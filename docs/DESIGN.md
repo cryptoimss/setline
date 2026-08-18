@@ -220,7 +220,7 @@ The form language is engineered but approachable: 8px corners on controls and fi
 
 - **Program control:** A 48px-high, left-aligned equipment label with an outlined code block. Hover lifts the text from muted steel to chalk; selection raises the slate surface and adds a 3px coral inset rule.
 - **Day control:** A 44px-high row with a circular code. The selected state becomes a solid coral plate with Signal Ink text.
-- **Responsive treatment:** Below 880px, programs become a two-way segmented control and days scroll horizontally inside the sticky top bar. At phone width, the brand collapses to its dumbbell mark while the Watch action stays in immediate reach.
+- **Responsive treatment:** Below 880px, programs become a compact three-way segmented control and days scroll horizontally inside the sticky top bar. At phone width, the brand collapses to its dumbbell mark while the Watch action stays in immediate reach.
 
 ### Buttons and Chips
 
@@ -237,12 +237,12 @@ The form language is engineered but approachable: 8px corners on controls and fi
 ### Inputs / Fields
 
 - **Numeric fields:** 38px-high dark fields with centered, tabular values and an 8px radius. Resting borders may be transparent; hover introduces Strong Rule and focus switches to mint.
-- **Reference fields:** Default to the locally saved volume from the previous complete session and label that source plainly. Use a visible Rule border at rest, left-aligned values, and the same mint focus treatment; typing creates a manual target and reveals a compact `Auto` recovery control.
+- **Reference fields:** Default to the locally saved volume from the previous complete session and label that source plainly. Use `kg·rep` for loaded exercises and `reps` for bodyweight exercises. Use a visible Rule border at rest, left-aligned values, and the same mint focus treatment; typing creates a manual target and reveals a compact `Auto` recovery control.
 - **Completion control:** A 44px square checkbox with a Strong Rule border; checked state becomes mint with a dark drawn check.
 
 ### Ruled Data Row
 
-The signature row combines a compact index, 44px completion control, paired numeric fields, and faint separators on a Raised Slate strip. Labels sit above in small uppercase type. Rows are repeated with 5px separation so the sheet scans as an ordered sequence rather than a stack of generic cards.
+The signature row combines a compact index, 44px completion control, paired numeric fields, and faint separators on a Raised Slate strip. In bodyweight sessions, the weight field becomes a static `Corporal` marker and only repetitions are editable. Labels sit above in small uppercase type. Rows are repeated with 5px separation so the sheet scans as an ordered sequence rather than a stack of generic cards.
 
 ### Coral Signal Plate
 

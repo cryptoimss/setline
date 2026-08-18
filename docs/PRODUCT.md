@@ -16,11 +16,11 @@ One primary user training for hypertrophy around volleyball sessions, using the 
 
 ## Product Purpose
 
-Present two ordered hypertrophy programs, make each gym session easy to execute, and provide lightweight in-session tracking for sets, weight, reps, rest, exercise volume, and weekly volume.
+Present three ordered training programs, make each session easy to execute, and provide lightweight in-session tracking for sets, weight or bodyweight reps, rest, exercise volume, and weekly volume.
 
 ## Positioning
 
-Combines a volleyball-compatible gym plan and an independent 3–4 day hypertrophy plan in one focused training sheet, with progress calculated locally rather than requiring an account or backend.
+Combines a volleyball-compatible gym plan, an independent 3–4 day hypertrophy plan, and a short beginner bodyweight plan in one focused training sheet, with progress calculated locally rather than requiring an account or backend.
 
 ## Operating Context
 
@@ -28,13 +28,13 @@ Used in a gym or around volleyball training, often one-handed on a phone and und
 
 ## Capabilities and Constraints
 
-- Two programs: gym-only work for volleyball days, and a 3–4 day hypertrophy program without volleyball.
+- Three programs: gym-only work for volleyball days, a 3–4 day hypertrophy program without volleyball, and a beginner 20-minute calisthenics A/B plan.
 - Prioritize chest, back, shoulders, and arms; legs are minimal and optional.
 - Exercises include order, muscle group, sets, rep range, rest, and RIR.
 - The independent 3–4 day hypertrophy program is the first-run default.
 - Personalized Light, Normal, and Heavy starting-load presets prefill untouched set weights; manual edits always take precedence and the prescribed RIR remains the calibration rule.
-- Local tabs, filters, set completion, weight/reps inputs, volume calculations, automatic previous-session comparison with manual override, progress bars, rest timer, and weekly summary.
-- Starting a new session snapshots exercises whose every set has weight and reps, preserving each volume locally as the next automatic reference without replacing incomplete history.
+- Local tabs, filters, set completion, weight/reps inputs, reps-only bodyweight tracking, volume calculations, automatic previous-session comparison with manual override, progress bars, rest timer, and weekly summary.
+- Starting a new session snapshots exercises whose every set has its required tracking data, preserving each volume locally as the next automatic reference without replacing incomplete history.
 - State may live in browser memory and optionally localStorage; the app must remain useful as a static file.
 - The navigation may launch a user-configured iOS Shortcut named `Setline Fuerza`; with a paired Apple Watch, that shortcut can use the system action to start Traditional Strength Training. An x-callback returns to Setline after completion, though iOS still opens Shortcuts briefly.
 - Direct HealthKit access and sensor collection are outside a static website; live metrics come from the Apple Watch workout, and first-party direct control would require native Apple capabilities.
@@ -55,6 +55,7 @@ The user supplied their current measurements and training priorities in the refe
 - Use transparent arithmetic and previous-session references instead of opaque scores; keep manual overrides available.
 - Keep touch interactions comfortable and all data under the user's local control.
 - Treat legs as maintenance/optional work, not the program's center.
+- Keep the beginner bodyweight plan full-body, short, and easy to scale through exercise variants rather than invented external loads.
 
 ## Accessibility & Inclusion
 

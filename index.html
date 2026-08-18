@@ -482,6 +482,8 @@
       background: var(--surface-raised);
     }
 
+    .load-preset-panel[hidden] { display: none; }
+
     .load-preset-copy { min-width: 0; }
 
     .load-preset-copy strong,
@@ -839,6 +841,21 @@
 
     .set-number { color: var(--muted); font-size: 12px; font-weight: 850; text-align: center; }
 
+    .bodyweight-load {
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--mint);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .025em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
     .set-check {
       appearance: none;
       width: 44px;
@@ -1023,6 +1040,8 @@
       color: var(--muted);
       font-size: 12px;
     }
+
+    .optional-toggle[hidden] { display: none; }
 
     .switch {
       position: relative;
@@ -1315,7 +1334,7 @@
       .mobile-programs {
         min-width: 0;
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 4px;
         padding: 4px;
         overflow: hidden;
@@ -1446,7 +1465,8 @@
       .set-grid-head, .set-row { grid-template-columns: 29px 44px minmax(62px, 1fr) 12px minmax(62px, 1fr); gap: 5px; }
       .set-grid-head { padding-inline: 6px; }
       .set-row { padding-inline: 6px; }
-      .set-input, .reference-input { height: 46px; font-size: 16px; }
+      .set-input, .reference-input, .bodyweight-load { height: 46px; font-size: 16px; }
+      .bodyweight-load { font-size: 10px; }
       .exercise-foot { grid-template-columns: 1fr; gap: 13px; padding: 13px 14px 16px; }
       .summary-column { grid-template-columns: 1fr; }
       .summary-panel { padding: 18px; }
@@ -1487,7 +1507,8 @@
 
     @media (pointer: coarse) {
       .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .demo-button, .apple-button, .nav-shortcut, .mobile-shortcut, .load-preset-button, .hero-toggle, .reference-auto-button { min-height: 48px; }
-      .set-input, .reference-input { min-height: 46px; font-size: 16px; }
+      .set-input, .reference-input, .bodyweight-load { min-height: 46px; font-size: 16px; }
+      .bodyweight-load { font-size: 10px; }
     }
 
     @media (max-width: 350px) {
@@ -1568,7 +1589,7 @@
       <div class="session-layout">
         <section class="session-main" aria-labelledby="session-title">
           <div class="session-hero" id="session-hero"></div>
-          <section class="load-preset-panel" aria-labelledby="load-preset-title">
+          <section class="load-preset-panel" id="load-preset-panel" aria-labelledby="load-preset-title">
             <div class="load-preset-copy">
               <strong id="load-preset-title">Carga inicial · 174 cm / 74,4 kg</strong>
               <span id="load-preset-note">Valores orientativos; ajusta siempre para cumplir el RIR indicado.</span>
@@ -1592,8 +1613,8 @@
 
         <aside class="summary-column" aria-label="Resumen del programa">
           <section class="summary-panel">
-            <h2>Volumen semanal</h2>
-            <p>Series directas por grupo muscular.</p>
+            <h2 id="weekly-title">Volumen semanal</h2>
+            <p id="weekly-caption">Series directas por grupo muscular.</p>
             <div class="weekly-list" id="weekly-volume"></div>
             <div class="optional-toggle" id="optional-toggle-wrap" hidden>
               <span>Incluir día 4 opcional</span>
@@ -1603,7 +1624,7 @@
               </label>
             </div>
           </section>
-          <section class="summary-panel">
+          <section class="summary-panel" id="progress-guidance">
             <h2>Cómo progresar</h2>
             <p>Doble progresión, sin perseguir el fallo.</p>
             <ol class="guidance-list">
@@ -1663,12 +1684,13 @@
   </aside>
 
   <script>
-    const MUSCLE_ORDER = ["Pecho", "Espalda", "Hombros", "Bíceps", "Tríceps", "Piernas"];
+    const MUSCLE_ORDER = ["Pecho", "Espalda", "Hombros", "Bíceps", "Tríceps", "Piernas", "Core"];
 
     const programs = [
       {
         id: "volley",
         short: "Vóley + gym",
+        mobileName: "Vóley",
         title: "Gym compatible con vóley",
         navNote: "2–3 sesiones compactas",
         symbol: "V+",
@@ -1713,6 +1735,7 @@
       {
         id: "solo",
         short: "Hipertrofia 3–4 días",
+        mobileName: "Hiper",
         title: "Hipertrofia sin vóley",
         navNote: "3 días + full-body opcional",
         symbol: "H4",
@@ -1762,6 +1785,37 @@
               { id: "s4-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 3, reps: "15–20", rest: 60, rir: "1–2", cue: "Serie limpia, sin convertirla en un encogimiento." },
               { id: "s4-curl", name: "Curl en polea", muscle: "Bíceps", sets: 2, reps: "12–16", rest: 60, rir: "1–2", cue: "Mantén tensión y no adelantes el codo." },
               { id: "s4-tri", name: "Extensión con cuerda", muscle: "Tríceps", sets: 2, reps: "12–16", rest: 60, rir: "1–2", cue: "Finaliza cada repetición sin impulso." }
+            ]
+          }
+        ]
+      },
+      {
+        id: "calisthenics",
+        short: "Calistenia 20 min",
+        mobileName: "Calis",
+        title: "Calistenia principiante",
+        navNote: "2 sesiones A/B · peso corporal",
+        symbol: "BW",
+        description: "Alterna A y B dos o tres veces por semana. Usa una variante que te deje unas 2 repeticiones en reserva.",
+        days: [
+          {
+            id: "c-a", code: "A", name: "Base A", duration: "18–22 min", note: "Empuje, tirón, piernas y core con descansos breves y técnica limpia.",
+            exercises: [
+              { id: "ca-pushup", name: "Flexión inclinada", muscle: "Pecho", sets: 3, reps: "8–15", rest: 60, rir: "2", tracking: "reps", cue: "Apoya las manos en una mesa o banco firme; baja el pecho entre las manos." },
+              { id: "ca-row", name: "Remo invertido con rodillas flexionadas", muscle: "Espalda", sets: 3, reps: "6–12", rest: 75, rir: "2", tracking: "reps", cue: "Usa solo una barra o mesa muy estable y mantén el cuerpo en bloque." },
+              { id: "ca-squat", name: "Sentadilla asistida", muscle: "Piernas", sets: 2, reps: "12–20", rest: 45, rir: "2–3", tracking: "reps", cue: "Usa un apoyo estable solo lo necesario; controla la bajada y empuja el suelo al subir." },
+              { id: "ca-pike", name: "Flexión pike a cobra", muscle: "Hombros", sets: 2, reps: "6–10", rest: 60, rir: "2", tracking: "reps", cue: "Empieza con la cadera alta y pasa hacia delante sin colapsar los hombros." },
+              { id: "ca-deadbug", name: "Dead bug", muscle: "Core", sets: 2, reps: "8–12/lado", rest: 45, rir: "2", tracking: "reps", cue: "Mantén la zona lumbar apoyada y mueve brazo y pierna con control." }
+            ]
+          },
+          {
+            id: "c-b", code: "B", name: "Base B", duration: "18–22 min", note: "Segunda variante de cuerpo completo para repetir patrones sin cargar siempre igual.",
+            exercises: [
+              { id: "cb-pushup", name: "Flexión con rodillas o completa", muscle: "Pecho", sets: 3, reps: "6–12", rest: 60, rir: "2", tracking: "reps", cue: "Elige la variante que te permita mantener el cuerpo alineado hasta la última repetición." },
+              { id: "cb-row", name: "Remo invertido", muscle: "Espalda", sets: 3, reps: "6–12", rest: 75, rir: "2", tracking: "reps", cue: "Comprueba el apoyo antes de empezar y acerca el pecho con control." },
+              { id: "cb-lunge", name: "Zancada al frente", muscle: "Piernas", sets: 2, reps: "8–12/lado", rest: 45, rir: "2–3", tracking: "reps", cue: "Da un paso cómodo, mantén el tronco estable y vuelve empujando el suelo." },
+              { id: "cb-scapular", name: "Flexión escapular", muscle: "Hombros", sets: 2, reps: "10–15", rest: 45, rir: "2", tracking: "reps", cue: "Mantén los codos extendidos; separa y junta las escápulas sin hundir la espalda." },
+              { id: "cb-crunch", name: "Crunch inverso", muscle: "Core", sets: 2, reps: "8–15", rest: 45, rir: "2", tracking: "reps", cue: "Eleva la pelvis sin impulso y baja de forma lenta y controlada." }
             ]
           }
         ]
@@ -1832,21 +1886,31 @@
       "s4-pulldown": ["lats/twin-handle-parallel-grip-lat-pulldown.gif", "Jalón con agarre paralelo"],
       "s4-lateral": ["delts/cable-one-arm-lateral-raise.gif", "Elevación lateral unilateral en polea"],
       "s4-curl": ["biceps/cable-curl.gif", "Curl de bíceps en polea"],
-      "s4-tri": ["triceps/cable-pushdown-with-rope-attachment.gif", "Extensión de tríceps con cuerda"]
+      "s4-tri": ["triceps/cable-pushdown-with-rope-attachment.gif", "Extensión de tríceps con cuerda"],
+      "ca-pushup": ["pectorals/incline-push-up.gif", "Flexión inclinada"],
+      "ca-row": ["upper-back/inverted-row-bent-knees.gif", "Remo invertido con rodillas flexionadas"],
+      "ca-squat": ["glutes/potty-squat-with-support.gif", "Sentadilla con apoyo"],
+      "ca-pike": ["glutes/pike-to-cobra-push-up.gif", "Flexión pike a cobra"],
+      "ca-deadbug": ["abs/dead-bug.gif", "Dead bug"],
+      "cb-pushup": ["pectorals/kneeling-push-up-male.gif", "Flexión con rodillas apoyadas"],
+      "cb-row": ["upper-back/inverted-row.gif", "Remo invertido"],
+      "cb-lunge": ["glutes/forward-lunge-male.gif", "Zancada al frente"],
+      "cb-scapular": ["serratus-anterior/scapula-push-up.gif", "Flexión escapular"],
+      "cb-crunch": ["abs/reverse-crunch.gif", "Crunch inverso"]
     };
 
     const storageKey = "setline-hypertrophy-v1";
     const defaultState = {
       schemaVersion: 3,
       programId: "solo",
-      dayByProgram: { volley: "v-a", solo: "s-1" },
+      dayByProgram: { volley: "v-a", solo: "s-1", calisthenics: "c-a" },
       filter: "Todos",
       loadPreset: "normal",
       entries: {},
       references: {},
       lastVolumes: {},
-      heroSeenByProgram: { volley: false, solo: false },
-      includeOptionalByProgram: { volley: false, solo: false }
+      heroSeenByProgram: { volley: false, solo: false, calisthenics: false },
+      includeOptionalByProgram: { volley: false, solo: false, calisthenics: false }
     };
 
     function loadState() {
@@ -1910,10 +1974,15 @@
       return "Primera sesión";
     }
 
-    function referenceFieldLabel(reference) {
-      if (reference.source === "automatic") return "Sesión anterior · kg·rep";
-      if (reference.source === "manual") return "Objetivo manual · kg·rep";
-      return "Referencia automática · kg·rep";
+    function volumeUnit(exercise) {
+      return exercise.tracking === "reps" ? "reps" : "kg·rep";
+    }
+
+    function referenceFieldLabel(reference, exercise) {
+      const unit = volumeUnit(exercise);
+      if (reference.source === "automatic") return `Sesión anterior · ${unit}`;
+      if (reference.source === "manual") return `Objetivo manual · ${unit}`;
+      return `Referencia automática · ${unit}`;
     }
 
     function persist() {
@@ -1942,6 +2011,7 @@
     function exerciseVolume(day, exercise) {
       return Array.from({ length: exercise.sets }, (_, index) => {
         const entry = getEntry(day.id, exercise.id, index);
+        if (exercise.tracking === "reps") return safeNumber(entry.reps);
         return safeNumber(entry.weight) * safeNumber(entry.reps);
       }).reduce((sum, value) => sum + value, 0);
     }
@@ -2005,7 +2075,7 @@
       return `<button class="program-button" type="button" aria-pressed="${selected}" data-program="${program.id}">
         <span class="program-symbol">${program.symbol}</span>
         <span class="program-copy"><strong>${program.short}</strong><span>${program.navNote}</span></span>
-        <span class="program-mobile-name">${program.id === "solo" ? "Hipertrofia" : "Vóley"}</span>
+        <span class="program-mobile-name">${program.mobileName}</span>
       </button>`;
     }
 
@@ -2066,6 +2136,9 @@
     }
 
     function renderLoadPresets() {
+      const panel = $("#load-preset-panel");
+      panel.hidden = activeProgram().id === "calisthenics";
+      if (panel.hidden) return;
       const preset = LOAD_PRESETS[state.loadPreset];
       const mobileNotes = {
         light: "75% de base. Ajusta al RIR; no cambia tus pesos manuales.",
@@ -2084,11 +2157,14 @@
 
     function setRow(day, exercise, index) {
       const entry = getEntry(day.id, exercise.id, index);
+      const bodyweight = exercise.tracking === "reps";
       return `<div class="set-row ${entry.completed ? "is-done" : ""}" data-set-row="${index}">
         <span class="set-number">${index + 1}</span>
         <input class="set-check" type="checkbox" ${entry.completed ? "checked" : ""} aria-label="Marcar serie ${index + 1} de ${exercise.name}" data-check data-exercise="${exercise.id}" data-set="${index}">
-        <input class="set-input" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Peso de la serie ${index + 1} en kilogramos" placeholder="kg" value="${escapeAttribute(entry.weight)}" data-weight data-exercise="${exercise.id}" data-set="${index}">
-        <span class="times" aria-hidden="true">×</span>
+        ${bodyweight
+          ? `<span class="bodyweight-load" aria-label="Carga: peso corporal">Corporal</span>`
+          : `<input class="set-input" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Peso de la serie ${index + 1} en kilogramos" placeholder="kg" value="${escapeAttribute(entry.weight)}" data-weight data-exercise="${exercise.id}" data-set="${index}">`}
+        <span class="times" aria-hidden="true">${bodyweight ? "" : "×"}</span>
         <input class="set-input" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" aria-label="Repeticiones de la serie ${index + 1}" placeholder="${exercise.reps}" value="${escapeAttribute(entry.reps)}" data-reps data-exercise="${exercise.id}" data-set="${index}">
       </div>`;
     }
@@ -2099,7 +2175,9 @@
       const ratio = reference.value ? Math.round((volume / reference.value) * 100) : 0;
       const complete = isExerciseComplete(day, exercise);
       const load = suggestedLoad(exercise.id);
-      const loadHint = load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`;
+      const bodyweight = exercise.tracking === "reps";
+      const unit = volumeUnit(exercise);
+      const loadHint = bodyweight ? "Peso corporal · ajusta la variante" : (load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`);
       const demo = exerciseGifs[exercise.id];
       const demoUrl = demo ? GIF_BASE + demo[0] : "";
       return `<article class="exercise-card ${complete ? "is-complete" : ""}" data-exercise-card="${exercise.id}">
@@ -2127,18 +2205,18 @@
           <div class="demo-caption"><span>Variante mostrada: <strong>${demo[1]}</strong></span><a href="${demoUrl}" target="_blank" rel="noreferrer">Abrir GIF</a></div>
         </div>` : ""}
         <div class="sets-wrap">
-          <div class="set-grid-head" aria-hidden="true"><span>Serie</span><span>Hecha</span><span>Peso</span><span></span><span>Reps</span></div>
+          <div class="set-grid-head" aria-hidden="true"><span>Serie</span><span>Hecha</span><span>${bodyweight ? "Carga" : "Peso"}</span><span></span><span>Reps</span></div>
           ${Array.from({ length: exercise.sets }, (_, index) => setRow(day, exercise, index)).join("")}
         </div>
         <div class="exercise-foot">
           <div class="volume-readout">
-            <div class="volume-topline"><span><strong class="volume-value" data-volume-value>${formatVolume(volume)} kg·rep</strong> registrados</span><span data-ratio-label>${referenceRatioLabel(reference, ratio)}</span></div>
+            <div class="volume-topline"><span><strong class="volume-value" data-volume-value>${formatVolume(volume)} ${unit}</strong> ${bodyweight ? "registradas" : "registrados"}</span><span data-ratio-label>${referenceRatioLabel(reference, ratio)}</span></div>
             <div class="exercise-progress-track"><div class="exercise-progress-fill" data-exercise-fill style="width:${Math.min(ratio, 100)}%"></div></div>
           </div>
           <div class="reference-field">
-            <label for="ref-${exercise.id}" data-reference-label>${referenceFieldLabel(reference)}</label>
+            <label for="ref-${exercise.id}" data-reference-label>${referenceFieldLabel(reference, exercise)}</label>
             <div class="reference-control">
-              <input class="reference-input" id="ref-${exercise.id}" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="Se crea al terminar" value="${escapeAttribute(reference.value || "")}" data-reference data-exercise="${exercise.id}">
+              <input class="reference-input" id="ref-${exercise.id}" type="text" inputmode="${bodyweight ? "numeric" : "decimal"}" enterkeyhint="done" autocomplete="off" placeholder="Se crea al terminar" value="${escapeAttribute(reference.value || "")}" data-reference data-exercise="${exercise.id}">
               <button class="reference-auto-button" type="button" data-reference-auto data-exercise="${exercise.id}" aria-label="Volver a la referencia automática de ${exercise.name}" ${reference.source === "manual" ? "" : "hidden"}>Auto</button>
             </div>
           </div>
@@ -2158,6 +2236,9 @@
 
     function renderWeeklyVolume() {
       const program = activeProgram();
+      const bodyweight = program.id === "calisthenics";
+      $("#weekly-title").textContent = bodyweight ? "Volumen base A+B" : "Volumen semanal";
+      $("#weekly-caption").textContent = bodyweight ? "Series directas al completar una vez cada sesión." : "Series directas por grupo muscular.";
       const includedDays = program.days.filter(day => !day.optional || state.includeOptionalByProgram[program.id]);
       const totals = {};
       includedDays.forEach(day => day.exercises.forEach(exercise => { totals[exercise.muscle] = (totals[exercise.muscle] || 0) + exercise.sets; }));
@@ -2173,6 +2254,17 @@
       $("#include-optional").checked = Boolean(state.includeOptionalByProgram[program.id]);
     }
 
+    function renderProgressGuidance() {
+      const bodyweight = activeProgram().id === "calisthenics";
+      $("#progress-guidance").innerHTML = `<h2>Cómo progresar</h2>
+        <p>${bodyweight ? "Más repeticiones y después una variante más difícil." : "Doble progresión, sin perseguir el fallo."}</p>
+        <ol class="guidance-list">
+          <li><b>1</b><span>Completa el mínimo del rango con el RIR indicado.</span></li>
+          <li><b>2</b><span>Sube repeticiones manteniendo técnica y control.</span></li>
+          <li><b>3</b><span>${bodyweight ? "Al lograr el máximo, usa menos apoyo o una variante más difícil y vuelve al mínimo del rango." : "Al lograr el máximo en todas las series, sube 2–5% la carga."}</span></li>
+        </ol>`;
+    }
+
     function renderAll() {
       renderNavigation();
       renderHero();
@@ -2180,6 +2272,7 @@
       renderFilters();
       renderExercises();
       renderWeeklyVolume();
+      renderProgressGuidance();
       requestAnimationFrame(() => {
         $("#mobile-programs [aria-pressed=\"true\"]")?.scrollIntoView({ block: "nearest", inline: "center" });
         $("#mobile-days [aria-pressed=\"true\"]")?.scrollIntoView({ block: "nearest", inline: "center" });
@@ -2202,9 +2295,9 @@
       const volume = exerciseVolume(day, exercise);
       const reference = getReference(exerciseId);
       const ratio = reference.value ? Math.round((volume / reference.value) * 100) : 0;
-      $("[data-volume-value]", card).textContent = `${formatVolume(volume)} kg·rep`;
+      $("[data-volume-value]", card).textContent = `${formatVolume(volume)} ${volumeUnit(exercise)}`;
       $("[data-ratio-label]", card).textContent = referenceRatioLabel(reference, ratio);
-      $("[data-reference-label]", card).textContent = referenceFieldLabel(reference);
+      $("[data-reference-label]", card).textContent = referenceFieldLabel(reference, exercise);
       $("[data-reference-auto]", card).hidden = reference.source !== "manual";
       $("[data-exercise-fill]", card).style.width = `${Math.min(ratio, 100)}%`;
       card.classList.toggle("is-complete", isExerciseComplete(day, exercise));
@@ -2357,6 +2450,7 @@
       return day.exercises.reduce((volumes, exercise) => {
         const hasEverySet = Array.from({ length: exercise.sets }, (_, index) => {
           const entry = getEntry(day.id, exercise.id, index);
+          if (exercise.tracking === "reps") return safeNumber(entry.reps) > 0;
           return safeNumber(entry.weight) > 0 && safeNumber(entry.reps) > 0;
         }).every(Boolean);
         const volume = exerciseVolume(day, exercise);
