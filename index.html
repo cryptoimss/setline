@@ -215,6 +215,8 @@
       white-space: nowrap;
     }
 
+    .program-mobile-name { display: none; }
+
     .day-button { min-height: 44px; padding: 7px 10px; }
 
     .day-button[aria-pressed="true"] { background: var(--accent); color: #1a0c09; }
@@ -412,6 +414,8 @@
       font-size: 11px;
     }
 
+    .load-preset-copy .load-note-mobile { display: none; }
+
     .load-preset-controls {
       min-width: 276px;
       display: grid;
@@ -425,7 +429,7 @@
     .load-preset-button {
       min-height: 44px;
       border: 0;
-      border-radius: 9px;
+      border-radius: 8px;
       padding: 0 13px;
       background: transparent;
       color: var(--muted);
@@ -1177,35 +1181,60 @@
         z-index: 30;
         top: 0;
         display: grid;
-        gap: 10px;
+        gap: 8px;
         margin: 0 calc(0px - var(--mobile-safe-right)) 16px calc(0px - var(--mobile-safe-left));
         padding: calc(10px + env(safe-area-inset-top)) var(--mobile-safe-right) 11px var(--mobile-safe-left);
         border-bottom: 1px solid var(--line);
         background: rgba(12, 16, 19, .96);
         backdrop-filter: blur(14px);
       }
-      .mobile-brand-row { display: flex; align-items: center; justify-content: space-between; }
-      .mobile-brand-row .brand { min-height: 42px; padding: 0; border: 0; }
-      .mobile-brand-row .brand-mark { width: 28px; height: 28px; }
-      .mobile-brand-row .brand-sub { display: none; }
-      .mobile-program-row {
+      .mobile-command-row {
         min-width: 0;
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: auto minmax(0, 1fr) auto;
         gap: 8px;
         align-items: center;
       }
-      .mobile-programs, .mobile-days { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; }
-      .mobile-programs::-webkit-scrollbar, .mobile-days::-webkit-scrollbar { display: none; }
-      .mobile-programs .program-button { width: auto; min-width: max-content; min-height: 44px; padding: 6px 10px; }
-      .mobile-programs .program-symbol { width: 25px; height: 25px; }
-      .mobile-programs .program-copy span { display: none; }
+      .mobile-brand-lockup {
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text);
+      }
+      .mobile-brand-lockup .brand-mark { width: 30px; height: 30px; }
+      .mobile-brand-lockup .brand-name { font-size: 15px; }
+      .mobile-programs {
+        min-width: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+        padding: 4px;
+        overflow: hidden;
+        border-radius: 12px;
+        background: var(--surface);
+      }
+      .mobile-days { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; }
+      .mobile-days::-webkit-scrollbar { display: none; }
+      .mobile-programs .program-button {
+        width: 100%;
+        min-width: 0;
+        min-height: 40px;
+        justify-content: center;
+        padding: 0 8px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .mobile-programs .program-button[aria-pressed="true"] { background: var(--accent); color: #1a0c09; box-shadow: none; }
+      .mobile-programs .program-symbol,
+      .mobile-programs .program-copy { display: none; }
+      .mobile-programs .program-mobile-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 850; }
       .mobile-days .day-button { width: auto; min-width: max-content; min-height: 44px; padding: 5px 10px; }
       .mobile-days .day-button small { display: none; }
       .mobile-shortcut {
-        min-width: 92px;
-        min-height: 46px;
-        padding: 0 12px;
+        min-width: 82px;
+        min-height: 48px;
+        padding: 0 11px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1231,35 +1260,62 @@
         --mobile-safe-left: max(12px, env(safe-area-inset-left));
         --mobile-safe-right: max(12px, env(safe-area-inset-right));
       }
-      body { font-size: 16px; padding-bottom: 116px; }
+      body { font-size: 16px; padding-bottom: 96px; }
       .page { padding-left: var(--mobile-safe-left); padding-right: var(--mobile-safe-right); }
       .mobile-topbar {
-        gap: 7px;
+        gap: 6px;
         margin-left: calc(0px - var(--mobile-safe-left));
         margin-right: calc(0px - var(--mobile-safe-right));
-        padding: max(8px, env(safe-area-inset-top)) var(--mobile-safe-right) 9px var(--mobile-safe-left);
+        padding: max(7px, env(safe-area-inset-top)) var(--mobile-safe-right) 8px var(--mobile-safe-left);
       }
-      .mobile-brand-row { display: none; }
-      .mobile-programs, .mobile-days { scroll-snap-type: x proximity; overscroll-behavior-inline: contain; }
-      .mobile-programs .program-button, .mobile-days .day-button { scroll-snap-align: center; }
+      .mobile-brand-lockup .brand-name { display: none; }
+      .mobile-brand-lockup .brand-mark { width: 32px; height: 32px; }
+      .mobile-programs { gap: 3px; padding: 3px; }
+      .mobile-programs .program-button { min-height: 44px; padding-inline: 6px; }
+      .mobile-programs .program-mobile-name { font-size: 11px; }
+      .mobile-days { scroll-snap-type: x proximity; overscroll-behavior-inline: contain; }
+      .mobile-days .day-button { scroll-snap-align: center; }
       .session-hero { display: block; min-height: 0; }
-      .hero-copy { padding: 24px 20px 22px; }
-      .hero-program { font-size: 10px; }
-      .session-hero h1 { margin-top: 13px; font-size: clamp(31px, 10vw, 38px); }
-      .session-hero p { font-size: 15px; line-height: 1.5; }
-      .hero-slate { min-height: 88px; display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 24px; padding: 19px 22px; }
-      .hero-slate::after { inset: 9px; }
-      .hero-day-code { font-size: 54px; }
+      .hero-copy { padding: 18px 18px 16px; }
+      .hero-program { display: none; }
+      .session-hero h1 { margin: 0 0 7px; font-size: clamp(30px, 9vw, 36px); line-height: 1; }
+      .session-hero p {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .hero-slate { min-height: 68px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 18px; padding: 13px 18px; }
+      .hero-slate::after { inset: 8px; }
+      .hero-day-code { font-size: 44px; }
       .hero-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-      .hero-fact { display: grid; gap: 1px; padding-top: 5px; font-size: 9px; }
-      .load-preset-panel { grid-template-columns: 1fr; gap: 12px; padding: 14px 12px; }
+      .hero-fact { display: grid; gap: 1px; padding-top: 4px; font-size: 11px; line-height: 1.15; }
+      .load-preset-panel { margin-top: 12px; grid-template-columns: 1fr; gap: 8px; padding: 11px 10px; }
       .load-preset-copy { padding-inline: 2px; }
-      .load-preset-copy strong { font-size: 14px; }
-      .load-preset-copy span { font-size: 12px; line-height: 1.4; }
+      .load-preset-copy strong { font-size: 13px; }
+      .load-preset-copy #load-preset-note {
+        display: block;
+        font-size: 11px;
+        line-height: 1.35;
+      }
+      .load-preset-copy .load-note-long { display: none; }
+      .load-preset-copy .load-note-mobile {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
       .load-preset-controls { width: 100%; min-width: 0; }
-      .session-tools { margin-top: 24px; display: block; }
-      .filter-row { margin-bottom: 10px; }
-      .quiet-button { width: 100%; }
+      .load-preset-button { min-height: 44px; }
+      .session-tools { margin: 16px 0 12px; display: grid; grid-template-columns: minmax(0, 1fr) 48px; gap: 8px; }
+      .filter-row { min-width: 0; margin: 0; padding: 0; }
+      .filter-button { min-height: 48px; padding-inline: 14px; }
+      .quiet-button { width: 48px; padding: 0; border-radius: 12px; }
+      .quiet-button span { display: none; }
+      .session-progress { margin-bottom: 12px; gap: 9px; }
+      .session-progress-output { font-size: 11px; }
       .exercise-head { grid-template-columns: 42px minmax(0, 1fr); gap: 12px; padding: 16px 14px 12px; }
       .exercise-order { width: 42px; height: 42px; }
       .exercise-title-line h2 { font-size: 17px; }
@@ -1283,13 +1339,29 @@
       .timer-dock {
         left: var(--mobile-safe-left);
         right: var(--mobile-safe-right);
-        bottom: max(10px, env(safe-area-inset-bottom));
+        bottom: max(8px, env(safe-area-inset-bottom));
         width: auto;
+        min-height: 60px;
+        gap: 8px;
+        padding: 7px 8px 7px 12px;
+        border-radius: 14px;
       }
-      .timer-control { width: 44px; min-width: 44px; }
-      .timer-control.wide { min-width: 44px; padding-inline: 10px; }
+      .timer-label { max-width: 13ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+      .timer-time { font-size: 23px; }
+      .timer-actions { gap: 4px; }
+      .timer-control { width: 44px; min-width: 44px; min-height: 44px; }
+      .timer-control.wide { min-width: 44px; padding-inline: 8px; font-size: 10px; }
+      .timer-dock:not(.is-running):not(.has-time) {
+        left: auto;
+        width: auto;
+        grid-template-columns: auto auto;
+      }
+      .timer-dock:not(.is-running):not(.has-time) .timer-label,
+      .timer-dock:not(.is-running):not(.has-time) #timer-minus,
+      .timer-dock:not(.is-running):not(.has-time) #timer-plus { display: none; }
+      .timer-dock:not(.is-running):not(.has-time) .timer-time { margin: 0; font-size: 20px; }
       .pwa-banner {
-        bottom: calc(100px + env(safe-area-inset-bottom));
+        bottom: calc(82px + env(safe-area-inset-bottom));
         width: calc(100vw - var(--mobile-safe-left) - var(--mobile-safe-right));
         grid-template-columns: minmax(0, 1fr) auto;
         gap: 8px;
@@ -1304,9 +1376,15 @@
       .set-input, .reference-input { min-height: 46px; font-size: 16px; }
     }
 
+    @media (max-width: 350px) {
+      .mobile-command-row { gap: 6px; }
+      .mobile-shortcut { min-width: 48px; width: 48px; padding: 0; }
+      .mobile-shortcut span { display: none; }
+      .mobile-programs .program-mobile-name { font-size: 10px; }
+    }
+
     @media (max-height: 520px) and (orientation: landscape) and (max-width: 880px) {
       .mobile-topbar { position: relative; }
-      .mobile-brand-row { display: none; }
       .hero-copy { padding-block: 20px; }
       .session-hero h1 { font-size: 34px; }
     }
@@ -1330,8 +1408,11 @@
     <aside class="sidebar" aria-label="Navegación de la rutina">
       <div class="brand">
         <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-          <path d="M6 8h18v5H6zM12 16h18v5H12zM6 24h18v5H6z" fill="currentColor"/>
-          <path d="M27 8h3v5h-3zM6 16h3v5H6zM27 24h3v5h-3z" fill="#8ed7ca"/>
+          <rect x="2" y="9" width="6" height="18" rx="2" fill="currentColor"/>
+          <rect x="8" y="12" width="5" height="12" rx="1.5" fill="currentColor"/>
+          <rect x="23" y="12" width="5" height="12" rx="1.5" fill="currentColor"/>
+          <rect x="28" y="9" width="6" height="18" rx="2" fill="currentColor"/>
+          <rect x="12" y="16" width="12" height="4" rx="2" fill="#8ed7ca"/>
         </svg>
         <span><span class="brand-name">Setline</span><span class="brand-sub">Hypertrophy log</span></span>
       </div>
@@ -1348,20 +1429,21 @@
 
     <main class="page">
       <header class="mobile-topbar">
-        <div class="mobile-brand-row">
-          <div class="brand">
+        <div class="mobile-command-row">
+          <div class="mobile-brand-lockup" aria-label="Setline">
             <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-              <path d="M6 8h18v5H6zM12 16h18v5H12zM6 24h18v5H6z" fill="currentColor"/>
-              <path d="M27 8h3v5h-3zM6 16h3v5H6zM27 24h3v5h-3z" fill="#8ed7ca"/>
+              <rect x="2" y="9" width="6" height="18" rx="2" fill="currentColor"/>
+              <rect x="8" y="12" width="5" height="12" rx="1.5" fill="currentColor"/>
+              <rect x="23" y="12" width="5" height="12" rx="1.5" fill="currentColor"/>
+              <rect x="28" y="9" width="6" height="18" rx="2" fill="currentColor"/>
+              <rect x="12" y="16" width="12" height="4" rx="2" fill="#8ed7ca"/>
             </svg>
-            <span><span class="brand-name">Setline</span><span class="brand-sub">Hypertrophy log</span></span>
+            <span class="brand-name">Setline</span>
           </div>
-        </div>
-        <div class="mobile-program-row">
           <nav class="mobile-programs" id="mobile-programs" aria-label="Programas"></nav>
           <a class="mobile-shortcut" href="shortcuts://run-shortcut?name=Setline%20Fuerza" data-health-shortcut aria-label="Iniciar entrenamiento en Apple Watch y volver a Setline">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/><path d="M7.5 12h2l1-2 2 4 1-2h3"/></svg>
-            Watch
+            <span>Watch</span>
           </a>
         </div>
         <nav class="mobile-days" id="mobile-days" aria-label="Días"></nav>
@@ -1379,9 +1461,9 @@
           </section>
           <div class="session-tools">
             <div class="filter-row" id="filters" aria-label="Filtrar por grupo muscular"></div>
-            <button class="quiet-button" id="reset-session" type="button">
+            <button class="quiet-button" id="reset-session" type="button" aria-label="Limpiar día">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-              Limpiar día
+              <span>Limpiar día</span>
             </button>
           </div>
           <div class="session-progress" aria-label="Progreso de la sesión">
@@ -1778,6 +1860,7 @@
       return `<button class="program-button" type="button" aria-pressed="${selected}" data-program="${program.id}">
         <span class="program-symbol">${program.symbol}</span>
         <span class="program-copy"><strong>${program.short}</strong><span>${program.navNote}</span></span>
+        <span class="program-mobile-name">${program.id === "solo" ? "Hipertrofia" : "Vóley"}</span>
       </button>`;
     }
 
@@ -1822,8 +1905,13 @@
 
     function renderLoadPresets() {
       const preset = LOAD_PRESETS[state.loadPreset];
+      const mobileNotes = {
+        light: "75% de base. Ajusta al RIR; no cambia tus pesos manuales.",
+        normal: "Base estimada. Ajusta al RIR; no cambia tus pesos manuales.",
+        heavy: "125% de base. Solo si mantienes el RIR; manuales intactos."
+      };
       $("#load-presets").innerHTML = Object.entries(LOAD_PRESETS).map(([id, item]) => `<button class="load-preset-button" type="button" aria-pressed="${state.loadPreset === id}" data-load-preset="${id}">${item.label}</button>`).join("");
-      $("#load-preset-note").textContent = `${preset.description}. No es un estándar por talla: ajusta al RIR. No pisa pesos manuales; en mancuernas/unilaterales, usa kg por lado.`;
+      $("#load-preset-note").innerHTML = `<span class="load-note-long">${preset.description}. No es un estándar por talla: ajusta al RIR. No pisa pesos manuales; en mancuernas/unilaterales, usa kg por lado.</span><span class="load-note-mobile">${mobileNotes[state.loadPreset]}</span>`;
     }
 
     function renderFilters() {
@@ -2110,6 +2198,7 @@
       const seconds = timerRemaining % 60;
       $("#timer-time").textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
       $("#timer-dock").classList.toggle("is-running", timerRunning);
+      $("#timer-dock").classList.toggle("has-time", timerRemaining > 0);
       $("#timer-toggle").setAttribute("aria-label", timerRunning ? "Pausar temporizador" : "Iniciar temporizador");
       $("#timer-toggle-icon").innerHTML = timerRunning ? '<path d="M8 5h3v14H8zM14 5h3v14h-3z" fill="currentColor" stroke="none"/>' : '<path d="m8 5 11 7-11 7z"/>';
       document.title = timerRunning ? `${$("#timer-time").textContent} · Setline` : "Setline — Rutinas de hipertrofia";

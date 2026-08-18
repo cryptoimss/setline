@@ -192,7 +192,7 @@ The palette is a low-light slate field animated by three disciplined signals: co
 
 On wide screens, the application uses three visual stations: a persistent 258px rail, a flexible primary work sheet, and a sticky 286px readout column. The inner sheet is capped at 1280px with a 26px column gap, while page gutters breathe between 18px and 44px. The primary sheet leads; the readout remains visibly subordinate.
 
-At 1100px, the rail and readout narrow to 228px and 252px, and the main gap contracts to 18px. At 880px, the rail becomes a sticky horizontal top bar, the main work becomes a single column, and readouts form a two-column band below it. At 620px, all panels stack, gutters contract to 12px, the signal plate shifts beneath the heading, and dense row internals tighten without shrinking interactive controls below 44px where practical. Safe-area insets protect the sticky top bar and floating dock.
+At 1100px, the rail and readout narrow to 228px and 252px, and the main gap contracts to 18px. At 880px, the rail becomes a sticky horizontal top bar, the main work becomes a single column, and readouts form a two-column band below it. At 620px, a compact dumbbell mark, two-way segmented program control, Watch action, and horizontally scrolling day rail share the command area. The session description clamps visually, the signal plate becomes a short horizontal band, filters and reset share one row, all panels stack, and gutters contract to 12px without shrinking touch targets below 44px where practical. Safe-area insets protect the sticky top bar and floating dock.
 
 Spacing follows a compact 8px base with recurring 12px, 16px, 20px, 24px, and 28px steps. Use tighter gaps inside ruled rows and wider gaps between major stations.
 
@@ -220,7 +220,7 @@ The form language is engineered but approachable: 8px corners on controls and fi
 
 - **Program control:** A 48px-high, left-aligned equipment label with an outlined code block. Hover lifts the text from muted steel to chalk; selection raises the slate surface and adds a 3px coral inset rule.
 - **Day control:** A 44px-high row with a circular code. The selected state becomes a solid coral plate with Signal Ink text.
-- **Responsive treatment:** Below 880px, both navigation groups scroll horizontally inside the sticky top bar; secondary descriptions disappear before labels do.
+- **Responsive treatment:** Below 880px, programs become a two-way segmented control and days scroll horizontally inside the sticky top bar. At phone width, the brand collapses to its dumbbell mark while the Watch action stays in immediate reach.
 
 ### Buttons and Chips
 
@@ -250,7 +250,7 @@ The signal plate is a solid coral block inset with a quiet one-pixel inner rule.
 
 ### Timer Dock
 
-The dock is the system's one deliberate light surface: Timer Paper with Timer Ink, a 16px radius, strong shadow, tabular metric, and 46px controls. Its running state turns mint. Keep it fixed near the safe-area edge and wide enough for one-handed operation without obscuring the primary sheet.
+The dock is the system's one deliberate light surface: Timer Paper with Timer Ink, a 16px radius, strong shadow, tabular metric, and 46px controls. On phones it collapses to time, play, and reset while idle at zero; starting or pausing a timed rest restores the full adjustment controls and its running state turns mint. Keep it fixed near the safe-area edge without obscuring more of the primary sheet than the current state needs.
 
 ## Do's and Don'ts
 

@@ -2,6 +2,8 @@
 
 PWA personal para ejecutar y registrar rutinas de hipertrofia desde iPhone o Mac. Funciona sin backend: pesos, repeticiones, referencias y series completadas permanecen en el almacenamiento local de cada dispositivo.
 
+En móvil usa una barra compacta con selector de programa, sesiones desplazables y acceso directo al Watch. El temporizador se mantiene pequeño cuando está inactivo y se expande durante el descanso. La identidad instalada usa una mancuerna coral y menta.
+
 La app abre primero **Hipertrofia 3–4 días** e incluye cargas iniciales estimadas para 174 cm / 74,4 kg. El selector **Light / Normal / Heavy** actualiza solo los pesos sugeridos; cualquier carga editada a mano se conserva. No existe una carga universal por talla y peso: estos valores son orientativos y deben ajustarse para cumplir el RIR de cada ejercicio.
 
 ## Instalar en iPhone
