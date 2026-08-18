@@ -31,9 +31,11 @@ Used in a gym or around volleyball training, often one-handed on a phone and und
 - Two programs: gym-only work for volleyball days, and a 3–4 day hypertrophy program without volleyball.
 - Prioritize chest, back, shoulders, and arms; legs are minimal and optional.
 - Exercises include order, muscle group, sets, rep range, rest, and RIR.
+- The independent 3–4 day hypertrophy program is the first-run default.
+- Personalized Light, Normal, and Heavy starting-load presets prefill untouched set weights; manual edits always take precedence and the prescribed RIR remains the calibration rule.
 - Local tabs, filters, set completion, weight/reps inputs, volume calculations, reference comparison, progress bars, rest timer, and weekly summary.
 - State may live in browser memory and optionally localStorage; the app must remain useful as a static file.
-- The web interface may launch a user-configured iOS Shortcut named `Setline Fuerza`; with a paired Apple Watch, that shortcut can use the system action to start Traditional Strength Training, with post-workout logging as a fallback.
+- The navigation may launch a user-configured iOS Shortcut named `Setline Fuerza`; with a paired Apple Watch, that shortcut can use the system action to start Traditional Strength Training. An x-callback returns to Setline after completion, though iOS still opens Shortcuts briefly.
 - Direct HealthKit access and sensor collection are outside a static website; live metrics come from the Apple Watch workout, and first-party direct control would require native Apple capabilities.
 - No medical claims, backend, account, or real cross-device synchronization.
 

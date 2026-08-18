@@ -64,7 +64,8 @@
     button, input[type="checkbox"] { cursor: pointer; }
 
     button:focus-visible,
-    input:focus-visible {
+    input:focus-visible,
+    a:focus-visible {
       outline: 3px solid rgba(142, 215, 202, .55);
       outline-offset: 2px;
     }
@@ -232,6 +233,27 @@
 
     .day-button small { margin-left: auto; opacity: .72; font-size: 10px; }
 
+    .nav-shortcut {
+      min-height: 52px;
+      margin-top: 18px;
+      padding: 9px 11px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      border-radius: 12px;
+      background: var(--mint);
+      color: #0d1b19;
+      text-decoration: none;
+      transition: filter .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .nav-shortcut:hover { filter: brightness(1.06); }
+    .nav-shortcut:active { transform: scale(.985); }
+    .nav-shortcut svg { width: 22px; height: 22px; flex: 0 0 auto; }
+    .nav-shortcut span { min-width: 0; display: grid; line-height: 1.15; }
+    .nav-shortcut strong { font-size: 12px; }
+    .nav-shortcut small { margin-top: 3px; color: #315a52; font-size: 10px; }
+
     .sidebar-note {
       margin-top: 28px;
       padding: 14px;
@@ -313,30 +335,6 @@
       font-size: 14px;
     }
 
-    .health-launch {
-      width: fit-content;
-      min-height: 48px;
-      margin-top: 20px;
-      padding: 0 15px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      border-radius: 12px;
-      background: var(--surface-soft);
-      color: var(--text);
-      text-decoration: none;
-      transition: background .2s var(--ease), transform .2s var(--ease);
-    }
-
-    .health-launch:hover { background: var(--mint); color: #0d1b19; }
-    .health-launch:active { transform: scale(.98); }
-    .health-launch svg { width: 21px; height: 21px; flex: 0 0 auto; color: var(--mint); }
-    .health-launch:hover svg { color: #0d1b19; }
-    .health-launch span { display: grid; line-height: 1.15; }
-    .health-launch strong { font-size: 12px; }
-    .health-launch small { margin-top: 3px; color: var(--muted); font-size: 10px; }
-    .health-launch:hover small { color: #29453f; }
-
     .hero-slate {
       position: relative;
       display: grid;
@@ -384,6 +382,61 @@
       letter-spacing: .04em;
       text-transform: uppercase;
     }
+
+    .load-preset-panel {
+      margin-top: 18px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-raised);
+    }
+
+    .load-preset-copy { min-width: 0; }
+
+    .load-preset-copy strong,
+    .load-preset-copy span { display: block; }
+
+    .load-preset-copy strong {
+      color: var(--text);
+      font-size: 13px;
+      letter-spacing: -.01em;
+    }
+
+    .load-preset-copy span {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .load-preset-controls {
+      min-width: 276px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 5px;
+      padding: 4px;
+      border-radius: 12px;
+      background: var(--surface);
+    }
+
+    .load-preset-button {
+      min-height: 44px;
+      border: 0;
+      border-radius: 9px;
+      padding: 0 13px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .load-preset-button:hover { color: var(--text); }
+    .load-preset-button:active { transform: scale(.98); }
+    .load-preset-button[aria-pressed="true"] { background: var(--accent); color: #1a0c09; }
 
     .session-tools {
       display: flex;
@@ -549,6 +602,9 @@
     }
 
     .exercise-meta strong { color: var(--text); }
+
+    .preset-load-hint { color: var(--amber); }
+    .preset-load-hint strong { color: inherit; }
 
     .exercise-cue {
       margin: 9px 0 0;
@@ -1132,6 +1188,13 @@
       .mobile-brand-row .brand { min-height: 42px; padding: 0; border: 0; }
       .mobile-brand-row .brand-mark { width: 28px; height: 28px; }
       .mobile-brand-row .brand-sub { display: none; }
+      .mobile-program-row {
+        min-width: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        align-items: center;
+      }
       .mobile-programs, .mobile-days { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; }
       .mobile-programs::-webkit-scrollbar, .mobile-days::-webkit-scrollbar { display: none; }
       .mobile-programs .program-button { width: auto; min-width: max-content; min-height: 44px; padding: 6px 10px; }
@@ -1139,6 +1202,22 @@
       .mobile-programs .program-copy span { display: none; }
       .mobile-days .day-button { width: auto; min-width: max-content; min-height: 44px; padding: 5px 10px; }
       .mobile-days .day-button small { display: none; }
+      .mobile-shortcut {
+        min-width: 92px;
+        min-height: 46px;
+        padding: 0 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        border-radius: 11px;
+        background: var(--mint);
+        color: #0d1b19;
+        font-size: 12px;
+        font-weight: 900;
+        text-decoration: none;
+      }
+      .mobile-shortcut svg { width: 19px; height: 19px; }
       .session-layout { display: block; }
       .summary-column { position: static; margin-top: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .session-hero { min-height: 218px; }
@@ -1168,12 +1247,16 @@
       .hero-program { font-size: 10px; }
       .session-hero h1 { margin-top: 13px; font-size: clamp(31px, 10vw, 38px); }
       .session-hero p { font-size: 15px; line-height: 1.5; }
-      .health-launch { width: 100%; justify-content: center; margin-top: 18px; }
       .hero-slate { min-height: 88px; display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 24px; padding: 19px 22px; }
       .hero-slate::after { inset: 9px; }
       .hero-day-code { font-size: 54px; }
       .hero-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
       .hero-fact { display: grid; gap: 1px; padding-top: 5px; font-size: 9px; }
+      .load-preset-panel { grid-template-columns: 1fr; gap: 12px; padding: 14px 12px; }
+      .load-preset-copy { padding-inline: 2px; }
+      .load-preset-copy strong { font-size: 14px; }
+      .load-preset-copy span { font-size: 12px; line-height: 1.4; }
+      .load-preset-controls { width: 100%; min-width: 0; }
       .session-tools { margin-top: 24px; display: block; }
       .filter-row { margin-bottom: 10px; }
       .quiet-button { width: 100%; }
@@ -1217,7 +1300,7 @@
     }
 
     @media (pointer: coarse) {
-      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .demo-button, .apple-button { min-height: 48px; }
+      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .demo-button, .apple-button, .nav-shortcut, .mobile-shortcut, .load-preset-button { min-height: 48px; }
       .set-input, .reference-input { min-height: 46px; font-size: 16px; }
     }
 
@@ -1256,6 +1339,10 @@
       <nav class="program-nav" id="desktop-programs" aria-label="Programas"></nav>
       <p class="nav-label">Sesiones</p>
       <nav class="day-nav" id="desktop-days" aria-label="Días"></nav>
+      <a class="nav-shortcut" href="shortcuts://run-shortcut?name=Setline%20Fuerza" data-health-shortcut aria-label="Iniciar entrenamiento en Apple Watch y volver a Setline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/><path d="M7.5 12h2l1-2 2 4 1-2h3"/></svg>
+        <span><strong>Iniciar en Watch</strong><small>Atajo · vuelve a Setline</small></span>
+      </a>
       <div class="sidebar-note"><strong>Regla de esfuerzo</strong><br>Termina la mayoría de series con 1–2 repeticiones posibles en reserva. Prioriza técnica limpia.</div>
     </aside>
 
@@ -1270,13 +1357,26 @@
             <span><span class="brand-name">Setline</span><span class="brand-sub">Hypertrophy log</span></span>
           </div>
         </div>
-        <nav class="mobile-programs" id="mobile-programs" aria-label="Programas"></nav>
+        <div class="mobile-program-row">
+          <nav class="mobile-programs" id="mobile-programs" aria-label="Programas"></nav>
+          <a class="mobile-shortcut" href="shortcuts://run-shortcut?name=Setline%20Fuerza" data-health-shortcut aria-label="Iniciar entrenamiento en Apple Watch y volver a Setline">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/><path d="M7.5 12h2l1-2 2 4 1-2h3"/></svg>
+            Watch
+          </a>
+        </div>
         <nav class="mobile-days" id="mobile-days" aria-label="Días"></nav>
       </header>
 
       <div class="session-layout">
         <section class="session-main" aria-labelledby="session-title">
           <div class="session-hero" id="session-hero"></div>
+          <section class="load-preset-panel" aria-labelledby="load-preset-title">
+            <div class="load-preset-copy">
+              <strong id="load-preset-title">Carga inicial · 174 cm / 74,4 kg</strong>
+              <span id="load-preset-note">Valores orientativos; ajusta siempre para cumplir el RIR indicado.</span>
+            </div>
+            <div class="load-preset-controls" id="load-presets" aria-label="Preset de carga"></div>
+          </section>
           <div class="session-tools">
             <div class="filter-row" id="filters" aria-label="Filtrar por grupo muscular"></div>
             <button class="quiet-button" id="reset-session" type="button">
@@ -1316,11 +1416,11 @@
           </section>
           <section class="summary-panel apple-panel">
             <h2>Apple Salud</h2>
-            <p>La web puede ejecutar un atajo de iOS que inicie Fuerza tradicional en tu Apple Watch; no accede directamente a HealthKit.</p>
+            <p>El atajo inicia Fuerza tradicional en tu Apple Watch. iOS abre Atajos un instante y después vuelve automáticamente a Setline.</p>
             <div class="apple-actions">
               <a class="apple-button" href="shortcuts://run-shortcut?name=Setline%20Fuerza" data-health-shortcut>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/><path d="M7.5 12h2l1-2 2 4 1-2h3"/></svg>
-                Ejecutar “Setline Fuerza”
+                Iniciar y volver a Setline
               </a>
             </div>
             <details class="shortcut-setup">
@@ -1470,6 +1570,24 @@
       }
     ];
 
+    programs.sort((a, b) => (a.id === "solo" ? 0 : 1) - (b.id === "solo" ? 0 : 1));
+
+    const LOAD_PRESETS = {
+      light: { label: "Light", multiplier: .75, description: "75% de la base · más margen y técnica" },
+      normal: { label: "Normal", multiplier: 1, description: "Base estimada · empieza aquí y calibra por RIR" },
+      heavy: { label: "Heavy", multiplier: 1.25, description: "125% de la base · solo si mantienes el RIR" }
+    };
+
+    const NORMAL_LOADS = {
+      "va-press": 18, "va-row": 22.5, "va-pulldown": 40, "va-lateral": 5, "va-curl": 15, "va-pushdown": 25,
+      "vb-chest": 45, "vb-highrow": 20, "vb-shoulder": 30, "vb-reverse": 30, "vb-inclinecurl": 10, "vb-overheadtri": 20,
+      "vc-pulldown": 17.5, "vc-incline": 40, "vc-seatedrow": 40, "vc-lateral": 25, "vc-fly": 30, "vc-curl": 20, "vc-tri": 12.5,
+      "s1-incline": 18, "s1-row": 22.5, "s1-fly": 10, "s1-pulldown": 40, "s1-lateral": 5, "s1-tri": 25,
+      "s2-pullup": null, "s2-highrow": 25, "s2-cablerow": 40, "s2-reverse": 30, "s2-preacher": 20, "s2-hammer": 15,
+      "s3-flat": 50, "s3-incline": 40, "s3-shoulder": 30, "s3-lateral": 25, "s3-fly": 7.5, "s3-overhead": 20, "s3-pushdown": 12.5,
+      "s4-legpress": 90, "s4-legcurl": 30, "s4-chest": 45, "s4-pulldown": 40, "s4-lateral": 5, "s4-curl": 15, "s4-tri": 25
+    };
+
     const GIF_BASE = "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/";
     const exerciseGifs = {
       "va-press": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
@@ -1521,9 +1639,11 @@
 
     const storageKey = "setline-hypertrophy-v1";
     const defaultState = {
-      programId: "volley",
+      schemaVersion: 2,
+      programId: "solo",
       dayByProgram: { volley: "v-a", solo: "s-1" },
       filter: "Todos",
+      loadPreset: "normal",
       entries: {},
       references: {},
       includeOptionalByProgram: { volley: false, solo: false }
@@ -1532,12 +1652,18 @@
     function loadState() {
       try {
         const saved = JSON.parse(localStorage.getItem(storageKey));
-        return saved ? {
+        const merged = saved ? {
           ...defaultState,
           ...saved,
           dayByProgram: { ...defaultState.dayByProgram, ...(saved.dayByProgram || {}) },
           includeOptionalByProgram: { ...defaultState.includeOptionalByProgram, ...(saved.includeOptionalByProgram || {}) }
         } : JSON.parse(JSON.stringify(defaultState));
+        if (saved && Number(saved.schemaVersion || 1) < 2) {
+          merged.schemaVersion = 2;
+          merged.programId = "solo";
+        }
+        if (!LOAD_PRESETS[merged.loadPreset]) merged.loadPreset = "normal";
+        return merged;
       } catch (_) {
         return JSON.parse(JSON.stringify(defaultState));
       }
@@ -1568,7 +1694,7 @@
     }
 
     function getEntry(dayId, exerciseId, index) {
-      return state.entries[entryKey(dayId, exerciseId, index)] || { weight: "", reps: "", completed: false };
+      return state.entries[entryKey(dayId, exerciseId, index)] || { weight: "", reps: "", completed: false, weightSource: "" };
     }
 
     function setEntry(dayId, exerciseId, index, patch) {
@@ -1607,6 +1733,46 @@
       return remainder ? `${minutes}:${String(remainder).padStart(2, "0")}` : `${minutes}:00`;
     }
 
+    function formatLoad(value) {
+      return new Intl.NumberFormat("es-ES", { maximumFractionDigits: 1 }).format(value);
+    }
+
+    function suggestedLoad(exerciseId) {
+      const normal = NORMAL_LOADS[exerciseId];
+      if (!Number.isFinite(normal)) return null;
+      if (state.loadPreset === "normal") return normal;
+      const raw = normal * LOAD_PRESETS[state.loadPreset].multiplier;
+      const step = raw < 10 ? 1 : 2.5;
+      return Math.round(raw / step) * step;
+    }
+
+    function ensurePresetWeights(day) {
+      let changed = false;
+      day.exercises.forEach(exercise => {
+        const target = suggestedLoad(exercise.id);
+        if (target === null) return;
+        const weight = String(target);
+        Array.from({ length: exercise.sets }, (_, index) => {
+          const key = entryKey(day.id, exercise.id, index);
+          const entry = state.entries[key] || { weight: "", reps: "", completed: false, weightSource: "" };
+          const untouched = String(entry.weight ?? "") === "" && entry.weightSource !== "manual";
+          if ((entry.weightSource === "preset" || untouched) && (String(entry.weight ?? "") !== weight || entry.weightSource !== "preset")) {
+            state.entries[key] = { ...entry, weight, weightSource: "preset" };
+            changed = true;
+          }
+        });
+      });
+      if (changed) persist();
+    }
+
+    function buildShortcutUrl() {
+      const program = activeProgram();
+      const day = activeDay();
+      const shortcutText = encodeURIComponent(`${program.short} · ${day.name}`);
+      const returnUrl = encodeURIComponent(location.href.split(/[?#]/)[0]);
+      return `shortcuts://x-callback-url/run-shortcut?name=Setline%20Fuerza&input=text&text=${shortcutText}&x-success=${returnUrl}&x-cancel=${returnUrl}&x-error=${returnUrl}`;
+    }
+
     function programButton(program) {
       const selected = program.id === state.programId;
       return `<button class="program-button" type="button" aria-pressed="${selected}" data-program="${program.id}">
@@ -1635,16 +1801,10 @@
       const program = activeProgram();
       const day = activeDay();
       const totalSets = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
-      const shortcutText = encodeURIComponent(`${program.short} · ${day.name}`);
-      const shortcutUrl = `shortcuts://run-shortcut?name=Setline%20Fuerza&input=text&text=${shortcutText}`;
       $("#session-hero").innerHTML = `<div class="hero-copy">
         <span class="hero-program">${program.title}</span>
         <h1 id="session-title">${day.name}</h1>
         <p>${day.note} ${program.description}</p>
-        <a class="health-launch" href="${shortcutUrl}" data-health-shortcut aria-label="Ejecutar el atajo Setline Fuerza para ${day.name}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/><path d="M7.5 12h2l1-2 2 4 1-2h3"/></svg>
-          <span><strong>Iniciar en Apple Watch</strong><small>Atajo “Setline Fuerza” · configuración única</small></span>
-        </a>
       </div>
       <div class="hero-slate" aria-label="Datos de la sesión">
         <span class="hero-day-code">${day.code}</span>
@@ -1653,7 +1813,17 @@
           <span class="hero-fact"><span>Trabajo</span><strong>${totalSets} series</strong></span>
         </div>
       </div>`;
-      $$('[data-health-shortcut]').forEach(link => link.href = shortcutUrl);
+      const shortcutUrl = buildShortcutUrl();
+      $$('[data-health-shortcut]').forEach(link => {
+        link.href = shortcutUrl;
+        link.setAttribute("aria-label", `Iniciar ${day.name} en Apple Watch y volver a Setline`);
+      });
+    }
+
+    function renderLoadPresets() {
+      const preset = LOAD_PRESETS[state.loadPreset];
+      $("#load-presets").innerHTML = Object.entries(LOAD_PRESETS).map(([id, item]) => `<button class="load-preset-button" type="button" aria-pressed="${state.loadPreset === id}" data-load-preset="${id}">${item.label}</button>`).join("");
+      $("#load-preset-note").textContent = `${preset.description}. No es un estándar por talla: ajusta al RIR. No pisa pesos manuales; en mancuernas/unilaterales, usa kg por lado.`;
     }
 
     function renderFilters() {
@@ -1678,6 +1848,8 @@
       const reference = safeNumber(state.references[referenceKey(exercise.id)] || "");
       const ratio = reference ? Math.round((volume / reference) * 100) : 0;
       const complete = isExerciseComplete(day, exercise);
+      const load = suggestedLoad(exercise.id);
+      const loadHint = load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`;
       const demo = exerciseGifs[exercise.id];
       const demoUrl = demo ? GIF_BASE + demo[0] : "";
       return `<article class="exercise-card ${complete ? "is-complete" : ""}" data-exercise-card="${exercise.id}">
@@ -1685,7 +1857,7 @@
           <span class="exercise-order">${String(visibleIndex + 1).padStart(2, "0")}</span>
           <div class="exercise-title-wrap">
             <div class="exercise-title-line"><h2>${exercise.name}</h2><span class="muscle-badge">${exercise.muscle}</span></div>
-            <div class="exercise-meta"><span><strong>${exercise.sets}</strong> series</span><span><strong>${exercise.reps}</strong> reps</span><span>RIR <strong>${exercise.rir}</strong></span></div>
+            <div class="exercise-meta"><span><strong>${exercise.sets}</strong> series</span><span><strong>${exercise.reps}</strong> reps</span><span>RIR <strong>${exercise.rir}</strong></span><span class="preset-load-hint"><strong>${loadHint}</strong></span></div>
             <p class="exercise-cue">${exercise.cue}</p>
           </div>
           <div class="exercise-actions">
@@ -1723,6 +1895,7 @@
 
     function renderExercises() {
       const day = activeDay();
+      ensurePresetWeights(day);
       const filtered = day.exercises.filter(exercise => state.filter === "Todos" || exercise.muscle === state.filter);
       $("#exercise-list").innerHTML = filtered.length
         ? filtered.map((exercise) => exerciseCard(day, exercise, day.exercises.indexOf(exercise))).join("")
@@ -1750,6 +1923,7 @@
     function renderAll() {
       renderNavigation();
       renderHero();
+      renderLoadPresets();
       renderFilters();
       renderExercises();
       renderWeeklyVolume();
@@ -1924,7 +2098,7 @@
         showToast("Este día ya está limpio");
         return;
       }
-      if (!window.confirm(`¿Limpiar pesos, repeticiones y series marcadas de ${day.name}?`)) return;
+      if (!window.confirm(`¿Limpiar repeticiones, pesos manuales y series marcadas de ${day.name}? Los pesos del preset se restaurarán.`)) return;
       Object.keys(state.entries).filter(key => key.startsWith(prefix)).forEach(key => delete state.entries[key]);
       persist();
       renderExercises();
@@ -2034,6 +2208,15 @@
       if (programButton) return switchProgram(programButton.dataset.program);
       const dayButton = event.target.closest("[data-day]");
       if (dayButton) return switchDay(dayButton.dataset.day);
+      const loadPresetButton = event.target.closest("[data-load-preset]");
+      if (loadPresetButton) {
+        state.loadPreset = loadPresetButton.dataset.loadPreset;
+        persist();
+        renderLoadPresets();
+        renderExercises();
+        showToast(`Preset ${LOAD_PRESETS[state.loadPreset].label} aplicado`);
+        return;
+      }
       const filterButton = event.target.closest("[data-filter]");
       if (filterButton) {
         state.filter = filterButton.dataset.filter;
@@ -2069,7 +2252,7 @@
         const day = activeDay();
         const exerciseId = event.target.dataset.exercise;
         const index = Number(event.target.dataset.set);
-        setEntry(day.id, exerciseId, index, event.target.matches("[data-weight]") ? { weight: event.target.value } : { reps: event.target.value });
+        setEntry(day.id, exerciseId, index, event.target.matches("[data-weight]") ? { weight: event.target.value, weightSource: "manual" } : { reps: event.target.value });
         updateExerciseStats(exerciseId);
       }
       if (event.target.matches("[data-reference]")) {
