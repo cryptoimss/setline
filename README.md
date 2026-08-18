@@ -1,6 +1,6 @@
 # Setline
 
-PWA personal para ejecutar y registrar rutinas de hipertrofia desde iPhone o Mac. Funciona sin backend: pesos, repeticiones, referencias y series completadas permanecen en el almacenamiento local de cada dispositivo.
+PWA personal para ejecutar y registrar rutinas de hipertrofia desde iPhone o Mac. Funciona sin backend: pesos, repeticiones, series completadas y referencias automáticas de la sesión anterior permanecen en el almacenamiento local de cada dispositivo.
 
 En móvil usa una barra compacta con selector de programa, sesiones desplazables y acceso directo al Watch. El temporizador se mantiene pequeño cuando está inactivo y se expande durante el descanso. La identidad instalada usa una mancuerna coral y menta.
 

@@ -24,7 +24,7 @@ Combines a volleyball-compatible gym plan and an independent 3–4 day hypertrop
 
 ## Operating Context
 
-Used in a gym or around volleyball training, often one-handed on a phone and under mixed or low ambient light. The user switches programs and days, records working sets, times rest, and compares exercise volume against an editable reference.
+Used in a gym or around volleyball training, often one-handed on a phone and under mixed or low ambient light. The user switches programs and days, records working sets, times rest, and compares exercise volume against the previous completed session or an optional manual target.
 
 ## Capabilities and Constraints
 
@@ -33,7 +33,8 @@ Used in a gym or around volleyball training, often one-handed on a phone and und
 - Exercises include order, muscle group, sets, rep range, rest, and RIR.
 - The independent 3–4 day hypertrophy program is the first-run default.
 - Personalized Light, Normal, and Heavy starting-load presets prefill untouched set weights; manual edits always take precedence and the prescribed RIR remains the calibration rule.
-- Local tabs, filters, set completion, weight/reps inputs, volume calculations, reference comparison, progress bars, rest timer, and weekly summary.
+- Local tabs, filters, set completion, weight/reps inputs, volume calculations, automatic previous-session comparison with manual override, progress bars, rest timer, and weekly summary.
+- Starting a new session snapshots exercises whose every set has weight and reps, preserving each volume locally as the next automatic reference without replacing incomplete history.
 - State may live in browser memory and optionally localStorage; the app must remain useful as a static file.
 - The navigation may launch a user-configured iOS Shortcut named `Setline Fuerza`; with a paired Apple Watch, that shortcut can use the system action to start Traditional Strength Training. An x-callback returns to Setline after completion, though iOS still opens Shortcuts briefly.
 - Direct HealthKit access and sensor collection are outside a static website; live metrics come from the Apple Watch workout, and first-party direct control would require native Apple capabilities.
@@ -51,7 +52,7 @@ The user supplied their current measurements and training priorities in the refe
 
 - Make the next set and its target obvious at a glance.
 - Preserve volleyball quality by keeping combined sessions concise and stable.
-- Use transparent arithmetic and editable references instead of opaque scores.
+- Use transparent arithmetic and previous-session references instead of opaque scores; keep manual overrides available.
 - Keep touch interactions comfortable and all data under the user's local control.
 - Treat legs as maintenance/optional work, not the program's center.
 

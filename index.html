@@ -889,7 +889,7 @@
 
     .exercise-foot {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(136px, .42fr);
+      grid-template-columns: minmax(0, 1fr) minmax(190px, .55fr);
       gap: 20px;
       align-items: end;
       padding: 14px 20px 18px 84px;
@@ -934,6 +934,29 @@
     }
 
     .reference-input:focus { border-color: var(--mint); outline: 0; }
+
+    .reference-control {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px;
+    }
+
+    .reference-auto-button {
+      min-height: 38px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      color: var(--mint);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .reference-auto-button:hover { border-color: var(--mint); }
+    .reference-auto-button[hidden] { display: none; }
 
     .empty-state {
       padding: 34px 24px;
@@ -1463,7 +1486,7 @@
     }
 
     @media (pointer: coarse) {
-      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .demo-button, .apple-button, .nav-shortcut, .mobile-shortcut, .load-preset-button, .hero-toggle { min-height: 48px; }
+      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .demo-button, .apple-button, .nav-shortcut, .mobile-shortcut, .load-preset-button, .hero-toggle, .reference-auto-button { min-height: 48px; }
       .set-input, .reference-input { min-height: 46px; font-size: 16px; }
     }
 
@@ -1554,9 +1577,9 @@
           </section>
           <div class="session-tools">
             <div class="filter-row" id="filters" aria-label="Filtrar por grupo muscular"></div>
-            <button class="quiet-button" id="reset-session" type="button" aria-label="Limpiar día">
+            <button class="quiet-button" id="reset-session" type="button" aria-label="Guardar resultados y empezar una nueva sesión">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-              <span>Limpiar día</span>
+              <span>Nueva sesión</span>
             </button>
           </div>
           <div class="session-progress" aria-label="Progreso de la sesión">
@@ -1814,13 +1837,14 @@
 
     const storageKey = "setline-hypertrophy-v1";
     const defaultState = {
-      schemaVersion: 2,
+      schemaVersion: 3,
       programId: "solo",
       dayByProgram: { volley: "v-a", solo: "s-1" },
       filter: "Todos",
       loadPreset: "normal",
       entries: {},
       references: {},
+      lastVolumes: {},
       heroSeenByProgram: { volley: false, solo: false },
       includeOptionalByProgram: { volley: false, solo: false }
     };
@@ -1832,13 +1856,16 @@
           ...defaultState,
           ...saved,
           dayByProgram: { ...defaultState.dayByProgram, ...(saved.dayByProgram || {}) },
+          entries: { ...(saved.entries || {}) },
+          references: { ...(saved.references || {}) },
+          lastVolumes: { ...(saved.lastVolumes || {}) },
           heroSeenByProgram: { ...defaultState.heroSeenByProgram, ...(saved.heroSeenByProgram || {}) },
           includeOptionalByProgram: { ...defaultState.includeOptionalByProgram, ...(saved.includeOptionalByProgram || {}) }
         } : JSON.parse(JSON.stringify(defaultState));
         if (saved && Number(saved.schemaVersion || 1) < 2) {
-          merged.schemaVersion = 2;
           merged.programId = "solo";
         }
+        merged.schemaVersion = 3;
         if (!LOAD_PRESETS[merged.loadPreset]) merged.loadPreset = "normal";
         return merged;
       } catch (_) {
@@ -1867,6 +1894,27 @@
     const activeDay = () => activeProgram().days.find(day => day.id === state.dayByProgram[state.programId]) || activeProgram().days[0];
     const entryKey = (dayId, exerciseId, index) => `${state.programId}:${dayId}:${exerciseId}:${index}`;
     const referenceKey = exerciseId => `${state.programId}:${exerciseId}`;
+
+    function getReference(exerciseId) {
+      const key = referenceKey(exerciseId);
+      const manualValue = safeNumber(state.references[key] || "");
+      const automaticValue = safeNumber(state.lastVolumes[key] || "");
+      if (manualValue) return { value: manualValue, source: "manual" };
+      if (automaticValue) return { value: automaticValue, source: "automatic" };
+      return { value: 0, source: "none" };
+    }
+
+    function referenceRatioLabel(reference, ratio) {
+      if (reference.source === "automatic") return `${ratio}% del anterior`;
+      if (reference.source === "manual") return `${ratio}% del objetivo`;
+      return "Primera sesión";
+    }
+
+    function referenceFieldLabel(reference) {
+      if (reference.source === "automatic") return "Sesión anterior · kg·rep";
+      if (reference.source === "manual") return "Objetivo manual · kg·rep";
+      return "Referencia automática · kg·rep";
+    }
 
     function persist() {
       try { localStorage.setItem(storageKey, JSON.stringify(state)); } catch (_) {}
@@ -2047,8 +2095,8 @@
 
     function exerciseCard(day, exercise, visibleIndex) {
       const volume = exerciseVolume(day, exercise);
-      const reference = safeNumber(state.references[referenceKey(exercise.id)] || "");
-      const ratio = reference ? Math.round((volume / reference) * 100) : 0;
+      const reference = getReference(exercise.id);
+      const ratio = reference.value ? Math.round((volume / reference.value) * 100) : 0;
       const complete = isExerciseComplete(day, exercise);
       const load = suggestedLoad(exercise.id);
       const loadHint = load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`;
@@ -2084,12 +2132,15 @@
         </div>
         <div class="exercise-foot">
           <div class="volume-readout">
-            <div class="volume-topline"><span><strong class="volume-value" data-volume-value>${formatVolume(volume)} kg·rep</strong> registrados</span><span data-ratio-label>${reference ? `${ratio}% de ref.` : "Sin referencia"}</span></div>
+            <div class="volume-topline"><span><strong class="volume-value" data-volume-value>${formatVolume(volume)} kg·rep</strong> registrados</span><span data-ratio-label>${referenceRatioLabel(reference, ratio)}</span></div>
             <div class="exercise-progress-track"><div class="exercise-progress-fill" data-exercise-fill style="width:${Math.min(ratio, 100)}%"></div></div>
           </div>
           <div class="reference-field">
-            <label for="ref-${exercise.id}">Referencia editable · kg·rep</label>
-            <input class="reference-input" id="ref-${exercise.id}" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="Ej. 1800" value="${escapeAttribute(state.references[referenceKey(exercise.id)] || "")}" data-reference data-exercise="${exercise.id}">
+            <label for="ref-${exercise.id}" data-reference-label>${referenceFieldLabel(reference)}</label>
+            <div class="reference-control">
+              <input class="reference-input" id="ref-${exercise.id}" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="Se crea al terminar" value="${escapeAttribute(reference.value || "")}" data-reference data-exercise="${exercise.id}">
+              <button class="reference-auto-button" type="button" data-reference-auto data-exercise="${exercise.id}" aria-label="Volver a la referencia automática de ${exercise.name}" ${reference.source === "manual" ? "" : "hidden"}>Auto</button>
+            </div>
           </div>
         </div>
       </article>`;
@@ -2149,10 +2200,12 @@
       const card = $(`[data-exercise-card="${exerciseId}"]`);
       if (!exercise || !card) return;
       const volume = exerciseVolume(day, exercise);
-      const reference = safeNumber(state.references[referenceKey(exerciseId)] || "");
-      const ratio = reference ? Math.round((volume / reference) * 100) : 0;
+      const reference = getReference(exerciseId);
+      const ratio = reference.value ? Math.round((volume / reference.value) * 100) : 0;
       $("[data-volume-value]", card).textContent = `${formatVolume(volume)} kg·rep`;
-      $("[data-ratio-label]", card).textContent = reference ? `${ratio}% de ref.` : "Sin referencia";
+      $("[data-ratio-label]", card).textContent = referenceRatioLabel(reference, ratio);
+      $("[data-reference-label]", card).textContent = referenceFieldLabel(reference);
+      $("[data-reference-auto]", card).hidden = reference.source !== "manual";
       $("[data-exercise-fill]", card).style.width = `${Math.min(ratio, 100)}%`;
       card.classList.toggle("is-complete", isExerciseComplete(day, exercise));
     }
@@ -2293,18 +2346,43 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function resetCurrentSession() {
+    function hasTrainingData(day) {
+      return day.exercises.some(exercise => Array.from({ length: exercise.sets }, (_, index) => {
+        const entry = getEntry(day.id, exercise.id, index);
+        return safeNumber(entry.reps) > 0 || entry.completed || entry.weightSource === "manual";
+      }).some(Boolean));
+    }
+
+    function completedExerciseVolumes(day) {
+      return day.exercises.reduce((volumes, exercise) => {
+        const hasEverySet = Array.from({ length: exercise.sets }, (_, index) => {
+          const entry = getEntry(day.id, exercise.id, index);
+          return safeNumber(entry.weight) > 0 && safeNumber(entry.reps) > 0;
+        }).every(Boolean);
+        const volume = exerciseVolume(day, exercise);
+        if (hasEverySet && volume > 0) volumes[referenceKey(exercise.id)] = volume;
+        return volumes;
+      }, {});
+    }
+
+    function startNewSession() {
       const day = activeDay();
       const prefix = `${state.programId}:${day.id}:`;
-      if (!Object.keys(state.entries).some(key => key.startsWith(prefix))) {
-        showToast("Este día ya está limpio");
+      if (!hasTrainingData(day)) {
+        showToast("Este día ya está listo para empezar");
         return;
       }
-      if (!window.confirm(`¿Limpiar repeticiones, pesos manuales y series marcadas de ${day.name}? Los pesos del preset se restaurarán.`)) return;
+      const volumes = completedExerciseVolumes(day);
+      const savedCount = Object.keys(volumes).length;
+      const confirmation = savedCount
+        ? `¿Terminar ${day.name} y empezar una nueva sesión? Guardaré ${savedCount === 1 ? "1 ejercicio completo" : `${savedCount} ejercicios completos`} como referencia automática.`
+        : `¿Empezar ${day.name} desde cero? No hay ejercicios con todas sus series registradas para guardar como referencia.`;
+      if (!window.confirm(confirmation)) return;
+      Object.assign(state.lastVolumes, volumes);
       Object.keys(state.entries).filter(key => key.startsWith(prefix)).forEach(key => delete state.entries[key]);
       persist();
       renderExercises();
-      showToast("Sesión reiniciada");
+      showToast(savedCount ? `Nueva sesión · ${savedCount} ${savedCount === 1 ? "referencia guardada" : "referencias guardadas"}` : "Nueva sesión lista");
     }
 
     function updateTimerUI() {
@@ -2438,6 +2516,17 @@
       }
       const demoButton = event.target.closest("[data-demo-toggle]");
       if (demoButton) return toggleExerciseDemo(demoButton);
+      const automaticReferenceButton = event.target.closest("[data-reference-auto]");
+      if (automaticReferenceButton) {
+        const exerciseId = automaticReferenceButton.dataset.exercise;
+        delete state.references[referenceKey(exerciseId)];
+        persist();
+        const reference = getReference(exerciseId);
+        $(`#ref-${exerciseId}`).value = reference.value || "";
+        updateExerciseStats(exerciseId);
+        showToast("Referencia automática restaurada");
+        return;
+      }
       const restButton = event.target.closest("[data-rest]");
       if (restButton) {
         startTimer(Number(restButton.dataset.rest), `Descanso · ${restButton.dataset.exerciseName}`);
@@ -2459,6 +2548,14 @@
           startTimer(exercise.rest, `Descanso · ${exercise.name}`);
         }
       }
+      if (event.target.matches("[data-reference]") && !safeNumber(event.target.value)) {
+        const exerciseId = event.target.dataset.exercise;
+        delete state.references[referenceKey(exerciseId)];
+        const reference = getReference(exerciseId);
+        event.target.value = reference.value || "";
+        persist();
+        updateExerciseStats(exerciseId);
+      }
     });
 
     document.addEventListener("input", event => {
@@ -2476,7 +2573,7 @@
       }
     });
 
-    $("#reset-session").addEventListener("click", resetCurrentSession);
+    $("#reset-session").addEventListener("click", startNewSession);
     $("#include-optional").addEventListener("change", event => {
       state.includeOptionalByProgram[state.programId] = event.target.checked;
       persist(); renderWeeklyVolume();
