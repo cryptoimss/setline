@@ -297,9 +297,40 @@
     }
 
     .hero-copy {
+      position: relative;
       align-self: end;
       padding: clamp(24px, 4vw, 42px);
     }
+
+    .hero-compact-meta { display: none; }
+
+    .hero-toggle {
+      position: absolute;
+      z-index: 2;
+      top: 18px;
+      right: 18px;
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .hero-toggle:hover { background: var(--line); color: var(--text); }
+    .hero-toggle:active { transform: scale(.97); }
+    .hero-toggle svg { width: 16px; height: 16px; transition: transform .24s var(--ease); }
+    .hero-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
 
     .hero-program {
       display: inline-flex;
@@ -383,6 +414,60 @@
       font-weight: 850;
       letter-spacing: .04em;
       text-transform: uppercase;
+    }
+
+    .session-hero.is-compact {
+      min-height: 76px;
+      display: block;
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .session-hero.is-compact .hero-copy {
+      min-height: 74px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        "title toggle"
+        "meta toggle";
+      align-content: center;
+      align-items: center;
+      gap: 3px 16px;
+      padding: 11px 12px 11px 16px;
+    }
+
+    .session-hero.is-compact .hero-program,
+    .session-hero.is-compact .hero-copy > p,
+    .session-hero.is-compact .hero-slate { display: none; }
+
+    .session-hero.is-compact h1 {
+      grid-area: title;
+      margin: 0;
+      overflow: hidden;
+      color: var(--text);
+      font-size: clamp(25px, 3vw, 32px);
+      line-height: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .session-hero.is-compact .hero-compact-meta {
+      grid-area: meta;
+      display: block;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .035em;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .session-hero.is-compact .hero-toggle {
+      position: static;
+      grid-area: toggle;
+      align-self: center;
     }
 
     .load-preset-panel {
@@ -1287,6 +1372,12 @@
         font-size: 13px;
         line-height: 1.45;
       }
+      .session-hero:not(.is-compact) .hero-copy { padding-right: 82px; }
+      .hero-toggle { top: 12px; right: 12px; }
+      .session-hero.is-compact { min-height: 64px; }
+      .session-hero.is-compact .hero-copy { min-height: 62px; gap: 2px 10px; padding: 9px 9px 9px 13px; }
+      .session-hero.is-compact h1 { font-size: 24px; }
+      .session-hero.is-compact .hero-compact-meta { font-size: 10px; }
       .hero-slate { min-height: 68px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 18px; padding: 13px 18px; }
       .hero-slate::after { inset: 8px; }
       .hero-day-code { font-size: 44px; }
@@ -1372,7 +1463,7 @@
     }
 
     @media (pointer: coarse) {
-      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .demo-button, .apple-button, .nav-shortcut, .mobile-shortcut, .load-preset-button { min-height: 48px; }
+      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .demo-button, .apple-button, .nav-shortcut, .mobile-shortcut, .load-preset-button, .hero-toggle { min-height: 48px; }
       .set-input, .reference-input { min-height: 46px; font-size: 16px; }
     }
 
@@ -1381,6 +1472,8 @@
       .mobile-shortcut { min-width: 48px; width: 48px; padding: 0; }
       .mobile-shortcut span { display: none; }
       .mobile-programs .program-mobile-name { font-size: 10px; }
+      .session-hero.is-compact .hero-toggle { width: 44px; min-width: 44px; padding: 0; }
+      .session-hero.is-compact .hero-toggle span { display: none; }
     }
 
     @media (max-height: 520px) and (orientation: landscape) and (max-width: 880px) {
@@ -1728,6 +1821,7 @@
       loadPreset: "normal",
       entries: {},
       references: {},
+      heroSeenByProgram: { volley: false, solo: false },
       includeOptionalByProgram: { volley: false, solo: false }
     };
 
@@ -1738,6 +1832,7 @@
           ...defaultState,
           ...saved,
           dayByProgram: { ...defaultState.dayByProgram, ...(saved.dayByProgram || {}) },
+          heroSeenByProgram: { ...defaultState.heroSeenByProgram, ...(saved.heroSeenByProgram || {}) },
           includeOptionalByProgram: { ...defaultState.includeOptionalByProgram, ...(saved.includeOptionalByProgram || {}) }
         } : JSON.parse(JSON.stringify(defaultState));
         if (saved && Number(saved.schemaVersion || 1) < 2) {
@@ -1763,6 +1858,8 @@
     let refreshingForUpdate = false;
     let pwaBannerAction = null;
     let pwaBannerKind = "";
+    let heroSeenTimer = null;
+    const expandedHeroPrograms = new Set();
 
     const $ = (selector, scope = document) => scope.querySelector(selector);
     const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
@@ -1884,12 +1981,21 @@
       const program = activeProgram();
       const day = activeDay();
       const totalSets = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
-      $("#session-hero").innerHTML = `<div class="hero-copy">
+      const isFirstView = !state.heroSeenByProgram[program.id];
+      const isExpanded = isFirstView || expandedHeroPrograms.has(program.id);
+      const hero = $("#session-hero");
+      hero.classList.toggle("is-compact", !isExpanded);
+      hero.innerHTML = `<div class="hero-copy">
         <span class="hero-program">${program.title}</span>
         <h1 id="session-title">${day.name}</h1>
-        <p>${day.note} ${program.description}</p>
+        <p id="session-description">${day.note} ${program.description}</p>
+        <span class="hero-compact-meta" aria-hidden="true">Día ${day.code} · ${day.duration} · ${totalSets} series</span>
+        <button class="hero-toggle" type="button" data-hero-toggle aria-expanded="${isExpanded}" aria-controls="session-description session-facts" aria-label="${isExpanded ? "Ocultar" : "Mostrar"} detalles de ${day.name}">
+          <span>${isExpanded ? "Ocultar" : "Detalles"}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
       </div>
-      <div class="hero-slate" aria-label="Datos de la sesión">
+      <div class="hero-slate" id="session-facts" aria-label="Datos de la sesión">
         <span class="hero-day-code">${day.code}</span>
         <div class="hero-facts">
           <span class="hero-fact"><span>Duración</span><strong>${day.duration}</strong></span>
@@ -1901,6 +2007,14 @@
         link.href = shortcutUrl;
         link.setAttribute("aria-label", `Iniciar ${day.name} en Apple Watch y volver a Setline`);
       });
+      clearTimeout(heroSeenTimer);
+      if (isFirstView) {
+        const programId = program.id;
+        heroSeenTimer = setTimeout(() => {
+          state.heroSeenByProgram[programId] = true;
+          persist();
+        }, 1500);
+      }
     }
 
     function renderLoadPresets() {
@@ -2293,6 +2407,17 @@
     }
 
     document.addEventListener("click", event => {
+      const heroToggle = event.target.closest("[data-hero-toggle]");
+      if (heroToggle) {
+        const programId = activeProgram().id;
+        state.heroSeenByProgram[programId] = true;
+        if (heroToggle.getAttribute("aria-expanded") === "true") expandedHeroPrograms.delete(programId);
+        else expandedHeroPrograms.add(programId);
+        persist();
+        renderHero();
+        $("[data-hero-toggle]")?.focus({ preventScroll: true });
+        return;
+      }
       const programButton = event.target.closest("[data-program]");
       if (programButton) return switchProgram(programButton.dataset.program);
       const dayButton = event.target.closest("[data-day]");
