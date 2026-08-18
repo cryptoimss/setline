@@ -1,0 +1,2116 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1013">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Rutinas de hipertrofia, registro de series, volumen y temporizador en una PWA privada por dispositivo.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Setline">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+  <title>Setline — Rutinas de hipertrofia</title>
+  <style>
+    :root {
+      --bg: #0c1013;
+      --surface: #13191d;
+      --surface-raised: #192126;
+      --surface-soft: #20292f;
+      --line: #2b353b;
+      --line-strong: #3b474e;
+      --text: #f5f1e9;
+      --muted: #a8b1b5;
+      --faint: #929da2;
+      --accent: #ff735c;
+      --accent-dark: #a93425;
+      --mint: #8ed7ca;
+      --amber: #f2c979;
+      --danger: #ff8a7a;
+      --shadow: 0 18px 44px rgba(0, 0, 0, .28);
+      --radius: 14px;
+      --sidebar: 258px;
+      --summary: 286px;
+      --ease: cubic-bezier(.16, 1, .3, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 15px;
+      line-height: 1.45;
+      padding-bottom: 104px;
+    }
+
+    button, input { font: inherit; touch-action: manipulation; }
+
+    a { touch-action: manipulation; }
+
+    button {
+      color: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button, input[type="checkbox"] { cursor: pointer; }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(142, 215, 202, .55);
+      outline-offset: 2px;
+    }
+
+    button:disabled { opacity: .45; cursor: not-allowed; }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 8px;
+      left: 8px;
+      transform: translateY(-140%);
+      background: var(--text);
+      color: var(--bg);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-weight: 800;
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid var(--line);
+      background: #0f1417;
+      padding: 24px 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 48px;
+      padding: 0 8px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      color: var(--accent);
+    }
+
+    .brand-name {
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.02em;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .nav-label {
+      margin: 26px 8px 10px;
+      color: var(--faint);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .program-nav,
+    .day-nav {
+      display: grid;
+      gap: 7px;
+    }
+
+    .program-button,
+    .day-button {
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      border-radius: 11px;
+      background: transparent;
+      color: var(--muted);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 11px;
+      transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .program-button:hover,
+    .day-button:hover { background: var(--surface); color: var(--text); }
+
+    .program-button:active,
+    .day-button:active { transform: scale(.985); }
+
+    .program-button[aria-pressed="true"] {
+      color: var(--text);
+      background: var(--surface-raised);
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .program-symbol {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      color: var(--faint);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .program-button[aria-pressed="true"] .program-symbol {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .program-copy { min-width: 0; }
+
+    .program-copy strong,
+    .program-copy span { display: block; }
+
+    .program-copy strong { color: inherit; font-size: 13px; }
+
+    .program-copy span {
+      margin-top: 2px;
+      color: var(--faint);
+      font-size: 11px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .day-button { min-height: 44px; padding: 7px 10px; }
+
+    .day-button[aria-pressed="true"] { background: var(--accent); color: #1a0c09; }
+
+    .day-code {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .day-button small { margin-left: auto; opacity: .72; font-size: 10px; }
+
+    .sidebar-note {
+      margin-top: 28px;
+      padding: 14px;
+      color: var(--muted);
+      background: var(--surface);
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .sidebar-note strong { color: var(--mint); }
+
+    .page {
+      min-width: 0;
+      padding: 22px clamp(18px, 3vw, 44px) 60px;
+    }
+
+    .mobile-topbar { display: none; }
+
+    .session-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) var(--summary);
+      gap: 26px;
+      max-width: 1280px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .session-main { min-width: 0; }
+
+    .session-hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 246px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 190px;
+      background: var(--surface-raised);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-copy {
+      align-self: end;
+      padding: clamp(24px, 4vw, 42px);
+    }
+
+    .hero-program {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--mint);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .hero-program::before {
+      content: "";
+      width: 18px;
+      height: 2px;
+      background: currentColor;
+    }
+
+    .session-hero h1 {
+      max-width: 720px;
+      margin: 18px 0 10px;
+      font-size: clamp(34px, 5vw, 60px);
+      line-height: .96;
+      letter-spacing: -.035em;
+      text-wrap: balance;
+      font-family: "DIN Condensed", "Avenir Next Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+      text-transform: uppercase;
+    }
+
+    .session-hero p {
+      max-width: 64ch;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .health-launch {
+      width: fit-content;
+      min-height: 48px;
+      margin-top: 20px;
+      padding: 0 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 12px;
+      background: var(--surface-soft);
+      color: var(--text);
+      text-decoration: none;
+      transition: background .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .health-launch:hover { background: var(--mint); color: #0d1b19; }
+    .health-launch:active { transform: scale(.98); }
+    .health-launch svg { width: 21px; height: 21px; flex: 0 0 auto; color: var(--mint); }
+    .health-launch:hover svg { color: #0d1b19; }
+    .health-launch span { display: grid; line-height: 1.15; }
+    .health-launch strong { font-size: 12px; }
+    .health-launch small { margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .health-launch:hover small { color: #29453f; }
+
+    .hero-slate {
+      position: relative;
+      display: grid;
+      align-content: space-between;
+      padding: 24px;
+      background: var(--accent);
+      color: #1a0c09;
+      animation: slate-reveal .46s var(--ease) both;
+    }
+
+    .hero-slate::after {
+      content: "";
+      position: absolute;
+      inset: 15px;
+      border: 1px solid rgba(26, 12, 9, .28);
+      border-radius: 10px;
+      pointer-events: none;
+    }
+
+    .hero-day-code {
+      position: relative;
+      z-index: 1;
+      font-size: 84px;
+      line-height: .85;
+      font-weight: 950;
+      letter-spacing: -.06em;
+      font-family: "DIN Condensed", "Avenir Next Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+    }
+
+    .hero-facts {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 10px;
+    }
+
+    .hero-fact {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(26, 12, 9, .32);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .session-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 34px 0 14px;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 3px;
+      margin-left: -3px;
+    }
+
+    .filter-row::-webkit-scrollbar { display: none; }
+
+    .filter-button,
+    .quiet-button,
+    .rest-button,
+    .timer-control {
+      min-height: 44px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--surface-raised);
+      color: var(--muted);
+      font-weight: 750;
+      transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .filter-button { flex: 0 0 auto; padding: 0 15px; font-size: 12px; }
+
+    .filter-button:hover,
+    .quiet-button:hover,
+    .rest-button:hover,
+    .timer-control:hover { background: var(--surface-soft); color: var(--text); }
+
+    .filter-button[aria-pressed="true"] { background: var(--mint); color: #0d1b19; }
+
+    .quiet-button {
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      font-size: 12px;
+    }
+
+    .quiet-button svg,
+    .rest-button svg,
+    .timer-control svg { width: 17px; height: 17px; }
+
+    .session-progress {
+      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .session-progress-track,
+    .exercise-progress-track,
+    .weekly-track {
+      overflow: hidden;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--line);
+    }
+
+    .session-progress-fill,
+    .exercise-progress-fill,
+    .weekly-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+    }
+
+    .session-progress-output {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .exercise-list { display: grid; gap: 12px; }
+
+    .exercise-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, .18);
+      transition: background .25s var(--ease), transform .25s var(--ease);
+    }
+
+    .exercise-card.is-complete { background: #13201f; }
+
+    .exercise-card.is-complete .exercise-order { background: var(--mint); color: #10211e; }
+
+    .exercise-head {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+      padding: 20px 20px 16px;
+    }
+
+    .exercise-order {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--surface-soft);
+      color: var(--accent);
+      font-size: 17px;
+      font-weight: 950;
+      transition: background .25s var(--ease), color .25s var(--ease);
+    }
+
+    .exercise-title-wrap { min-width: 0; }
+
+    .exercise-title-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .exercise-title-line h2 {
+      margin: 1px 0 0;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: -.018em;
+    }
+
+    .muscle-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      padding: 0 9px;
+      background: var(--surface-soft);
+      color: var(--mint);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .exercise-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 16px;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .exercise-meta strong { color: var(--text); }
+
+    .exercise-cue {
+      margin: 9px 0 0;
+      color: var(--faint);
+      font-size: 12px;
+    }
+
+    .rest-button {
+      min-width: 96px;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .exercise-actions {
+      display: grid;
+      gap: 8px;
+      min-width: 118px;
+    }
+
+    .demo-button {
+      min-height: 44px;
+      border: 0;
+      border-radius: 999px;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      background: var(--surface-soft);
+      color: var(--mint);
+      font-size: 12px;
+      font-weight: 800;
+      transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .demo-button:hover { background: var(--mint); color: #0d1b19; }
+    .demo-button:active { transform: scale(.98); }
+    .demo-button svg { width: 17px; height: 17px; }
+
+    .exercise-demo {
+      margin: 0 20px 18px 84px;
+      overflow: hidden;
+      border-radius: 12px;
+      background: #0a0f12;
+    }
+
+    .exercise-demo[hidden] { display: none; }
+
+    .demo-frame {
+      position: relative;
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      background: #080c0e;
+    }
+
+    .demo-frame img {
+      display: block;
+      width: 100%;
+      height: min(34vw, 340px);
+      min-height: 220px;
+      object-fit: contain;
+      background: #080c0e;
+    }
+
+    .demo-status {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .exercise-demo.is-ready .demo-status { display: none; }
+    .exercise-demo.is-error .demo-frame img { visibility: hidden; }
+
+    .demo-caption {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 10px 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .demo-caption strong { color: var(--text); }
+
+    .demo-caption a {
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--mint);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .demo-caption a:hover { text-decoration: underline; }
+
+    .sets-wrap {
+      padding: 0 20px 16px 84px;
+    }
+
+    .set-grid-head,
+    .set-row {
+      display: grid;
+      grid-template-columns: 34px 44px minmax(76px, 1fr) 16px minmax(76px, 1fr);
+      gap: 8px;
+      align-items: center;
+    }
+
+    .set-grid-head {
+      padding: 0 10px 7px;
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .set-grid-head span:nth-child(3),
+    .set-grid-head span:nth-child(5) { text-align: center; }
+
+    .set-row {
+      min-height: 54px;
+      margin-top: 5px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: var(--surface-raised);
+    }
+
+    .set-row.is-done { background: #1b2b29; }
+
+    .set-number { color: var(--muted); font-size: 12px; font-weight: 850; text-align: center; }
+
+    .set-check {
+      appearance: none;
+      width: 44px;
+      height: 44px;
+      margin: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: var(--surface);
+      display: grid;
+      place-content: center;
+    }
+
+    .set-check::before {
+      content: "";
+      width: 11px;
+      height: 6px;
+      border-left: 2px solid #0f2520;
+      border-bottom: 2px solid #0f2520;
+      transform: rotate(-45deg) scale(0);
+      transition: transform .15s var(--ease);
+    }
+
+    .set-check:checked { background: var(--mint); border-color: var(--mint); }
+
+    .set-check:checked::before { transform: rotate(-45deg) scale(1); }
+
+    .set-input {
+      width: 100%;
+      min-width: 0;
+      height: 38px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      text-align: center;
+      font-size: 14px;
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .set-input::placeholder { color: #929da2; font-weight: 600; }
+
+    .set-input:hover { border-color: var(--line-strong); }
+
+    .set-input:focus { border-color: var(--mint); outline: 0; }
+
+    .times { color: var(--faint); text-align: center; }
+
+    .exercise-foot {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(136px, .42fr);
+      gap: 20px;
+      align-items: end;
+      padding: 14px 20px 18px 84px;
+      border-top: 1px solid var(--line);
+    }
+
+    .volume-readout { min-width: 0; }
+
+    .volume-topline {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .volume-value { color: var(--text); font-size: 15px; font-weight: 900; font-variant-numeric: tabular-nums; }
+
+    .exercise-progress-fill { background: var(--mint); }
+
+    .reference-field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .reference-input {
+      width: 100%;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-raised);
+      color: var(--text);
+      padding: 0 11px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reference-input:focus { border-color: var(--mint); outline: 0; }
+
+    .empty-state {
+      padding: 34px 24px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty-state strong { display: block; margin-bottom: 6px; color: var(--text); }
+
+    .summary-column {
+      position: sticky;
+      top: 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .summary-panel {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, .16);
+    }
+
+    .summary-panel h2 {
+      margin: 0 0 5px;
+      font-size: 17px;
+      letter-spacing: -.015em;
+    }
+
+    .summary-panel > p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .weekly-list { display: grid; gap: 14px; }
+
+    .weekly-item { display: grid; gap: 7px; }
+
+    .weekly-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .weekly-label strong { color: var(--text); font-size: 13px; }
+
+    .weekly-fill { background: var(--amber); }
+
+    .optional-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 48px;
+      margin: 18px -4px -4px;
+      padding: 8px 4px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .switch {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      flex: 0 0 auto;
+    }
+
+    .switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+
+    .switch-track {
+      position: absolute;
+      inset: 9px 0;
+      border-radius: 999px;
+      background: var(--line-strong);
+      transition: background .2s var(--ease);
+    }
+
+    .switch-track::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 3px;
+      left: 3px;
+      border-radius: 50%;
+      background: var(--text);
+      transition: transform .25s var(--ease);
+    }
+
+    .switch input:checked + .switch-track { background: var(--accent); }
+
+    .switch input:checked + .switch-track::after { transform: translateX(18px); }
+
+    .switch input:focus-visible + .switch-track { outline: 3px solid rgba(142, 215, 202, .55); outline-offset: 2px; }
+
+    .guidance-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 13px;
+    }
+
+    .guidance-list li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .guidance-list b {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--surface-soft);
+      color: var(--mint);
+      font-size: 11px;
+    }
+
+    .apple-panel { background: #18201f; }
+
+    .apple-actions { display: grid; gap: 8px; }
+
+    .apple-button {
+      min-height: 48px;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 10px;
+      background: var(--mint);
+      color: #0d1b19;
+      font-size: 12px;
+      font-weight: 850;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .apple-button.secondary { background: var(--surface-soft); color: var(--text); }
+    .apple-button svg { width: 18px; height: 18px; }
+
+    .shortcut-setup { margin-top: 14px; border-top: 1px solid var(--line); }
+
+    .shortcut-setup summary {
+      min-height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--mint);
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .shortcut-setup summary::-webkit-details-marker { display: none; }
+    .shortcut-setup summary::after { content: "+"; font-size: 18px; font-weight: 500; }
+    .shortcut-setup[open] summary::after { content: "−"; }
+
+    .shortcut-setup ol {
+      margin: 2px 0 14px;
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .shortcut-setup li + li { margin-top: 8px; }
+
+    .footer-note {
+      margin: 30px 0 0;
+      color: var(--faint);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .footer-note a { color: var(--mint); text-decoration: none; }
+    .footer-note a:hover { text-decoration: underline; }
+
+    .timer-dock {
+      position: fixed;
+      z-index: 40;
+      right: max(22px, env(safe-area-inset-right));
+      bottom: max(18px, env(safe-area-inset-bottom));
+      width: min(372px, calc(100vw - 36px));
+      min-height: 70px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 12px 11px 18px;
+      border-radius: 16px;
+      background: #edf0e9;
+      color: #11181a;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .42);
+      transform: translateY(0);
+      transition: transform .35s var(--ease), background .2s var(--ease);
+    }
+
+    .timer-dock.is-running { background: var(--mint); }
+
+    .timer-copy { min-width: 0; }
+
+    .timer-label {
+      display: block;
+      color: #536064;
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .timer-time {
+      display: block;
+      margin-top: 1px;
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -.035em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-actions { display: flex; gap: 6px; }
+
+    .timer-control {
+      width: 46px;
+      min-width: 46px;
+      min-height: 46px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      background: rgba(17, 24, 26, .1);
+      color: #11181a;
+    }
+
+    .timer-control:hover { background: rgba(17, 24, 26, .17); color: #11181a; }
+
+    .timer-control.wide { width: auto; padding: 0 12px; font-size: 11px; font-weight: 900; }
+
+    .toast {
+      position: fixed;
+      z-index: 60;
+      left: 50%;
+      bottom: 110px;
+      transform: translate(-50%, 16px);
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--text);
+      color: var(--bg);
+      font-size: 12px;
+      font-weight: 800;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    .pwa-banner {
+      position: fixed;
+      z-index: 70;
+      left: 50%;
+      bottom: 106px;
+      width: min(520px, calc(100vw - 32px));
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 14px 14px 18px;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      background: var(--surface-raised);
+      box-shadow: var(--shadow);
+      transform: translate(-50%, 18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s var(--ease), transform .22s var(--ease);
+    }
+
+    .pwa-banner[hidden] { display: none; }
+    .pwa-banner.is-visible { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+    .pwa-banner-copy { min-width: 0; }
+    .pwa-banner-copy strong { display: block; font-size: 13px; }
+    .pwa-banner-copy span { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .pwa-banner-action, .pwa-banner-close {
+      min-height: 44px;
+      border: 0;
+      border-radius: 10px;
+      font: inherit;
+      font-weight: 850;
+      cursor: pointer;
+    }
+    .pwa-banner-action { padding: 0 14px; background: var(--mint); color: #0f2520; }
+    .pwa-banner-close { width: 44px; padding: 0; background: var(--surface-soft); color: var(--text); font-size: 20px; }
+
+    @keyframes slate-reveal {
+      from { clip-path: inset(0 0 28% 0); opacity: .72; }
+      to { clip-path: inset(0 0 0 0); opacity: 1; }
+    }
+
+    @media (max-width: 1100px) {
+      :root { --sidebar: 228px; --summary: 252px; }
+      .page { padding-inline: 22px; }
+      .session-layout { gap: 18px; }
+      .session-hero { grid-template-columns: minmax(0, 1fr) 155px; }
+      .sets-wrap, .exercise-foot { padding-left: 20px; }
+    }
+
+    @media (max-width: 880px) {
+      :root {
+        --mobile-safe-left: max(16px, env(safe-area-inset-left));
+        --mobile-safe-right: max(16px, env(safe-area-inset-right));
+      }
+      .app-shell { display: block; }
+      .sidebar { display: none; }
+      .page { padding: 0 var(--mobile-safe-right) 44px var(--mobile-safe-left); }
+      .mobile-topbar {
+        position: sticky;
+        z-index: 30;
+        top: 0;
+        display: grid;
+        gap: 10px;
+        margin: 0 calc(0px - var(--mobile-safe-right)) 16px calc(0px - var(--mobile-safe-left));
+        padding: calc(10px + env(safe-area-inset-top)) var(--mobile-safe-right) 11px var(--mobile-safe-left);
+        border-bottom: 1px solid var(--line);
+        background: rgba(12, 16, 19, .96);
+        backdrop-filter: blur(14px);
+      }
+      .mobile-brand-row { display: flex; align-items: center; justify-content: space-between; }
+      .mobile-brand-row .brand { min-height: 42px; padding: 0; border: 0; }
+      .mobile-brand-row .brand-mark { width: 28px; height: 28px; }
+      .mobile-brand-row .brand-sub { display: none; }
+      .mobile-programs, .mobile-days { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; }
+      .mobile-programs::-webkit-scrollbar, .mobile-days::-webkit-scrollbar { display: none; }
+      .mobile-programs .program-button { width: auto; min-width: max-content; min-height: 44px; padding: 6px 10px; }
+      .mobile-programs .program-symbol { width: 25px; height: 25px; }
+      .mobile-programs .program-copy span { display: none; }
+      .mobile-days .day-button { width: auto; min-width: max-content; min-height: 44px; padding: 5px 10px; }
+      .mobile-days .day-button small { display: none; }
+      .session-layout { display: block; }
+      .summary-column { position: static; margin-top: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .session-hero { min-height: 218px; }
+      .hero-copy { padding: 28px; }
+      .session-hero h1 { font-size: clamp(32px, 8vw, 48px); }
+      .timer-dock { right: var(--mobile-safe-right); }
+    }
+
+    @media (max-width: 620px) {
+      :root {
+        --mobile-safe-left: max(12px, env(safe-area-inset-left));
+        --mobile-safe-right: max(12px, env(safe-area-inset-right));
+      }
+      body { font-size: 16px; padding-bottom: 116px; }
+      .page { padding-left: var(--mobile-safe-left); padding-right: var(--mobile-safe-right); }
+      .mobile-topbar {
+        gap: 7px;
+        margin-left: calc(0px - var(--mobile-safe-left));
+        margin-right: calc(0px - var(--mobile-safe-right));
+        padding: max(8px, env(safe-area-inset-top)) var(--mobile-safe-right) 9px var(--mobile-safe-left);
+      }
+      .mobile-brand-row { display: none; }
+      .mobile-programs, .mobile-days { scroll-snap-type: x proximity; overscroll-behavior-inline: contain; }
+      .mobile-programs .program-button, .mobile-days .day-button { scroll-snap-align: center; }
+      .session-hero { display: block; min-height: 0; }
+      .hero-copy { padding: 24px 20px 22px; }
+      .hero-program { font-size: 10px; }
+      .session-hero h1 { margin-top: 13px; font-size: clamp(31px, 10vw, 38px); }
+      .session-hero p { font-size: 15px; line-height: 1.5; }
+      .health-launch { width: 100%; justify-content: center; margin-top: 18px; }
+      .hero-slate { min-height: 88px; display: grid; grid-template-columns: auto 1fr; align-items: end; gap: 24px; padding: 19px 22px; }
+      .hero-slate::after { inset: 9px; }
+      .hero-day-code { font-size: 54px; }
+      .hero-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .hero-fact { display: grid; gap: 1px; padding-top: 5px; font-size: 9px; }
+      .session-tools { margin-top: 24px; display: block; }
+      .filter-row { margin-bottom: 10px; }
+      .quiet-button { width: 100%; }
+      .exercise-head { grid-template-columns: 42px minmax(0, 1fr); gap: 12px; padding: 16px 14px 12px; }
+      .exercise-order { width: 42px; height: 42px; }
+      .exercise-title-line h2 { font-size: 17px; }
+      .exercise-meta { gap: 5px 12px; font-size: 13px; }
+      .exercise-cue { font-size: 13px; line-height: 1.45; }
+      .exercise-actions { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; margin-top: 2px; }
+      .rest-button, .demo-button { width: 100%; }
+      .exercise-demo { margin: 0 10px 14px; }
+      .demo-frame, .demo-frame img { min-height: 190px; }
+      .demo-frame img { height: 64vw; max-height: 300px; }
+      .demo-caption { align-items: flex-start; flex-direction: column; gap: 4px; font-size: 12px; }
+      .demo-caption a { min-height: 44px; }
+      .sets-wrap { padding: 0 10px 12px; }
+      .set-grid-head, .set-row { grid-template-columns: 29px 44px minmax(62px, 1fr) 12px minmax(62px, 1fr); gap: 5px; }
+      .set-grid-head { padding-inline: 6px; }
+      .set-row { padding-inline: 6px; }
+      .set-input, .reference-input { height: 46px; font-size: 16px; }
+      .exercise-foot { grid-template-columns: 1fr; gap: 13px; padding: 13px 14px 16px; }
+      .summary-column { grid-template-columns: 1fr; }
+      .summary-panel { padding: 18px; }
+      .timer-dock {
+        left: var(--mobile-safe-left);
+        right: var(--mobile-safe-right);
+        bottom: max(10px, env(safe-area-inset-bottom));
+        width: auto;
+      }
+      .timer-control { width: 44px; min-width: 44px; }
+      .timer-control.wide { min-width: 44px; padding-inline: 10px; }
+      .pwa-banner {
+        bottom: calc(100px + env(safe-area-inset-bottom));
+        width: calc(100vw - var(--mobile-safe-left) - var(--mobile-safe-right));
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        padding: 13px;
+      }
+      .pwa-banner-action { grid-column: 1 / -1; width: 100%; }
+      .pwa-banner-close { grid-column: 2; grid-row: 1; }
+    }
+
+    @media (pointer: coarse) {
+      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .demo-button, .apple-button { min-height: 48px; }
+      .set-input, .reference-input { min-height: 46px; font-size: 16px; }
+    }
+
+    @media (max-height: 520px) and (orientation: landscape) and (max-width: 880px) {
+      .mobile-topbar { position: relative; }
+      .mobile-brand-row { display: none; }
+      .hero-copy { padding-block: 20px; }
+      .session-hero h1 { font-size: 34px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <!--
+  THESIS: Setline turns hypertrophy work into a courtside technical sheet; it refuses the generic neon fitness dashboard.
+  OWN-WORLD: Ink-black slate, warm coral signal plates, mint completion marks, ruled rows, and equipment-label controls.
+  STORY: Choose a program and day, execute sets in order, log the work, time rest, and read weekly direct-set volume.
+  FIRST VIEWPORT: Persistent program rail, a large session sheet, coral day plate, exercise sequence, and sticky weekly summary.
+  FORM: Courtside rotation board / equipment plate, grounded direction 7, seed 1b494f19.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+  -->
+  <a class="skip-link" href="#exercise-list">Saltar a los ejercicios</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación de la rutina">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <path d="M6 8h18v5H6zM12 16h18v5H12zM6 24h18v5H6z" fill="currentColor"/>
+          <path d="M27 8h3v5h-3zM6 16h3v5H6zM27 24h3v5h-3z" fill="#8ed7ca"/>
+        </svg>
+        <span><span class="brand-name">Setline</span><span class="brand-sub">Hypertrophy log</span></span>
+      </div>
+      <p class="nav-label">Programa</p>
+      <nav class="program-nav" id="desktop-programs" aria-label="Programas"></nav>
+      <p class="nav-label">Sesiones</p>
+      <nav class="day-nav" id="desktop-days" aria-label="Días"></nav>
+      <div class="sidebar-note"><strong>Regla de esfuerzo</strong><br>Termina la mayoría de series con 1–2 repeticiones posibles en reserva. Prioriza técnica limpia.</div>
+    </aside>
+
+    <main class="page">
+      <header class="mobile-topbar">
+        <div class="mobile-brand-row">
+          <div class="brand">
+            <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <path d="M6 8h18v5H6zM12 16h18v5H12zM6 24h18v5H6z" fill="currentColor"/>
+              <path d="M27 8h3v5h-3zM6 16h3v5H6zM27 24h3v5h-3z" fill="#8ed7ca"/>
+            </svg>
+            <span><span class="brand-name">Setline</span><span class="brand-sub">Hypertrophy log</span></span>
+          </div>
+        </div>
+        <nav class="mobile-programs" id="mobile-programs" aria-label="Programas"></nav>
+        <nav class="mobile-days" id="mobile-days" aria-label="Días"></nav>
+      </header>
+
+      <div class="session-layout">
+        <section class="session-main" aria-labelledby="session-title">
+          <div class="session-hero" id="session-hero"></div>
+          <div class="session-tools">
+            <div class="filter-row" id="filters" aria-label="Filtrar por grupo muscular"></div>
+            <button class="quiet-button" id="reset-session" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+              Limpiar día
+            </button>
+          </div>
+          <div class="session-progress" aria-label="Progreso de la sesión">
+            <div class="session-progress-track"><div class="session-progress-fill" id="session-progress-fill"></div></div>
+            <output class="session-progress-output" id="session-progress-output">0 de 0 series</output>
+          </div>
+          <div class="exercise-list" id="exercise-list"></div>
+          <p class="footer-note">Los datos se guardan solo en este navegador. Carga y repeticiones son notas de entrenamiento, no una evaluación médica.<br>Demostraciones servidas por <a href="https://github.com/JahelCuadrado/ExerciseGymGifsDB" target="_blank" rel="noreferrer">ExerciseGymGifsDB</a>.</p>
+        </section>
+
+        <aside class="summary-column" aria-label="Resumen del programa">
+          <section class="summary-panel">
+            <h2>Volumen semanal</h2>
+            <p>Series directas por grupo muscular.</p>
+            <div class="weekly-list" id="weekly-volume"></div>
+            <div class="optional-toggle" id="optional-toggle-wrap" hidden>
+              <span>Incluir día 4 opcional</span>
+              <label class="switch">
+                <input type="checkbox" id="include-optional" aria-label="Incluir día 4 opcional en el volumen semanal">
+                <span class="switch-track"></span>
+              </label>
+            </div>
+          </section>
+          <section class="summary-panel">
+            <h2>Cómo progresar</h2>
+            <p>Doble progresión, sin perseguir el fallo.</p>
+            <ol class="guidance-list">
+              <li><b>1</b><span>Completa el mínimo del rango con el RIR indicado.</span></li>
+              <li><b>2</b><span>Sube repeticiones manteniendo técnica y control.</span></li>
+              <li><b>3</b><span>Al lograr el máximo en todas las series, sube 2–5% la carga.</span></li>
+            </ol>
+          </section>
+          <section class="summary-panel apple-panel">
+            <h2>Apple Salud</h2>
+            <p>La web puede ejecutar un atajo de iOS que inicie Fuerza tradicional en tu Apple Watch; no accede directamente a HealthKit.</p>
+            <div class="apple-actions">
+              <a class="apple-button" href="shortcuts://run-shortcut?name=Setline%20Fuerza" data-health-shortcut>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/><path d="M7.5 12h2l1-2 2 4 1-2h3"/></svg>
+                Ejecutar “Setline Fuerza”
+              </a>
+            </div>
+            <details class="shortcut-setup">
+              <summary>Configurar el atajo una vez</summary>
+              <ol>
+                <li>Abre Atajos y crea uno llamado <strong>Setline Fuerza</strong>.</li>
+                <li>Con un Apple Watch emparejado, añade “Iniciar entrenamiento” y selecciona <strong>Fuerza tradicional</strong>.</li>
+                <li>Al terminar, detenlo desde el reloj. Si esa acción no aparece, usa “Registrar entrenamiento” al final como alternativa.</li>
+              </ol>
+              <a class="apple-button secondary" href="shortcuts://create-shortcut">Abrir editor de Atajos</a>
+            </details>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <section class="timer-dock" id="timer-dock" aria-label="Temporizador de descanso">
+    <div class="timer-copy">
+      <span class="timer-label" id="timer-label">Temporizador de descanso</span>
+      <output class="timer-time" id="timer-time">00:00</output>
+    </div>
+    <div class="timer-actions">
+      <button class="timer-control wide" type="button" id="timer-minus" aria-label="Restar 15 segundos">−15</button>
+      <button class="timer-control" type="button" id="timer-toggle" aria-label="Iniciar temporizador">
+        <svg id="timer-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>
+      </button>
+      <button class="timer-control wide" type="button" id="timer-plus" aria-label="Añadir 15 segundos">+15</button>
+      <button class="timer-control" type="button" id="timer-reset" aria-label="Reiniciar temporizador">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+  </section>
+  <div class="toast" id="toast" role="status"></div>
+  <aside class="pwa-banner" id="pwa-banner" aria-live="polite" hidden>
+    <div class="pwa-banner-copy">
+      <strong id="pwa-banner-title">Instalar Setline</strong>
+      <span id="pwa-banner-message">Añádela a la pantalla de inicio para usarla como una app.</span>
+    </div>
+    <button class="pwa-banner-action" id="pwa-banner-action" type="button">Instalar</button>
+    <button class="pwa-banner-close" id="pwa-banner-close" type="button" aria-label="Cerrar aviso">×</button>
+  </aside>
+
+  <script>
+    const MUSCLE_ORDER = ["Pecho", "Espalda", "Hombros", "Bíceps", "Tríceps", "Piernas"];
+
+    const programs = [
+      {
+        id: "volley",
+        short: "Vóley + gym",
+        title: "Gym compatible con vóley",
+        navNote: "2–3 sesiones compactas",
+        symbol: "V+",
+        description: "Solo la parte de gimnasio. Si haces dos días, alterna A y B; añade C cuando recuperes bien.",
+        days: [
+          {
+            id: "v-a", code: "A", name: "Base de torso", duration: "36–44 min", note: "Compuestos estables primero; deltoides y brazos al final.",
+            exercises: [
+              { id: "va-press", name: "Press inclinado en máquina o mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 120, rir: "2", cue: "Escápulas firmes; evita rebotar en la parte baja." },
+              { id: "va-row", name: "Remo con pecho apoyado", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Pausa breve atrás sin elevar los hombros." },
+              { id: "va-pulldown", name: "Jalón al pecho con agarre neutro", muscle: "Espalda", sets: 3, reps: "8–12", rest: 90, rir: "1–2", cue: "Lleva los codos hacia las costillas; torso estable." },
+              { id: "va-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Sube con el codo y controla la vuelta." },
+              { id: "va-curl", name: "Curl de bíceps en polea", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Brazos quietos; extensión completa sin perder tensión." },
+              { id: "va-pushdown", name: "Extensión de tríceps con cuerda", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Separa la cuerda al final sin mover los codos." }
+            ]
+          },
+          {
+            id: "v-b", code: "B", name: "Hombros y brazos", duration: "34–42 min", note: "Trabajo de torso con baja demanda lumbar y volumen de hombro controlado.",
+            exercises: [
+              { id: "vb-chest", name: "Press de pecho convergente", muscle: "Pecho", sets: 3, reps: "8–12", rest: 105, rir: "2", cue: "Agarre cómodo y recorrido sin despegar los hombros." },
+              { id: "vb-highrow", name: "Remo alto unilateral en polea", muscle: "Espalda", sets: 3, reps: "8–12", rest: 90, rir: "2", cue: "Termina con el codo junto al torso; no gires la cadera." },
+              { id: "vb-shoulder", name: "Press de hombro en máquina", muscle: "Hombros", sets: 2, reps: "8–12", rest: 105, rir: "2–3", cue: "Volumen prudente por el trabajo por encima de la cabeza del vóley." },
+              { id: "vb-reverse", name: "Pájaros en máquina o polea", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Abre desde los brazos sin arquear la espalda." },
+              { id: "vb-inclinecurl", name: "Curl inclinado con mancuernas", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Mantén el hombro atrás y evita impulso." },
+              { id: "vb-overheadtri", name: "Extensión de tríceps sobre la cabeza", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Busca estiramiento largo y codos apuntando al frente." }
+            ]
+          },
+          {
+            id: "v-c", code: "C", name: "Densidad de torso", duration: "38–46 min", note: "Tercer estímulo opcional, con cargas moderadas y ejecución muy controlada.", optional: true,
+            exercises: [
+              { id: "vc-pulldown", name: "Jalón unilateral en polea", muscle: "Espalda", sets: 3, reps: "10–14", rest: 75, rir: "2", cue: "Inicia bajando la escápula; no tires con el torso." },
+              { id: "vc-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 105, rir: "2", cue: "Misma trayectoria en todas las repeticiones." },
+              { id: "vc-seatedrow", name: "Remo sentado en polea", muscle: "Espalda", sets: 3, reps: "10–14", rest: 90, rir: "1–2", cue: "Mantén el pecho alto y no colapses al estirar." },
+              { id: "vc-lateral", name: "Elevación lateral en máquina", muscle: "Hombros", sets: 3, reps: "15–20", rest: 60, rir: "1", cue: "Ritmo continuo y sin impulso." },
+              { id: "vc-fly", name: "Apertura en polea o peck deck", muscle: "Pecho", sets: 2, reps: "12–18", rest: 60, rir: "1–2", cue: "Acerca los bíceps sin perder el arco natural del hombro." },
+              { id: "vc-curl", name: "Curl predicador", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "No hiperextiendas el codo al final." },
+              { id: "vc-tri", name: "Extensión cruzada de tríceps en polea", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Bloquea el brazo y termina cada repetición." }
+            ]
+          }
+        ]
+      },
+      {
+        id: "solo",
+        short: "Hipertrofia 3–4 días",
+        title: "Hipertrofia sin vóley",
+        navNote: "3 días + full-body opcional",
+        symbol: "H4",
+        description: "Tres días base para torso y brazos. El cuarto añade frecuencia y el mínimo necesario de piernas.",
+        days: [
+          {
+            id: "s-1", code: "1", name: "Torso A", duration: "55–68 min", note: "Base pesada equilibrada de pecho y espalda, con final de deltoides y tríceps.",
+            exercises: [
+              { id: "s1-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Progresión principal del día; repite banco y ángulo." },
+              { id: "s1-row", name: "Remo con pecho apoyado", muscle: "Espalda", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Pausa atrás y estiramiento completo al frente." },
+              { id: "s1-fly", name: "Apertura en polea", muscle: "Pecho", sets: 3, reps: "10–15", rest: 75, rir: "1–2", cue: "Controla la posición estirada; no choques las manos." },
+              { id: "s1-pulldown", name: "Jalón neutro al pecho", muscle: "Espalda", sets: 3, reps: "8–12", rest: 105, rir: "1–2", cue: "Codos hacia abajo, sin convertirlo en un remo." },
+              { id: "s1-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 4, reps: "12–20", rest: 60, rir: "1–2", cue: "Tensión constante; controla dos segundos al bajar." },
+              { id: "s1-tri", name: "Extensión de tríceps con barra", muscle: "Tríceps", sets: 3, reps: "8–12", rest: 75, rir: "1–2", cue: "Codos fijos y bloqueo controlado." }
+            ]
+          },
+          {
+            id: "s-2", code: "2", name: "Espalda y bíceps", duration: "54–66 min", note: "Más volumen de dorsales y espalda alta con dos perfiles de curl.",
+            exercises: [
+              { id: "s2-pullup", name: "Dominada asistida/lastrada o jalón", muscle: "Espalda", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Usa la variante que mantenga el rango completo." },
+              { id: "s2-highrow", name: "Remo alto unilateral", muscle: "Espalda", sets: 3, reps: "8–12", rest: 105, rir: "2", cue: "Codo abierto moderadamente para espalda alta." },
+              { id: "s2-cablerow", name: "Remo sentado agarre neutro", muscle: "Espalda", sets: 3, reps: "10–14", rest: 90, rir: "1–2", cue: "Estira sin redondear la zona lumbar." },
+              { id: "s2-reverse", name: "Pájaros en peck deck", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Piensa en separar las manos, no en juntar escápulas." },
+              { id: "s2-preacher", name: "Curl predicador", muscle: "Bíceps", sets: 3, reps: "8–12", rest: 75, rir: "1–2", cue: "Recorrido largo sin despegar el brazo del apoyo." },
+              { id: "s2-hammer", name: "Curl martillo con cuerda", muscle: "Bíceps", sets: 3, reps: "10–15", rest: 60, rir: "1–2", cue: "Muñeca neutra y codos quietos." }
+            ]
+          },
+          {
+            id: "s-3", code: "3", name: "Pecho, hombros y tríceps", duration: "58–70 min", note: "Segundo estímulo fuerte de pecho con prioridad de deltoides lateral y tríceps.",
+            exercises: [
+              { id: "s3-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Usa topes consistentes y registra la posición del asiento." },
+              { id: "s3-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "No acortes la parte baja por buscar más carga." },
+              { id: "s3-shoulder", name: "Press de hombro en máquina", muscle: "Hombros", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Antebrazos verticales y espalda apoyada." },
+              { id: "s3-lateral", name: "Elevación lateral en máquina", muscle: "Hombros", sets: 4, reps: "12–20", rest: 60, rir: "1–2", cue: "Repeticiones uniformes; evita encoger los hombros." },
+              { id: "s3-fly", name: "Apertura baja a alta en polea", muscle: "Pecho", sets: 2, reps: "12–18", rest: 60, rir: "1–2", cue: "Cruza levemente la línea media sin perder control." },
+              { id: "s3-overhead", name: "Extensión de tríceps sobre la cabeza", muscle: "Tríceps", sets: 3, reps: "10–15", rest: 75, rir: "1–2", cue: "Deja que el tríceps se estire sin abrir los codos." },
+              { id: "s3-pushdown", name: "Extensión unilateral en polea", muscle: "Tríceps", sets: 2, reps: "12–16", rest: 60, rir: "1", cue: "Termina con el codo bloqueado, hombro quieto." }
+            ]
+          },
+          {
+            id: "s-4", code: "4", name: "Full-body mínimo", duration: "45–55 min", note: "Opcional. Cubre piernas con poco coste y suma frecuencia de torso y brazos.", optional: true,
+            exercises: [
+              { id: "s4-legpress", name: "Prensa de piernas", muscle: "Piernas", sets: 2, reps: "8–12", rest: 150, rir: "2–3", cue: "Recorrido cómodo y controlado; no busques fatiga que afecte al vóley." },
+              { id: "s4-legcurl", name: "Curl femoral sentado", muscle: "Piernas", sets: 2, reps: "10–15", rest: 90, rir: "2", cue: "Pausa en flexión y controla la vuelta." },
+              { id: "s4-chest", name: "Press convergente en máquina", muscle: "Pecho", sets: 3, reps: "10–14", rest: 105, rir: "2", cue: "Carga moderada y recorrido completo." },
+              { id: "s4-pulldown", name: "Jalón al pecho agarre neutro", muscle: "Espalda", sets: 3, reps: "10–14", rest: 90, rir: "2", cue: "Movimiento suave, sin balanceo." },
+              { id: "s4-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 3, reps: "15–20", rest: 60, rir: "1–2", cue: "Serie limpia, sin convertirla en un encogimiento." },
+              { id: "s4-curl", name: "Curl en polea", muscle: "Bíceps", sets: 2, reps: "12–16", rest: 60, rir: "1–2", cue: "Mantén tensión y no adelantes el codo." },
+              { id: "s4-tri", name: "Extensión con cuerda", muscle: "Tríceps", sets: 2, reps: "12–16", rest: 60, rir: "1–2", cue: "Finaliza cada repetición sin impulso." }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const GIF_BASE = "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/";
+    const exerciseGifs = {
+      "va-press": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
+      "va-row": ["upper-back/dumbbell-incline-row.gif", "Remo inclinado con pecho apoyado"],
+      "va-pulldown": ["lats/twin-handle-parallel-grip-lat-pulldown.gif", "Jalón con agarre paralelo"],
+      "va-lateral": ["delts/cable-one-arm-lateral-raise.gif", "Elevación lateral unilateral en polea"],
+      "va-curl": ["biceps/cable-curl.gif", "Curl de bíceps en polea"],
+      "va-pushdown": ["triceps/cable-pushdown-with-rope-attachment.gif", "Extensión de tríceps con cuerda"],
+      "vb-chest": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
+      "vb-highrow": ["upper-back/cable-one-arm-straight-back-high-row-kneeling.gif", "Remo alto unilateral en polea"],
+      "vb-shoulder": ["delts/lever-shoulder-press.gif", "Press de hombro en máquina"],
+      "vb-reverse": ["delts/lever-seated-reverse-fly.gif", "Pájaros en máquina"],
+      "vb-inclinecurl": ["biceps/dumbbell-incline-biceps-curl.gif", "Curl inclinado con mancuernas"],
+      "vb-overheadtri": ["triceps/cable-overhead-triceps-extension-rope-attachment.gif", "Extensión de tríceps sobre la cabeza con cuerda"],
+      "vc-pulldown": ["lats/cable-one-arm-pulldown.gif", "Jalón unilateral en polea"],
+      "vc-incline": ["pectorals/lever-incline-chest-press.gif", "Press inclinado en máquina"],
+      "vc-seatedrow": ["upper-back/cable-seated-row.gif", "Remo sentado en polea"],
+      "vc-lateral": ["delts/lever-lateral-raise.gif", "Elevación lateral en máquina"],
+      "vc-fly": ["pectorals/lever-seated-fly.gif", "Apertura sentada en máquina"],
+      "vc-curl": ["biceps/barbell-preacher-curl.gif", "Curl predicador con barra"],
+      "vc-tri": ["triceps/cable-standing-one-arm-triceps-extension.gif", "Extensión unilateral de tríceps en polea"],
+      "s1-incline": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
+      "s1-row": ["upper-back/dumbbell-incline-row.gif", "Remo inclinado con pecho apoyado"],
+      "s1-fly": ["pectorals/cable-standing-fly.gif", "Apertura de pie en polea"],
+      "s1-pulldown": ["lats/twin-handle-parallel-grip-lat-pulldown.gif", "Jalón con agarre paralelo"],
+      "s1-lateral": ["delts/cable-one-arm-lateral-raise.gif", "Elevación lateral unilateral en polea"],
+      "s1-tri": ["triceps/cable-pushdown.gif", "Extensión de tríceps con barra"],
+      "s2-pullup": ["lats/pull-up-neutral-grip.gif", "Dominada con agarre neutro"],
+      "s2-highrow": ["upper-back/lever-one-arm-lateral-high-row.gif", "Remo alto unilateral en máquina"],
+      "s2-cablerow": ["upper-back/cable-seated-row.gif", "Remo sentado en polea"],
+      "s2-reverse": ["delts/lever-seated-reverse-fly.gif", "Pájaros en máquina"],
+      "s2-preacher": ["biceps/barbell-preacher-curl.gif", "Curl predicador con barra"],
+      "s2-hammer": ["biceps/cable-hammer-curl-with-rope.gif", "Curl martillo con cuerda"],
+      "s3-flat": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
+      "s3-incline": ["pectorals/lever-incline-chest-press.gif", "Press inclinado en máquina"],
+      "s3-shoulder": ["delts/lever-shoulder-press.gif", "Press de hombro en máquina"],
+      "s3-lateral": ["delts/lever-lateral-raise.gif", "Elevación lateral en máquina"],
+      "s3-fly": ["pectorals/cable-low-fly.gif", "Apertura baja en polea"],
+      "s3-overhead": ["triceps/cable-overhead-triceps-extension-rope-attachment.gif", "Extensión de tríceps sobre la cabeza con cuerda"],
+      "s3-pushdown": ["triceps/cable-one-arm-tricep-pushdown.gif", "Extensión unilateral de tríceps"],
+      "s4-legpress": ["glutes/sled-45-leg-press.gif", "Prensa inclinada de piernas"],
+      "s4-legcurl": ["hamstrings/lever-seated-leg-curl.gif", "Curl femoral sentado"],
+      "s4-chest": ["pectorals/lever-chest-press.gif", "Press convergente en máquina"],
+      "s4-pulldown": ["lats/twin-handle-parallel-grip-lat-pulldown.gif", "Jalón con agarre paralelo"],
+      "s4-lateral": ["delts/cable-one-arm-lateral-raise.gif", "Elevación lateral unilateral en polea"],
+      "s4-curl": ["biceps/cable-curl.gif", "Curl de bíceps en polea"],
+      "s4-tri": ["triceps/cable-pushdown-with-rope-attachment.gif", "Extensión de tríceps con cuerda"]
+    };
+
+    const storageKey = "setline-hypertrophy-v1";
+    const defaultState = {
+      programId: "volley",
+      dayByProgram: { volley: "v-a", solo: "s-1" },
+      filter: "Todos",
+      entries: {},
+      references: {},
+      includeOptionalByProgram: { volley: false, solo: false }
+    };
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey));
+        return saved ? {
+          ...defaultState,
+          ...saved,
+          dayByProgram: { ...defaultState.dayByProgram, ...(saved.dayByProgram || {}) },
+          includeOptionalByProgram: { ...defaultState.includeOptionalByProgram, ...(saved.includeOptionalByProgram || {}) }
+        } : JSON.parse(JSON.stringify(defaultState));
+      } catch (_) {
+        return JSON.parse(JSON.stringify(defaultState));
+      }
+    }
+
+    let state = loadState();
+    let timerRemaining = 0;
+    let timerInitial = 60;
+    let timerRunning = false;
+    let timerInterval = null;
+    let timerDeadline = null;
+    let toastTimeout = null;
+    let timerAudioContext = null;
+    let deferredInstallPrompt = null;
+    let refreshingForUpdate = false;
+    let pwaBannerAction = null;
+    let pwaBannerKind = "";
+
+    const $ = (selector, scope = document) => scope.querySelector(selector);
+    const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
+    const activeProgram = () => programs.find(program => program.id === state.programId) || programs[0];
+    const activeDay = () => activeProgram().days.find(day => day.id === state.dayByProgram[state.programId]) || activeProgram().days[0];
+    const entryKey = (dayId, exerciseId, index) => `${state.programId}:${dayId}:${exerciseId}:${index}`;
+    const referenceKey = exerciseId => `${state.programId}:${exerciseId}`;
+
+    function persist() {
+      try { localStorage.setItem(storageKey, JSON.stringify(state)); } catch (_) {}
+    }
+
+    function getEntry(dayId, exerciseId, index) {
+      return state.entries[entryKey(dayId, exerciseId, index)] || { weight: "", reps: "", completed: false };
+    }
+
+    function setEntry(dayId, exerciseId, index, patch) {
+      const key = entryKey(dayId, exerciseId, index);
+      state.entries[key] = { ...getEntry(dayId, exerciseId, index), ...patch };
+      persist();
+    }
+
+    function safeNumber(value) {
+      const number = Number(String(value).replace(",", "."));
+      return Number.isFinite(number) && number > 0 ? number : 0;
+    }
+
+    function escapeAttribute(value) {
+      return String(value ?? "").replace(/[&"<>]/g, character => ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[character]);
+    }
+
+    function exerciseVolume(day, exercise) {
+      return Array.from({ length: exercise.sets }, (_, index) => {
+        const entry = getEntry(day.id, exercise.id, index);
+        return safeNumber(entry.weight) * safeNumber(entry.reps);
+      }).reduce((sum, value) => sum + value, 0);
+    }
+
+    function isExerciseComplete(day, exercise) {
+      return Array.from({ length: exercise.sets }, (_, index) => getEntry(day.id, exercise.id, index).completed).every(Boolean);
+    }
+
+    function formatVolume(value) {
+      return new Intl.NumberFormat("es-ES", { maximumFractionDigits: 1 }).format(value);
+    }
+
+    function formatRest(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainder = seconds % 60;
+      return remainder ? `${minutes}:${String(remainder).padStart(2, "0")}` : `${minutes}:00`;
+    }
+
+    function programButton(program) {
+      const selected = program.id === state.programId;
+      return `<button class="program-button" type="button" aria-pressed="${selected}" data-program="${program.id}">
+        <span class="program-symbol">${program.symbol}</span>
+        <span class="program-copy"><strong>${program.short}</strong><span>${program.navNote}</span></span>
+      </button>`;
+    }
+
+    function dayButton(day) {
+      const selected = day.id === activeDay().id;
+      return `<button class="day-button" type="button" aria-pressed="${selected}" data-day="${day.id}">
+        <span class="day-code">${day.code}</span><span>${day.name}</span>${day.optional ? "<small>OPCIONAL</small>" : ""}
+      </button>`;
+    }
+
+    function renderNavigation() {
+      const programMarkup = programs.map(programButton).join("");
+      const dayMarkup = activeProgram().days.map(dayButton).join("");
+      $("#desktop-programs").innerHTML = programMarkup;
+      $("#mobile-programs").innerHTML = programMarkup;
+      $("#desktop-days").innerHTML = dayMarkup;
+      $("#mobile-days").innerHTML = dayMarkup;
+    }
+
+    function renderHero() {
+      const program = activeProgram();
+      const day = activeDay();
+      const totalSets = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
+      const shortcutText = encodeURIComponent(`${program.short} · ${day.name}`);
+      const shortcutUrl = `shortcuts://run-shortcut?name=Setline%20Fuerza&input=text&text=${shortcutText}`;
+      $("#session-hero").innerHTML = `<div class="hero-copy">
+        <span class="hero-program">${program.title}</span>
+        <h1 id="session-title">${day.name}</h1>
+        <p>${day.note} ${program.description}</p>
+        <a class="health-launch" href="${shortcutUrl}" data-health-shortcut aria-label="Ejecutar el atajo Setline Fuerza para ${day.name}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/><path d="M7.5 12h2l1-2 2 4 1-2h3"/></svg>
+          <span><strong>Iniciar en Apple Watch</strong><small>Atajo “Setline Fuerza” · configuración única</small></span>
+        </a>
+      </div>
+      <div class="hero-slate" aria-label="Datos de la sesión">
+        <span class="hero-day-code">${day.code}</span>
+        <div class="hero-facts">
+          <span class="hero-fact"><span>Duración</span><strong>${day.duration}</strong></span>
+          <span class="hero-fact"><span>Trabajo</span><strong>${totalSets} series</strong></span>
+        </div>
+      </div>`;
+      $$('[data-health-shortcut]').forEach(link => link.href = shortcutUrl);
+    }
+
+    function renderFilters() {
+      const available = ["Todos", ...MUSCLE_ORDER.filter(muscle => activeDay().exercises.some(exercise => exercise.muscle === muscle))];
+      if (!available.includes(state.filter)) state.filter = "Todos";
+      $("#filters").innerHTML = available.map(muscle => `<button class="filter-button" type="button" aria-pressed="${state.filter === muscle}" data-filter="${muscle}">${muscle}</button>`).join("");
+    }
+
+    function setRow(day, exercise, index) {
+      const entry = getEntry(day.id, exercise.id, index);
+      return `<div class="set-row ${entry.completed ? "is-done" : ""}" data-set-row="${index}">
+        <span class="set-number">${index + 1}</span>
+        <input class="set-check" type="checkbox" ${entry.completed ? "checked" : ""} aria-label="Marcar serie ${index + 1} de ${exercise.name}" data-check data-exercise="${exercise.id}" data-set="${index}">
+        <input class="set-input" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Peso de la serie ${index + 1} en kilogramos" placeholder="kg" value="${escapeAttribute(entry.weight)}" data-weight data-exercise="${exercise.id}" data-set="${index}">
+        <span class="times" aria-hidden="true">×</span>
+        <input class="set-input" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" aria-label="Repeticiones de la serie ${index + 1}" placeholder="${exercise.reps}" value="${escapeAttribute(entry.reps)}" data-reps data-exercise="${exercise.id}" data-set="${index}">
+      </div>`;
+    }
+
+    function exerciseCard(day, exercise, visibleIndex) {
+      const volume = exerciseVolume(day, exercise);
+      const reference = safeNumber(state.references[referenceKey(exercise.id)] || "");
+      const ratio = reference ? Math.round((volume / reference) * 100) : 0;
+      const complete = isExerciseComplete(day, exercise);
+      const demo = exerciseGifs[exercise.id];
+      const demoUrl = demo ? GIF_BASE + demo[0] : "";
+      return `<article class="exercise-card ${complete ? "is-complete" : ""}" data-exercise-card="${exercise.id}">
+        <div class="exercise-head">
+          <span class="exercise-order">${String(visibleIndex + 1).padStart(2, "0")}</span>
+          <div class="exercise-title-wrap">
+            <div class="exercise-title-line"><h2>${exercise.name}</h2><span class="muscle-badge">${exercise.muscle}</span></div>
+            <div class="exercise-meta"><span><strong>${exercise.sets}</strong> series</span><span><strong>${exercise.reps}</strong> reps</span><span>RIR <strong>${exercise.rir}</strong></span></div>
+            <p class="exercise-cue">${exercise.cue}</p>
+          </div>
+          <div class="exercise-actions">
+            ${demo ? `<button class="demo-button" type="button" data-demo-toggle aria-expanded="false" aria-controls="demo-${exercise.id}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg><span>Ver técnica</span>
+            </button>` : ""}
+            <button class="rest-button" type="button" data-rest="${exercise.rest}" data-exercise-name="${exercise.name}" aria-label="Iniciar descanso de ${formatRest(exercise.rest)}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6"/></svg>${formatRest(exercise.rest)}
+            </button>
+          </div>
+        </div>
+        ${demo ? `<div class="exercise-demo" id="demo-${exercise.id}" hidden>
+          <div class="demo-frame">
+            <img data-demo-image data-src="${demoUrl}" alt="Demostración animada: ${demo[1]}" loading="lazy" decoding="async">
+            <span class="demo-status">Cargando demostración…</span>
+          </div>
+          <div class="demo-caption"><span>Variante mostrada: <strong>${demo[1]}</strong></span><a href="${demoUrl}" target="_blank" rel="noreferrer">Abrir GIF</a></div>
+        </div>` : ""}
+        <div class="sets-wrap">
+          <div class="set-grid-head" aria-hidden="true"><span>Serie</span><span>Hecha</span><span>Peso</span><span></span><span>Reps</span></div>
+          ${Array.from({ length: exercise.sets }, (_, index) => setRow(day, exercise, index)).join("")}
+        </div>
+        <div class="exercise-foot">
+          <div class="volume-readout">
+            <div class="volume-topline"><span><strong class="volume-value" data-volume-value>${formatVolume(volume)} kg·rep</strong> registrados</span><span data-ratio-label>${reference ? `${ratio}% de ref.` : "Sin referencia"}</span></div>
+            <div class="exercise-progress-track"><div class="exercise-progress-fill" data-exercise-fill style="width:${Math.min(ratio, 100)}%"></div></div>
+          </div>
+          <div class="reference-field">
+            <label for="ref-${exercise.id}">Referencia editable · kg·rep</label>
+            <input class="reference-input" id="ref-${exercise.id}" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="Ej. 1800" value="${escapeAttribute(state.references[referenceKey(exercise.id)] || "")}" data-reference data-exercise="${exercise.id}">
+          </div>
+        </div>
+      </article>`;
+    }
+
+    function renderExercises() {
+      const day = activeDay();
+      const filtered = day.exercises.filter(exercise => state.filter === "Todos" || exercise.muscle === state.filter);
+      $("#exercise-list").innerHTML = filtered.length
+        ? filtered.map((exercise) => exerciseCard(day, exercise, day.exercises.indexOf(exercise))).join("")
+        : `<div class="empty-state"><strong>No hay ejercicios con este filtro.</strong>Elige otro grupo muscular para volver a la sesión.</div>`;
+      updateSessionProgress();
+    }
+
+    function renderWeeklyVolume() {
+      const program = activeProgram();
+      const includedDays = program.days.filter(day => !day.optional || state.includeOptionalByProgram[program.id]);
+      const totals = {};
+      includedDays.forEach(day => day.exercises.forEach(exercise => { totals[exercise.muscle] = (totals[exercise.muscle] || 0) + exercise.sets; }));
+      const activeMuscles = MUSCLE_ORDER.filter(muscle => totals[muscle]);
+      const max = Math.max(...activeMuscles.map(muscle => totals[muscle]), 1);
+      $("#weekly-volume").innerHTML = activeMuscles.map(muscle => `<div class="weekly-item">
+        <div class="weekly-label"><span>${muscle}</span><strong>${totals[muscle]} series</strong></div>
+        <div class="weekly-track"><div class="weekly-fill" style="width:${(totals[muscle] / max) * 100}%"></div></div>
+      </div>`).join("");
+      const optionalWrap = $("#optional-toggle-wrap");
+      optionalWrap.hidden = !program.days.some(day => day.optional);
+      optionalWrap.querySelector("span").textContent = program.id === "solo" ? "Incluir día 4 opcional" : "Incluir sesión C opcional";
+      $("#include-optional").checked = Boolean(state.includeOptionalByProgram[program.id]);
+    }
+
+    function renderAll() {
+      renderNavigation();
+      renderHero();
+      renderFilters();
+      renderExercises();
+      renderWeeklyVolume();
+      requestAnimationFrame(() => {
+        $("#mobile-programs [aria-pressed=\"true\"]")?.scrollIntoView({ block: "nearest", inline: "center" });
+        $("#mobile-days [aria-pressed=\"true\"]")?.scrollIntoView({ block: "nearest", inline: "center" });
+      });
+    }
+
+    function updateSessionProgress() {
+      const day = activeDay();
+      const total = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
+      const done = day.exercises.reduce((sum, exercise) => sum + Array.from({ length: exercise.sets }, (_, index) => getEntry(day.id, exercise.id, index).completed ? 1 : 0).reduce((a, b) => a + b, 0), 0);
+      $("#session-progress-fill").style.width = `${total ? (done / total) * 100 : 0}%`;
+      $("#session-progress-output").textContent = `${done} de ${total} series`;
+    }
+
+    function updateExerciseStats(exerciseId) {
+      const day = activeDay();
+      const exercise = day.exercises.find(item => item.id === exerciseId);
+      const card = $(`[data-exercise-card="${exerciseId}"]`);
+      if (!exercise || !card) return;
+      const volume = exerciseVolume(day, exercise);
+      const reference = safeNumber(state.references[referenceKey(exerciseId)] || "");
+      const ratio = reference ? Math.round((volume / reference) * 100) : 0;
+      $("[data-volume-value]", card).textContent = `${formatVolume(volume)} kg·rep`;
+      $("[data-ratio-label]", card).textContent = reference ? `${ratio}% de ref.` : "Sin referencia";
+      $("[data-exercise-fill]", card).style.width = `${Math.min(ratio, 100)}%`;
+      card.classList.toggle("is-complete", isExerciseComplete(day, exercise));
+    }
+
+    function showToast(message) {
+      const toast = $("#toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function showPwaBanner({ kind, title, message, actionLabel, onAction }) {
+      const banner = $("#pwa-banner");
+      pwaBannerKind = kind;
+      pwaBannerAction = onAction;
+      $("#pwa-banner-title").textContent = title;
+      $("#pwa-banner-message").textContent = message;
+      $("#pwa-banner-action").textContent = actionLabel;
+      banner.hidden = false;
+      requestAnimationFrame(() => banner.classList.add("is-visible"));
+    }
+
+    function hidePwaBanner() {
+      const banner = $("#pwa-banner");
+      banner.classList.remove("is-visible");
+      setTimeout(() => { banner.hidden = true; }, 240);
+      pwaBannerAction = null;
+      pwaBannerKind = "";
+    }
+
+    function isStandaloneApp() {
+      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    }
+
+    function showInstallOffer() {
+      if (isStandaloneApp() || localStorage.getItem("setline-install-hint-dismissed") === "1") return;
+      if (deferredInstallPrompt) {
+        showPwaBanner({
+          kind: "install",
+          title: "Instalar Setline",
+          message: "Úsala a pantalla completa y accede incluso con mala conexión.",
+          actionLabel: "Instalar",
+          onAction: async () => {
+            const prompt = deferredInstallPrompt;
+            deferredInstallPrompt = null;
+            await prompt.prompt();
+            const choice = await prompt.userChoice;
+            if (choice.outcome !== "accepted") localStorage.setItem("setline-install-hint-dismissed", "1");
+            hidePwaBanner();
+          }
+        });
+        return;
+      }
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      if (!isIOS) return;
+      showPwaBanner({
+        kind: "install",
+        title: "Instalar en iPhone",
+        message: "En Safari: Compartir → Añadir a pantalla de inicio.",
+        actionLabel: "Entendido",
+        onAction: () => {
+          localStorage.setItem("setline-install-hint-dismissed", "1");
+          hidePwaBanner();
+        }
+      });
+    }
+
+    function showUpdateOffer(worker) {
+      showPwaBanner({
+        kind: "update",
+        title: "Nueva versión disponible",
+        message: "Actualiza Setline sin perder tus registros guardados en este iPhone.",
+        actionLabel: "Actualizar",
+        onAction: () => worker.postMessage({ type: "SKIP_WAITING" })
+      });
+    }
+
+    async function registerSetlineServiceWorker() {
+      if (!("serviceWorker" in navigator) || !/^https?:$/.test(location.protocol)) return;
+      try {
+        const registration = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+        if (registration.waiting) showUpdateOffer(registration.waiting);
+        registration.addEventListener("updatefound", () => {
+          const worker = registration.installing;
+          if (!worker) return;
+          worker.addEventListener("statechange", () => {
+            if (worker.state === "installed" && navigator.serviceWorker.controller) showUpdateOffer(worker);
+          });
+        });
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
+          if (refreshingForUpdate) return;
+          refreshingForUpdate = true;
+          window.location.reload();
+        });
+        window.addEventListener("online", () => registration.update());
+      } catch (error) {
+        console.warn("Setline no pudo activar el modo offline.", error);
+      }
+    }
+
+    function toggleExerciseDemo(button) {
+      const panel = document.getElementById(button.getAttribute("aria-controls"));
+      if (!panel) return;
+      const willOpen = panel.hidden;
+      panel.hidden = !willOpen;
+      button.setAttribute("aria-expanded", String(willOpen));
+      $("span", button).textContent = willOpen ? "Ocultar técnica" : "Ver técnica";
+      if (!willOpen) return;
+      const image = $("[data-demo-image]", panel);
+      if (!image || image.getAttribute("src")) return;
+      image.addEventListener("load", () => panel.classList.add("is-ready"), { once: true });
+      image.addEventListener("error", () => {
+        panel.classList.add("is-error");
+        $(".demo-status", panel).textContent = "No se pudo cargar el GIF. Comprueba la conexión o ábrelo en una pestaña nueva.";
+      }, { once: true });
+      image.src = image.dataset.src;
+    }
+
+    function switchProgram(programId) {
+      const mobileSource = window.matchMedia("(max-width: 880px)").matches;
+      state.programId = programId;
+      state.filter = "Todos";
+      if (!state.dayByProgram[programId]) state.dayByProgram[programId] = activeProgram().days[0].id;
+      persist();
+      renderAll();
+      $(`#${mobileSource ? "mobile" : "desktop"}-programs [data-program="${programId}"]`)?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function switchDay(dayId) {
+      const mobileSource = window.matchMedia("(max-width: 880px)").matches;
+      state.dayByProgram[state.programId] = dayId;
+      state.filter = "Todos";
+      persist();
+      renderAll();
+      $(`#${mobileSource ? "mobile" : "desktop"}-days [data-day="${dayId}"]`)?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function resetCurrentSession() {
+      const day = activeDay();
+      const prefix = `${state.programId}:${day.id}:`;
+      if (!Object.keys(state.entries).some(key => key.startsWith(prefix))) {
+        showToast("Este día ya está limpio");
+        return;
+      }
+      if (!window.confirm(`¿Limpiar pesos, repeticiones y series marcadas de ${day.name}?`)) return;
+      Object.keys(state.entries).filter(key => key.startsWith(prefix)).forEach(key => delete state.entries[key]);
+      persist();
+      renderExercises();
+      showToast("Sesión reiniciada");
+    }
+
+    function updateTimerUI() {
+      const minutes = Math.floor(timerRemaining / 60);
+      const seconds = timerRemaining % 60;
+      $("#timer-time").textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      $("#timer-dock").classList.toggle("is-running", timerRunning);
+      $("#timer-toggle").setAttribute("aria-label", timerRunning ? "Pausar temporizador" : "Iniciar temporizador");
+      $("#timer-toggle-icon").innerHTML = timerRunning ? '<path d="M8 5h3v14H8zM14 5h3v14h-3z" fill="currentColor" stroke="none"/>' : '<path d="m8 5 11 7-11 7z"/>';
+      document.title = timerRunning ? `${$("#timer-time").textContent} · Setline` : "Setline — Rutinas de hipertrofia";
+    }
+
+    function syncTimer() {
+      if (!timerRunning || !timerDeadline) return;
+      const next = Math.max(0, Math.ceil((timerDeadline - Date.now()) / 1000));
+      if (next !== timerRemaining) {
+        timerRemaining = next;
+        updateTimerUI();
+      }
+      if (timerRemaining === 0) finishTimer();
+    }
+
+    function stopTimer() {
+      if (timerRunning && timerDeadline) timerRemaining = Math.max(0, Math.ceil((timerDeadline - Date.now()) / 1000));
+      timerRunning = false;
+      timerDeadline = null;
+      clearInterval(timerInterval);
+      timerInterval = null;
+      updateTimerUI();
+    }
+
+    function primeTimerAudio() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        if (!timerAudioContext || timerAudioContext.state === "closed") timerAudioContext = new AudioCtx();
+        if (timerAudioContext.state === "suspended") timerAudioContext.resume().catch(() => {});
+        const source = timerAudioContext.createBufferSource();
+        source.buffer = timerAudioContext.createBuffer(1, 1, timerAudioContext.sampleRate);
+        source.connect(timerAudioContext.destination);
+        source.start(0);
+      } catch (_) {}
+    }
+
+    function playTimerTone() {
+      try {
+        if (!timerAudioContext) return;
+        const play = () => {
+          const oscillator = timerAudioContext.createOscillator();
+          const gain = timerAudioContext.createGain();
+          oscillator.frequency.setValueAtTime(620, timerAudioContext.currentTime);
+          oscillator.frequency.setValueAtTime(790, timerAudioContext.currentTime + .16);
+          gain.gain.setValueAtTime(.055, timerAudioContext.currentTime);
+          gain.gain.exponentialRampToValueAtTime(.001, timerAudioContext.currentTime + .38);
+          oscillator.connect(gain).connect(timerAudioContext.destination);
+          oscillator.start();
+          oscillator.stop(timerAudioContext.currentTime + .38);
+        };
+        if (timerAudioContext.state === "suspended") timerAudioContext.resume().then(play).catch(() => {});
+        else play();
+      } catch (_) {}
+    }
+
+    function finishTimer() {
+      stopTimer();
+      $("#timer-label").textContent = "Descanso terminado";
+      showToast("Descanso terminado · próxima serie");
+      if (navigator.vibrate) navigator.vibrate([120, 70, 120]);
+      playTimerTone();
+    }
+
+    function runTimer() {
+      if (timerRunning) return;
+      primeTimerAudio();
+      if (timerRemaining <= 0) timerRemaining = timerInitial || 60;
+      timerRunning = true;
+      timerDeadline = Date.now() + timerRemaining * 1000;
+      updateTimerUI();
+      timerInterval = setInterval(syncTimer, 250);
+    }
+
+    function startTimer(seconds, label = "Descanso en curso") {
+      stopTimer();
+      timerInitial = seconds;
+      timerRemaining = seconds;
+      $("#timer-label").textContent = label;
+      runTimer();
+    }
+
+    function adjustTimer(seconds) {
+      if (timerRunning && timerDeadline) {
+        timerDeadline = Math.max(Date.now(), timerDeadline + seconds * 1000);
+        syncTimer();
+      } else {
+        timerRemaining = Math.max(0, timerRemaining + seconds);
+        timerInitial = Math.max(timerInitial, timerRemaining);
+        updateTimerUI();
+      }
+    }
+
+    document.addEventListener("click", event => {
+      const programButton = event.target.closest("[data-program]");
+      if (programButton) return switchProgram(programButton.dataset.program);
+      const dayButton = event.target.closest("[data-day]");
+      if (dayButton) return switchDay(dayButton.dataset.day);
+      const filterButton = event.target.closest("[data-filter]");
+      if (filterButton) {
+        state.filter = filterButton.dataset.filter;
+        persist(); renderFilters(); renderExercises(); return;
+      }
+      const demoButton = event.target.closest("[data-demo-toggle]");
+      if (demoButton) return toggleExerciseDemo(demoButton);
+      const restButton = event.target.closest("[data-rest]");
+      if (restButton) {
+        startTimer(Number(restButton.dataset.rest), `Descanso · ${restButton.dataset.exerciseName}`);
+        return;
+      }
+    });
+
+    document.addEventListener("change", event => {
+      if (event.target.matches("[data-check]")) {
+        const day = activeDay();
+        const exerciseId = event.target.dataset.exercise;
+        const index = Number(event.target.dataset.set);
+        setEntry(day.id, exerciseId, index, { completed: event.target.checked });
+        event.target.closest(".set-row").classList.toggle("is-done", event.target.checked);
+        updateExerciseStats(exerciseId);
+        updateSessionProgress();
+        if (event.target.checked) {
+          const exercise = day.exercises.find(item => item.id === exerciseId);
+          startTimer(exercise.rest, `Descanso · ${exercise.name}`);
+        }
+      }
+    });
+
+    document.addEventListener("input", event => {
+      if (event.target.matches("[data-weight], [data-reps]")) {
+        const day = activeDay();
+        const exerciseId = event.target.dataset.exercise;
+        const index = Number(event.target.dataset.set);
+        setEntry(day.id, exerciseId, index, event.target.matches("[data-weight]") ? { weight: event.target.value } : { reps: event.target.value });
+        updateExerciseStats(exerciseId);
+      }
+      if (event.target.matches("[data-reference]")) {
+        const exerciseId = event.target.dataset.exercise;
+        state.references[referenceKey(exerciseId)] = event.target.value;
+        persist(); updateExerciseStats(exerciseId);
+      }
+    });
+
+    $("#reset-session").addEventListener("click", resetCurrentSession);
+    $("#include-optional").addEventListener("change", event => {
+      state.includeOptionalByProgram[state.programId] = event.target.checked;
+      persist(); renderWeeklyVolume();
+    });
+    $("#timer-toggle").addEventListener("click", () => timerRunning ? stopTimer() : runTimer());
+    $("#timer-minus").addEventListener("click", () => adjustTimer(-15));
+    $("#timer-plus").addEventListener("click", () => adjustTimer(15));
+    $("#timer-reset").addEventListener("click", () => { stopTimer(); timerRemaining = timerInitial; $("#timer-label").textContent = "Temporizador de descanso"; updateTimerUI(); });
+    $("#pwa-banner-action").addEventListener("click", () => pwaBannerAction?.());
+    $("#pwa-banner-close").addEventListener("click", () => {
+      if (pwaBannerKind === "install") localStorage.setItem("setline-install-hint-dismissed", "1");
+      hidePwaBanner();
+    });
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      showInstallOffer();
+    });
+    window.addEventListener("appinstalled", () => {
+      deferredInstallPrompt = null;
+      localStorage.removeItem("setline-install-hint-dismissed");
+      hidePwaBanner();
+      showToast("Setline instalada");
+    });
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) syncTimer(); });
+    window.addEventListener("focus", syncTimer);
+
+    renderAll();
+    updateTimerUI();
+    registerSetlineServiceWorker();
+    setTimeout(showInstallOffer, 900);
+  </script>
+</body>
+</html>

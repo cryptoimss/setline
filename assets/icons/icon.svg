@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Setline</title>
+  <rect width="512" height="512" rx="112" fill="#0c1013"/>
+  <rect x="54" y="54" width="404" height="404" rx="92" fill="#192126" stroke="#2b353b" stroke-width="8"/>
+  <g fill="#ff735c">
+    <path d="M118 132h220v62H118z"/>
+    <path d="M174 225h220v62H174z"/>
+    <path d="M118 318h220v62H118z"/>
+  </g>
+  <g fill="#8ed7ca">
+    <path d="M360 132h34v62h-34z"/>
+    <path d="M118 225h34v62h-34z"/>
+    <path d="M360 318h34v62h-34z"/>
+  </g>
+</svg>
