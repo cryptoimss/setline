@@ -252,9 +252,19 @@ The signal plate is a solid coral block inset with a quiet one-pixel inner rule.
 
 The session header is expanded only for the first reading of each program. Later visits use a 64–76px compact row with the day title, code, duration, and prescribed series; a clearly named `Detalles` control restores the full explanation and signal plate. Its open state is intentionally temporary, while the first-read flag persists locally. The toggle keeps focus in place and retains a 44px minimum touch target.
 
+### Exercise Card States
+
+- **Next:** The first exercise with an unfinished set carries a 3px coral inset rule and a coral `Siguiente` chip; its first pending row gets a 1.5px coral inset ring. The progress strip offers a `Siguiente · 02 serie 1` control that scrolls to that row.
+- **Complete:** Once every set is checked the card collapses to a one-line summary (order plate in mint, title, `Completado · volume · ratio`) with a chevron toggle; tapping the head reopens it. Unchecking any set expands it again.
+- **Ruled row order:** index, load, reps, then the 48px completion control on the trailing edge so the thumb reaches it one-handed. Checking a set copies the previous set's reps and load into empty fields.
+
+### Session Finish Panel
+
+A raised slate panel after the last card shows `Sesión en curso` or `Sesión completa` with the done/total count and a primary `Terminar y guardar` action. Completion swaps the panel to the deep green surface and the button to mint. Confirmation uses an in-app `<dialog>` sheet (bottom-anchored on phones) instead of a native confirm.
+
 ### Timer Dock
 
-The dock is the system's one deliberate light surface: Timer Paper with Timer Ink, a 16px radius, strong shadow, tabular metric, and 46px controls. On phones it collapses to time, play, and reset while idle at zero; starting or pausing a timed rest restores the full adjustment controls and its running state turns mint. Keep it fixed near the safe-area edge without obscuring more of the primary sheet than the current state needs.
+The dock is the system's one deliberate light surface: Timer Paper with Timer Ink, a 16px radius, strong shadow, tabular metric, and 46px controls. On phones it collapses to time, play, and reset while idle at zero; starting or pausing a timed rest restores the full adjustment controls and its running state turns mint. The label shows the exercise name being rested, a 3px ink progress line runs along the bottom edge, and when time runs out the dock turns coral with `¡Listo! Siguiente serie` for six seconds. Keep it fixed near the safe-area edge without obscuring more of the primary sheet than the current state needs.
 
 ## Do's and Don'ts
 

@@ -471,12 +471,12 @@
     }
 
     .load-preset-panel {
-      margin-top: 18px;
-      padding: 14px;
+      margin-top: 12px;
+      padding: 8px 8px 8px 16px;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--surface-raised);
@@ -503,20 +503,22 @@
 
     .load-preset-copy .load-note-mobile { display: none; }
 
+    .session-hero.is-compact + .load-preset-panel .load-preset-copy span { display: none; }
+
     .load-preset-controls {
-      min-width: 276px;
+      min-width: 0;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 5px;
-      padding: 4px;
+      gap: 3px;
+      padding: 3px;
       border-radius: 12px;
       background: var(--surface);
     }
 
     .load-preset-button {
-      min-height: 44px;
+      min-height: 40px;
       border: 0;
-      border-radius: 8px;
+      border-radius: 9px;
       padding: 0 13px;
       background: transparent;
       color: var(--muted);
@@ -587,10 +589,37 @@
     .session-progress {
       margin-bottom: 18px;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 9px;
+    }
+
+    .session-progress-row {
+      display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
     }
+
+    .session-next {
+      min-height: 36px;
+      padding: 0 12px 0 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--surface-raised);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: background .2s var(--ease), color .2s var(--ease);
+    }
+
+    .session-next:hover { background: var(--surface-soft); }
+    .session-next svg { width: 14px; height: 14px; }
+    .session-next[hidden] { display: none; }
+    .session-next.is-done { color: var(--mint); }
 
     .session-progress-track,
     .exercise-progress-track,
@@ -614,6 +643,7 @@
       color: var(--muted);
       font-size: 12px;
       font-weight: 750;
+      font-variant-numeric: tabular-nums;
     }
 
     .exercise-list { display: grid; gap: 12px; }
@@ -630,6 +660,59 @@
     .exercise-card.is-complete { background: #13201f; }
 
     .exercise-card.is-complete .exercise-order { background: var(--mint); color: #10211e; }
+
+    .exercise-card.is-next { box-shadow: 0 12px 32px rgba(0, 0, 0, .18), inset 3px 0 0 var(--accent); }
+
+    .next-badge {
+      display: none;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #1a0c09;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .exercise-card.is-next .next-badge { display: inline-flex; }
+
+    .collapse-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      place-items: center;
+      transition: background .2s var(--ease), color .2s var(--ease);
+    }
+
+    .collapse-toggle:hover { background: var(--line); color: var(--text); }
+    .collapse-toggle svg { width: 18px; height: 18px; transition: transform .24s var(--ease); }
+    .exercise-card.is-complete .collapse-toggle { display: grid; }
+    .exercise-card.is-complete .exercise-head { cursor: pointer; }
+    .exercise-card.is-collapsed .collapse-toggle svg { transform: rotate(180deg); }
+
+    .exercise-collapsed-summary {
+      display: none;
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .exercise-collapsed-summary strong { color: var(--mint); }
+
+    .exercise-card.is-collapsed .exercise-body,
+    .exercise-card.is-collapsed .exercise-meta,
+    .exercise-card.is-collapsed .exercise-cue,
+    .exercise-card.is-collapsed .exercise-actions { display: none; }
+
+    .exercise-card.is-collapsed .exercise-collapsed-summary { display: block; }
 
     .exercise-head {
       display: grid;
@@ -704,7 +787,7 @@
     }
 
     .rest-button {
-      min-width: 96px;
+      min-width: 0;
       padding: 0 14px;
       display: inline-flex;
       align-items: center;
@@ -715,9 +798,10 @@
     }
 
     .exercise-actions {
-      display: grid;
+      display: flex;
+      flex-wrap: wrap;
       gap: 8px;
-      min-width: 118px;
+      margin-top: 12px;
     }
 
     .demo-button {
@@ -812,9 +896,13 @@
     .set-grid-head,
     .set-row {
       display: grid;
-      grid-template-columns: 34px 44px minmax(76px, 1fr) 16px minmax(76px, 1fr);
+      grid-template-columns: 30px minmax(76px, 1fr) 16px minmax(76px, 1fr) 48px;
       gap: 8px;
       align-items: center;
+    }
+
+    @media (min-width: 881px) {
+      .sets-wrap { max-width: 640px; }
     }
 
     .set-grid-head {
@@ -826,7 +914,8 @@
       text-transform: uppercase;
     }
 
-    .set-grid-head span:nth-child(3),
+    .set-grid-head span:nth-child(2),
+    .set-grid-head span:nth-child(4),
     .set-grid-head span:nth-child(5) { text-align: center; }
 
     .set-row {
@@ -838,6 +927,9 @@
     }
 
     .set-row.is-done { background: #1b2b29; }
+    .set-row.is-done .set-input { color: var(--muted); }
+    .set-row.is-next-set { box-shadow: inset 0 0 0 1.5px var(--accent); }
+    .set-row.is-next-set .set-number { color: var(--accent); }
 
     .set-number { color: var(--muted); font-size: 12px; font-weight: 850; text-align: center; }
 
@@ -878,7 +970,13 @@
       transition: transform .15s var(--ease);
     }
 
-    .set-check:checked { background: var(--mint); border-color: var(--mint); }
+    .set-check:checked { background: var(--mint); border-color: var(--mint); animation: check-pop .22s var(--ease); }
+
+    @keyframes check-pop {
+      0% { transform: scale(.9); }
+      60% { transform: scale(1.07); }
+      100% { transform: scale(1); }
+    }
 
     .set-check:checked::before { transform: rotate(-45deg) scale(1); }
 
@@ -974,6 +1072,69 @@
 
     .reference-auto-button:hover { border-color: var(--mint); }
     .reference-auto-button[hidden] { display: none; }
+
+    .session-finish {
+      margin-top: 14px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-raised);
+    }
+
+    .session-finish[hidden] { display: none; }
+    .session-finish strong { display: block; font-size: 15px; letter-spacing: -.01em; }
+    .session-finish span { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .session-finish.is-complete { border-color: rgba(142, 215, 202, .45); background: #13201f; }
+
+    .finish-button {
+      min-height: 48px;
+      padding: 0 18px;
+      flex: 0 0 auto;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #1a0c09;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      transition: filter .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .finish-button:hover { filter: brightness(1.06); }
+    .finish-button:active { transform: scale(.98); }
+    .session-finish.is-complete .finish-button { background: var(--mint); color: #0d1b19; }
+
+    .sheet {
+      border: 0;
+      padding: 0;
+      width: min(440px, calc(100vw - 24px));
+      border-radius: 18px;
+      background: var(--surface-raised);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    .sheet::backdrop { background: rgba(6, 9, 11, .66); backdrop-filter: blur(4px); }
+    .sheet-body { margin: 0; padding: 22px 20px 18px; display: grid; gap: 8px; }
+    .sheet-body h2 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
+    .sheet-body p { margin: 0; color: var(--muted); font-size: 14px; }
+    .sheet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+
+    .sheet-cancel,
+    .sheet-confirm {
+      min-height: 48px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .sheet-cancel { background: var(--surface-soft); color: var(--text); }
+    .sheet-confirm { background: var(--accent); color: #1a0c09; }
 
     .empty-state {
       padding: 34px 24px;
@@ -1169,7 +1330,8 @@
     .timer-dock {
       position: fixed;
       z-index: 40;
-      right: max(22px, env(safe-area-inset-right));
+      overflow: hidden;
+      right: calc(var(--summary) + 60px);
       bottom: max(18px, env(safe-area-inset-bottom));
       width: min(372px, calc(100vw - 36px));
       min-height: 70px;
@@ -1187,11 +1349,29 @@
     }
 
     .timer-dock.is-running { background: var(--mint); }
+    .timer-dock.is-finished { background: var(--accent); }
+    .timer-dock.is-finished .timer-label { color: #4a1a12; }
+
+    .timer-progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      background: rgba(17, 24, 26, .12);
+    }
+
+    .timer-progress-fill { width: 0; height: 100%; background: #11181a; transition: width .25s linear; }
+    .timer-dock:not(.is-running):not(.has-time):not(.is-finished) .timer-progress { display: none; }
 
     .timer-copy { min-width: 0; }
 
     .timer-label {
       display: block;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       color: #536064;
       font-size: 10px;
       font-weight: 850;
@@ -1425,7 +1605,9 @@
       .hero-day-code { font-size: 44px; }
       .hero-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
       .hero-fact { display: grid; gap: 1px; padding-top: 4px; font-size: 11px; line-height: 1.15; }
-      .load-preset-panel { margin-top: 12px; grid-template-columns: 1fr; gap: 8px; padding: 11px 10px; }
+      .load-preset-panel { margin-top: 10px; gap: 8px; padding: 6px 6px 6px 12px; }
+      .load-preset-panel:not(.is-noted) { grid-template-columns: minmax(0, 1fr) auto; }
+      .load-preset-panel.is-noted { grid-template-columns: 1fr; padding: 11px 10px; }
       .load-preset-copy { padding-inline: 2px; }
       .load-preset-copy strong { font-size: 13px; }
       .load-preset-copy #load-preset-note {
@@ -1440,8 +1622,8 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
       }
-      .load-preset-controls { width: 100%; min-width: 0; }
-      .load-preset-button { min-height: 44px; }
+      .load-preset-controls { min-width: 0; }
+      .load-preset-button { min-height: 44px; padding-inline: 10px; font-size: 11px; }
       .session-tools { margin: 16px 0 12px; display: grid; grid-template-columns: minmax(0, 1fr) 48px; gap: 8px; }
       .filter-row { min-width: 0; margin: 0; padding: 0; }
       .filter-button { min-height: 48px; padding-inline: 14px; }
@@ -1449,20 +1631,24 @@
       .quiet-button span { display: none; }
       .session-progress { margin-bottom: 12px; gap: 9px; }
       .session-progress-output { font-size: 11px; }
-      .exercise-head { grid-template-columns: 42px minmax(0, 1fr); gap: 12px; padding: 16px 14px 12px; }
+      .exercise-head { gap: 12px; padding: 16px 14px 12px; }
       .exercise-order { width: 42px; height: 42px; }
       .exercise-title-line h2 { font-size: 17px; }
       .exercise-meta { gap: 5px 12px; font-size: 13px; }
       .exercise-cue { font-size: 13px; line-height: 1.45; }
-      .exercise-actions { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; margin-top: 2px; }
-      .rest-button, .demo-button { width: 100%; }
+      .exercise-head { grid-template-columns: 42px minmax(0, 1fr) auto; }
+      .exercise-actions { margin-top: 10px; flex-wrap: nowrap; }
+      .rest-button, .demo-button { flex: 1 1 0; min-width: 0; padding-inline: 8px; font-size: 12px; white-space: nowrap; }
+      .rest-button svg, .demo-button svg { flex: 0 0 auto; }
+      .exercise-card.is-collapsed .exercise-head { padding-bottom: 14px; }
       .exercise-demo { margin: 0 10px 14px; }
       .demo-frame, .demo-frame img { min-height: 190px; }
       .demo-frame img { height: 64vw; max-height: 300px; }
       .demo-caption { align-items: flex-start; flex-direction: column; gap: 4px; font-size: 12px; }
       .demo-caption a { min-height: 44px; }
       .sets-wrap { padding: 0 10px 12px; }
-      .set-grid-head, .set-row { grid-template-columns: 29px 44px minmax(62px, 1fr) 12px minmax(62px, 1fr); gap: 5px; }
+      .set-grid-head, .set-row { grid-template-columns: 24px minmax(56px, 1fr) 12px minmax(56px, 1fr) 48px; gap: 6px; }
+      .set-check { width: 48px; height: 48px; }
       .set-grid-head { padding-inline: 6px; }
       .set-row { padding-inline: 6px; }
       .set-input, .reference-input, .bodyweight-load { height: 46px; font-size: 16px; }
@@ -1480,20 +1666,23 @@
         padding: 7px 8px 7px 12px;
         border-radius: 14px;
       }
-      .timer-label { max-width: 13ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+      .timer-label { font-size: 11px; }
+      .session-finish { flex-direction: column; align-items: stretch; padding: 14px; }
+      .finish-button { width: 100%; }
+      .sheet { margin: auto 12px max(12px, env(safe-area-inset-bottom)); width: calc(100vw - 24px); }
       .timer-time { font-size: 23px; }
       .timer-actions { gap: 4px; }
       .timer-control { width: 44px; min-width: 44px; min-height: 44px; }
       .timer-control.wide { min-width: 44px; padding-inline: 8px; font-size: 10px; }
-      .timer-dock:not(.is-running):not(.has-time) {
+      .timer-dock:not(.is-running):not(.has-time):not(.is-finished) {
         left: auto;
         width: auto;
         grid-template-columns: auto auto;
       }
-      .timer-dock:not(.is-running):not(.has-time) .timer-label,
-      .timer-dock:not(.is-running):not(.has-time) #timer-minus,
-      .timer-dock:not(.is-running):not(.has-time) #timer-plus { display: none; }
-      .timer-dock:not(.is-running):not(.has-time) .timer-time { margin: 0; font-size: 20px; }
+      .timer-dock:not(.is-running):not(.has-time):not(.is-finished) .timer-label,
+      .timer-dock:not(.is-running):not(.has-time):not(.is-finished) #timer-minus,
+      .timer-dock:not(.is-running):not(.has-time):not(.is-finished) #timer-plus { display: none; }
+      .timer-dock:not(.is-running):not(.has-time):not(.is-finished) .timer-time { margin: 0; font-size: 20px; }
       .pwa-banner {
         bottom: calc(82px + env(safe-area-inset-bottom));
         width: calc(100vw - var(--mobile-safe-left) - var(--mobile-safe-right));
@@ -1591,23 +1780,33 @@
           <div class="session-hero" id="session-hero"></div>
           <section class="load-preset-panel" id="load-preset-panel" aria-labelledby="load-preset-title">
             <div class="load-preset-copy">
-              <strong id="load-preset-title">Carga inicial · 174 cm / 74,4 kg</strong>
+              <strong id="load-preset-title">Carga inicial</strong>
               <span id="load-preset-note">Valores orientativos; ajusta siempre para cumplir el RIR indicado.</span>
             </div>
             <div class="load-preset-controls" id="load-presets" aria-label="Preset de carga"></div>
           </section>
           <div class="session-tools">
             <div class="filter-row" id="filters" aria-label="Filtrar por grupo muscular"></div>
-            <button class="quiet-button" id="reset-session" type="button" aria-label="Guardar resultados y empezar una nueva sesión">
+            <button class="quiet-button" id="reset-session" type="button" aria-label="Terminar sesión, guardar referencias y empezar de nuevo">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-              <span>Nueva sesión</span>
+              <span>Terminar sesión</span>
             </button>
           </div>
           <div class="session-progress" aria-label="Progreso de la sesión">
             <div class="session-progress-track"><div class="session-progress-fill" id="session-progress-fill"></div></div>
-            <output class="session-progress-output" id="session-progress-output">0 de 0 series</output>
+            <div class="session-progress-row">
+              <output class="session-progress-output" id="session-progress-output" aria-live="polite">0 de 0 series</output>
+              <button class="session-next" id="session-next" type="button" data-scroll-next hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14m0 0 6-6m-6 6-6-6"/></svg>
+                <span id="session-next-label"></span>
+              </button>
+            </div>
           </div>
           <div class="exercise-list" id="exercise-list"></div>
+          <div class="session-finish" id="session-finish" hidden>
+            <div><strong id="session-finish-title">Sesión en curso</strong><span id="session-finish-note"></span></div>
+            <button class="finish-button" type="button" data-finish-session>Terminar y guardar</button>
+          </div>
           <p class="footer-note">Los datos se guardan solo en este navegador. Carga y repeticiones son notas de entrenamiento, no una evaluación médica.<br>Demostraciones servidas por <a href="https://github.com/JahelCuadrado/ExerciseGymGifsDB" target="_blank" rel="noreferrer">ExerciseGymGifsDB</a>.</p>
         </section>
 
@@ -1659,9 +1858,10 @@
 
   <section class="timer-dock" id="timer-dock" aria-label="Temporizador de descanso">
     <div class="timer-copy">
-      <span class="timer-label" id="timer-label">Temporizador de descanso</span>
+      <span class="timer-label" id="timer-label">Descanso</span>
       <output class="timer-time" id="timer-time">00:00</output>
     </div>
+    <div class="timer-progress" aria-hidden="true"><div class="timer-progress-fill" id="timer-progress-fill"></div></div>
     <div class="timer-actions">
       <button class="timer-control wide" type="button" id="timer-minus" aria-label="Restar 15 segundos">−15</button>
       <button class="timer-control" type="button" id="timer-toggle" aria-label="Iniciar temporizador">
@@ -1674,6 +1874,16 @@
     </div>
   </section>
   <div class="toast" id="toast" role="status"></div>
+  <dialog class="sheet" id="confirm-sheet" aria-labelledby="sheet-title">
+    <form method="dialog" class="sheet-body">
+      <h2 id="sheet-title"></h2>
+      <p id="sheet-message"></p>
+      <div class="sheet-actions">
+        <button class="sheet-cancel" type="submit" value="cancel">Cancelar</button>
+        <button class="sheet-confirm" id="sheet-confirm" type="submit" value="confirm">Confirmar</button>
+      </div>
+    </form>
+  </dialog>
   <aside class="pwa-banner" id="pwa-banner" aria-live="polite" hidden>
     <div class="pwa-banner-copy">
       <strong id="pwa-banner-title">Instalar Setline</strong>
@@ -1950,7 +2160,9 @@
     let pwaBannerAction = null;
     let pwaBannerKind = "";
     let heroSeenTimer = null;
+    let timerFinishTimeout = null;
     const expandedHeroPrograms = new Set();
+    const expandedCompleteCards = new Set();
 
     const $ = (selector, scope = document) => scope.querySelector(selector);
     const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
@@ -2146,7 +2358,8 @@
         heavy: "125% de base. Solo si mantienes el RIR; manuales intactos."
       };
       $("#load-presets").innerHTML = Object.entries(LOAD_PRESETS).map(([id, item]) => `<button class="load-preset-button" type="button" aria-pressed="${state.loadPreset === id}" data-load-preset="${id}">${item.label}</button>`).join("");
-      $("#load-preset-note").innerHTML = `<span class="load-note-long">${preset.description}. No es un estándar por talla: ajusta al RIR. No pisa pesos manuales; en mancuernas/unilaterales, usa kg por lado.</span><span class="load-note-mobile">${mobileNotes[state.loadPreset]}</span>`;
+      $("#load-preset-note").innerHTML = `<span class="load-note-long">Base 174 cm / 74,4 kg · ${preset.description}. No es un estándar por talla: ajusta al RIR. No pisa pesos manuales; en mancuernas/unilaterales, usa kg por lado.</span><span class="load-note-mobile">${mobileNotes[state.loadPreset]}</span>`;
+      panel.classList.toggle("is-noted", !$("#session-hero").classList.contains("is-compact"));
     }
 
     function renderFilters() {
@@ -2160,12 +2373,12 @@
       const bodyweight = exercise.tracking === "reps";
       return `<div class="set-row ${entry.completed ? "is-done" : ""}" data-set-row="${index}">
         <span class="set-number">${index + 1}</span>
-        <input class="set-check" type="checkbox" ${entry.completed ? "checked" : ""} aria-label="Marcar serie ${index + 1} de ${exercise.name}" data-check data-exercise="${exercise.id}" data-set="${index}">
         ${bodyweight
           ? `<span class="bodyweight-load" aria-label="Carga: peso corporal">Corporal</span>`
           : `<input class="set-input" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Peso de la serie ${index + 1} en kilogramos" placeholder="kg" value="${escapeAttribute(entry.weight)}" data-weight data-exercise="${exercise.id}" data-set="${index}">`}
         <span class="times" aria-hidden="true">${bodyweight ? "" : "×"}</span>
-        <input class="set-input" type="text" inputmode="numeric" enterkeyhint="next" autocomplete="off" aria-label="Repeticiones de la serie ${index + 1}" placeholder="${exercise.reps}" value="${escapeAttribute(entry.reps)}" data-reps data-exercise="${exercise.id}" data-set="${index}">
+        <input class="set-input" type="text" inputmode="numeric" enterkeyhint="${index + 1 === exercise.sets ? "done" : "next"}" autocomplete="off" aria-label="Repeticiones de la serie ${index + 1}" placeholder="${exercise.reps}" value="${escapeAttribute(entry.reps)}" data-reps data-exercise="${exercise.id}" data-set="${index}">
+        <input class="set-check" type="checkbox" ${entry.completed ? "checked" : ""} aria-label="Marcar serie ${index + 1} de ${exercise.name} como hecha" data-check data-exercise="${exercise.id}" data-set="${index}">
       </div>`;
     }
 
@@ -2180,23 +2393,29 @@
       const loadHint = bodyweight ? "Peso corporal · ajusta la variante" : (load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`);
       const demo = exerciseGifs[exercise.id];
       const demoUrl = demo ? GIF_BASE + demo[0] : "";
-      return `<article class="exercise-card ${complete ? "is-complete" : ""}" data-exercise-card="${exercise.id}">
+      const collapsed = complete && !expandedCompleteCards.has(exercise.id);
+      return `<article class="exercise-card ${complete ? "is-complete" : ""} ${collapsed ? "is-collapsed" : ""}" data-exercise-card="${exercise.id}">
         <div class="exercise-head">
           <span class="exercise-order">${String(visibleIndex + 1).padStart(2, "0")}</span>
           <div class="exercise-title-wrap">
-            <div class="exercise-title-line"><h2>${exercise.name}</h2><span class="muscle-badge">${exercise.muscle}</span></div>
+            <div class="exercise-title-line"><h2>${exercise.name}</h2><span class="muscle-badge">${exercise.muscle}</span><span class="next-badge">Siguiente</span></div>
             <div class="exercise-meta"><span><strong>${exercise.sets}</strong> series</span><span><strong>${exercise.reps}</strong> reps</span><span>RIR <strong>${exercise.rir}</strong></span><span class="preset-load-hint"><strong>${loadHint}</strong></span></div>
             <p class="exercise-cue">${exercise.cue}</p>
+            <p class="exercise-collapsed-summary" data-collapsed-summary>${collapsedSummary(volume, unit, reference, ratio)}</p>
+            <div class="exercise-actions">
+              ${demo ? `<button class="demo-button" type="button" data-demo-toggle aria-expanded="false" aria-controls="demo-${exercise.id}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg><span>Ver técnica</span>
+              </button>` : ""}
+              <button class="rest-button" type="button" data-rest="${exercise.rest}" data-exercise-name="${escapeAttribute(exercise.name)}" aria-label="Iniciar descanso de ${formatRest(exercise.rest)}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6"/></svg>Descanso ${formatRest(exercise.rest)}
+              </button>
+            </div>
           </div>
-          <div class="exercise-actions">
-            ${demo ? `<button class="demo-button" type="button" data-demo-toggle aria-expanded="false" aria-controls="demo-${exercise.id}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg><span>Ver técnica</span>
-            </button>` : ""}
-            <button class="rest-button" type="button" data-rest="${exercise.rest}" data-exercise-name="${exercise.name}" aria-label="Iniciar descanso de ${formatRest(exercise.rest)}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6"/></svg>${formatRest(exercise.rest)}
-            </button>
-          </div>
+          <button class="collapse-toggle" type="button" data-collapse-toggle aria-expanded="${!collapsed}" aria-label="${collapsed ? "Mostrar" : "Plegar"} ${escapeAttribute(exercise.name)}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
+          </button>
         </div>
+        <div class="exercise-body">
         ${demo ? `<div class="exercise-demo" id="demo-${exercise.id}" hidden>
           <div class="demo-frame">
             <img data-demo-image data-src="${demoUrl}" alt="Demostración animada: ${demo[1]}" loading="lazy" decoding="async">
@@ -2205,12 +2424,12 @@
           <div class="demo-caption"><span>Variante mostrada: <strong>${demo[1]}</strong></span><a href="${demoUrl}" target="_blank" rel="noreferrer">Abrir GIF</a></div>
         </div>` : ""}
         <div class="sets-wrap">
-          <div class="set-grid-head" aria-hidden="true"><span>Serie</span><span>Hecha</span><span>${bodyweight ? "Carga" : "Peso"}</span><span></span><span>Reps</span></div>
+          <div class="set-grid-head" aria-hidden="true"><span>#</span><span>${bodyweight ? "Carga" : "Peso"}</span><span></span><span>Reps</span><span>Hecha</span></div>
           ${Array.from({ length: exercise.sets }, (_, index) => setRow(day, exercise, index)).join("")}
         </div>
         <div class="exercise-foot">
           <div class="volume-readout">
-            <div class="volume-topline"><span><strong class="volume-value" data-volume-value>${formatVolume(volume)} ${unit}</strong> ${bodyweight ? "registradas" : "registrados"}</span><span data-ratio-label>${referenceRatioLabel(reference, ratio)}</span></div>
+            <div class="volume-topline"><span><strong class="volume-value" data-volume-value>${volumeText(volume, unit)}</strong></span><span data-ratio-label>${referenceRatioLabel(reference, ratio)}</span></div>
             <div class="exercise-progress-track"><div class="exercise-progress-fill" data-exercise-fill style="width:${Math.min(ratio, 100)}%"></div></div>
           </div>
           <div class="reference-field">
@@ -2221,7 +2440,17 @@
             </div>
           </div>
         </div>
+        </div>
       </article>`;
+    }
+
+    function volumeText(volume, unit) {
+      return volume > 0 ? `${formatVolume(volume)} ${unit}` : "Sin series registradas";
+    }
+
+    function collapsedSummary(volume, unit, reference, ratio) {
+      const ratioText = reference.value ? ` · ${referenceRatioLabel(reference, ratio)}` : "";
+      return `<strong>Completado</strong> · ${volumeText(volume, unit)}${ratioText}`;
     }
 
     function renderExercises() {
@@ -2279,12 +2508,58 @@
       });
     }
 
+    function findNextSet(day) {
+      for (const exercise of day.exercises) {
+        for (let index = 0; index < exercise.sets; index += 1) {
+          if (!getEntry(day.id, exercise.id, index).completed) return { exercise, index, order: day.exercises.indexOf(exercise) + 1 };
+        }
+      }
+      return null;
+    }
+
+    function updateNextSet() {
+      const day = activeDay();
+      $$(".exercise-card.is-next").forEach(card => card.classList.remove("is-next"));
+      $$(".set-row.is-next-set").forEach(row => row.classList.remove("is-next-set"));
+      const next = findNextSet(day);
+      const button = $("#session-next");
+      const total = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
+      if (!next) {
+        button.hidden = total === 0;
+        button.classList.add("is-done");
+        $("#session-next-label").textContent = "Todo hecho";
+        return;
+      }
+      button.hidden = false;
+      button.classList.remove("is-done");
+      $("#session-next-label").textContent = `Siguiente · ${String(next.order).padStart(2, "0")} serie ${next.index + 1}`;
+      const card = $(`[data-exercise-card="${next.exercise.id}"]`);
+      if (!card) return;
+      card.classList.add("is-next");
+      $(`[data-set-row="${next.index}"]`, card)?.classList.add("is-next-set");
+    }
+
+    function updateSessionFinish(day, done, total) {
+      const panel = $("#session-finish");
+      const started = hasTrainingData(day);
+      panel.hidden = !started;
+      if (!started) return;
+      const complete = total > 0 && done === total;
+      panel.classList.toggle("is-complete", complete);
+      $("#session-finish-title").textContent = complete ? "Sesión completa" : "Sesión en curso";
+      $("#session-finish-note").textContent = complete
+        ? "Guarda los volúmenes como referencia y deja el día listo para la próxima."
+        : `${done} de ${total} series hechas. Puedes terminar cuando quieras; solo se guardan los ejercicios completos.`;
+    }
+
     function updateSessionProgress() {
       const day = activeDay();
       const total = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
       const done = day.exercises.reduce((sum, exercise) => sum + Array.from({ length: exercise.sets }, (_, index) => getEntry(day.id, exercise.id, index).completed ? 1 : 0).reduce((a, b) => a + b, 0), 0);
       $("#session-progress-fill").style.width = `${total ? (done / total) * 100 : 0}%`;
       $("#session-progress-output").textContent = `${done} de ${total} series`;
+      updateNextSet();
+      updateSessionFinish(day, done, total);
     }
 
     function updateExerciseStats(exerciseId) {
@@ -2295,12 +2570,48 @@
       const volume = exerciseVolume(day, exercise);
       const reference = getReference(exerciseId);
       const ratio = reference.value ? Math.round((volume / reference.value) * 100) : 0;
-      $("[data-volume-value]", card).textContent = `${formatVolume(volume)} ${volumeUnit(exercise)}`;
+      $("[data-volume-value]", card).textContent = volumeText(volume, volumeUnit(exercise));
       $("[data-ratio-label]", card).textContent = referenceRatioLabel(reference, ratio);
+      $("[data-collapsed-summary]", card).innerHTML = collapsedSummary(volume, volumeUnit(exercise), reference, ratio);
       $("[data-reference-label]", card).textContent = referenceFieldLabel(reference, exercise);
       $("[data-reference-auto]", card).hidden = reference.source !== "manual";
       $("[data-exercise-fill]", card).style.width = `${Math.min(ratio, 100)}%`;
-      card.classList.toggle("is-complete", isExerciseComplete(day, exercise));
+      const complete = isExerciseComplete(day, exercise);
+      card.classList.toggle("is-complete", complete);
+      if (!complete) {
+        card.classList.remove("is-collapsed");
+        expandedCompleteCards.delete(exerciseId);
+        setCollapseToggle(card, false);
+      }
+    }
+
+    function setCollapseToggle(card, collapsed) {
+      const toggle = $("[data-collapse-toggle]", card);
+      if (!toggle) return;
+      const name = $("h2", card)?.textContent || "ejercicio";
+      toggle.setAttribute("aria-expanded", String(!collapsed));
+      toggle.setAttribute("aria-label", `${collapsed ? "Mostrar" : "Plegar"} ${name}`);
+    }
+
+    function collapseCard(card, collapsed) {
+      const exerciseId = card.dataset.exerciseCard;
+      card.classList.toggle("is-collapsed", collapsed);
+      if (collapsed) expandedCompleteCards.delete(exerciseId);
+      else expandedCompleteCards.add(exerciseId);
+      setCollapseToggle(card, collapsed);
+    }
+
+    function confirmSheet({ title, message, confirmLabel = "Confirmar" }) {
+      const dialog = $("#confirm-sheet");
+      if (!dialog || typeof dialog.showModal !== "function") return Promise.resolve(window.confirm(`${title}\n${message}`));
+      $("#sheet-title").textContent = title;
+      $("#sheet-message").textContent = message;
+      $("#sheet-confirm").textContent = confirmLabel;
+      dialog.returnValue = "cancel";
+      return new Promise(resolve => {
+        dialog.addEventListener("close", () => resolve(dialog.returnValue === "confirm"), { once: true });
+        dialog.showModal();
+      });
     }
 
     function showToast(message) {
@@ -2459,7 +2770,7 @@
       }, {});
     }
 
-    function startNewSession() {
+    async function startNewSession() {
       const day = activeDay();
       const prefix = `${state.programId}:${day.id}:`;
       if (!hasTrainingData(day)) {
@@ -2468,15 +2779,17 @@
       }
       const volumes = completedExerciseVolumes(day);
       const savedCount = Object.keys(volumes).length;
-      const confirmation = savedCount
-        ? `¿Terminar ${day.name} y empezar una nueva sesión? Guardaré ${savedCount === 1 ? "1 ejercicio completo" : `${savedCount} ejercicios completos`} como referencia automática.`
-        : `¿Empezar ${day.name} desde cero? No hay ejercicios con todas sus series registradas para guardar como referencia.`;
-      if (!window.confirm(confirmation)) return;
+      const confirmed = await confirmSheet(savedCount
+        ? { title: `Terminar ${day.name}`, message: `Se guardar${savedCount === 1 ? "á 1 ejercicio completo" : `án ${savedCount} ejercicios completos`} como referencia automática y el día quedará listo para la próxima sesión.`, confirmLabel: "Guardar y terminar" }
+        : { title: `Reiniciar ${day.name}`, message: "Ningún ejercicio tiene todas sus series registradas, así que no se guardará ninguna referencia. Los datos de hoy se borrarán.", confirmLabel: "Reiniciar sin guardar" });
+      if (!confirmed) return;
       Object.assign(state.lastVolumes, volumes);
       Object.keys(state.entries).filter(key => key.startsWith(prefix)).forEach(key => delete state.entries[key]);
+      expandedCompleteCards.clear();
       persist();
       renderExercises();
-      showToast(savedCount ? `Nueva sesión · ${savedCount} ${savedCount === 1 ? "referencia guardada" : "referencias guardadas"}` : "Nueva sesión lista");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      showToast(savedCount ? `Sesión guardada · ${savedCount} ${savedCount === 1 ? "referencia" : "referencias"}` : "Día reiniciado");
     }
 
     function updateTimerUI() {
@@ -2487,6 +2800,11 @@
       $("#timer-dock").classList.toggle("has-time", timerRemaining > 0);
       $("#timer-toggle").setAttribute("aria-label", timerRunning ? "Pausar temporizador" : "Iniciar temporizador");
       $("#timer-toggle-icon").innerHTML = timerRunning ? '<path d="M8 5h3v14H8zM14 5h3v14h-3z" fill="currentColor" stroke="none"/>' : '<path d="m8 5 11 7-11 7z"/>';
+      $("#timer-progress-fill").style.width = `${timerInitial > 0 ? Math.min(100, (timerRemaining / timerInitial) * 100) : 0}%`;
+      if (timerRunning) {
+        clearTimeout(timerFinishTimeout);
+        $("#timer-dock").classList.remove("is-finished");
+      }
       document.title = timerRunning ? `${$("#timer-time").textContent} · Setline` : "Setline — Rutinas de hipertrofia";
     }
 
@@ -2543,8 +2861,15 @@
 
     function finishTimer() {
       stopTimer();
-      $("#timer-label").textContent = "Descanso terminado";
-      showToast("Descanso terminado · próxima serie");
+      const dock = $("#timer-dock");
+      dock.classList.add("is-finished");
+      $("#timer-label").textContent = "¡Listo! Siguiente";
+      clearTimeout(timerFinishTimeout);
+      timerFinishTimeout = setTimeout(() => {
+        dock.classList.remove("is-finished");
+        $("#timer-label").textContent = "Descanso";
+      }, 6000);
+      showToast("Descanso terminado · siguiente serie");
       if (navigator.vibrate) navigator.vibrate([120, 70, 120]);
       playTimerTone();
     }
@@ -2559,7 +2884,7 @@
       timerInterval = setInterval(syncTimer, 250);
     }
 
-    function startTimer(seconds, label = "Descanso en curso") {
+    function startTimer(seconds, label = "Descanso") {
       stopTimer();
       timerInitial = seconds;
       timerRemaining = seconds;
@@ -2587,6 +2912,7 @@
         else expandedHeroPrograms.add(programId);
         persist();
         renderHero();
+        renderLoadPresets();
         $("[data-hero-toggle]")?.focus({ preventScroll: true });
         return;
       }
@@ -2610,6 +2936,26 @@
       }
       const demoButton = event.target.closest("[data-demo-toggle]");
       if (demoButton) return toggleExerciseDemo(demoButton);
+      const finishButton = event.target.closest("[data-finish-session]");
+      if (finishButton) return startNewSession();
+      const nextButton = event.target.closest("[data-scroll-next]");
+      if (nextButton) {
+        const target = $(".set-row.is-next-set") || $("#session-finish");
+        target?.scrollIntoView({ block: "center", behavior: "smooth" });
+        return;
+      }
+      const collapseToggle = event.target.closest("[data-collapse-toggle]");
+      if (collapseToggle) {
+        const card = collapseToggle.closest(".exercise-card");
+        collapseCard(card, !card.classList.contains("is-collapsed"));
+        return;
+      }
+      const completeHead = event.target.closest(".exercise-card.is-complete .exercise-head");
+      if (completeHead && !event.target.closest("button, a, input")) {
+        const card = completeHead.closest(".exercise-card");
+        collapseCard(card, !card.classList.contains("is-collapsed"));
+        return;
+      }
       const automaticReferenceButton = event.target.closest("[data-reference-auto]");
       if (automaticReferenceButton) {
         const exerciseId = automaticReferenceButton.dataset.exercise;
@@ -2623,9 +2969,18 @@
       }
       const restButton = event.target.closest("[data-rest]");
       if (restButton) {
-        startTimer(Number(restButton.dataset.rest), `Descanso · ${restButton.dataset.exerciseName}`);
+        startTimer(Number(restButton.dataset.rest), restButton.dataset.exerciseName);
         return;
       }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key !== "Enter" || !event.target.matches(".set-input")) return;
+      event.preventDefault();
+      const inputs = $$(".set-input", event.target.closest(".exercise-card"));
+      const next = inputs[inputs.indexOf(event.target) + 1];
+      if (next) next.focus();
+      else event.target.blur();
     });
 
     document.addEventListener("change", event => {
@@ -2633,13 +2988,35 @@
         const day = activeDay();
         const exerciseId = event.target.dataset.exercise;
         const index = Number(event.target.dataset.set);
-        setEntry(day.id, exerciseId, index, { completed: event.target.checked });
-        event.target.closest(".set-row").classList.toggle("is-done", event.target.checked);
+        const row = event.target.closest(".set-row");
+        const patch = { completed: event.target.checked };
+        if (event.target.checked && index > 0) {
+          const previous = getEntry(day.id, exerciseId, index - 1);
+          const repsInput = $("[data-reps]", row);
+          const weightInput = $("[data-weight]", row);
+          if (repsInput && !safeNumber(repsInput.value) && safeNumber(previous.reps)) {
+            repsInput.value = previous.reps;
+            patch.reps = previous.reps;
+          }
+          if (weightInput && !safeNumber(weightInput.value) && safeNumber(previous.weight)) {
+            weightInput.value = previous.weight;
+            patch.weight = previous.weight;
+            patch.weightSource = previous.weightSource || "manual";
+          }
+        }
+        setEntry(day.id, exerciseId, index, patch);
+        row.classList.toggle("is-done", event.target.checked);
         updateExerciseStats(exerciseId);
         updateSessionProgress();
+        const exercise = day.exercises.find(item => item.id === exerciseId);
         if (event.target.checked) {
-          const exercise = day.exercises.find(item => item.id === exerciseId);
-          startTimer(exercise.rest, `Descanso · ${exercise.name}`);
+          startTimer(exercise.rest, exercise.name);
+          if (isExerciseComplete(day, exercise)) {
+            const card = event.target.closest(".exercise-card");
+            setTimeout(() => {
+              if (card.classList.contains("is-complete") && !expandedCompleteCards.has(exerciseId)) collapseCard(card, true);
+            }, 480);
+          }
         }
       }
       if (event.target.matches("[data-reference]") && !safeNumber(event.target.value)) {
@@ -2675,7 +3052,7 @@
     $("#timer-toggle").addEventListener("click", () => timerRunning ? stopTimer() : runTimer());
     $("#timer-minus").addEventListener("click", () => adjustTimer(-15));
     $("#timer-plus").addEventListener("click", () => adjustTimer(15));
-    $("#timer-reset").addEventListener("click", () => { stopTimer(); timerRemaining = timerInitial; $("#timer-label").textContent = "Temporizador de descanso"; updateTimerUI(); });
+    $("#timer-reset").addEventListener("click", () => { stopTimer(); clearTimeout(timerFinishTimeout); $("#timer-dock").classList.remove("is-finished"); timerRemaining = timerInitial; $("#timer-label").textContent = "Descanso"; updateTimerUI(); });
     $("#pwa-banner-action").addEventListener("click", () => pwaBannerAction?.());
     $("#pwa-banner-close").addEventListener("click", () => {
       if (pwaBannerKind === "install") localStorage.setItem("setline-install-hint-dismissed", "1");
