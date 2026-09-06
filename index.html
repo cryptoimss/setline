@@ -804,50 +804,28 @@
       margin-top: 12px;
     }
 
-    .demo-button {
-      min-height: 44px;
-      border: 0;
-      border-radius: 999px;
-      padding: 0 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      background: var(--surface-soft);
-      color: var(--mint);
-      font-size: 12px;
-      font-weight: 800;
-      transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
-    }
-
-    .demo-button:hover { background: var(--mint); color: #0d1b19; }
-    .demo-button:active { transform: scale(.98); }
-    .demo-button svg { width: 17px; height: 17px; }
-
     .exercise-demo {
       margin: 0 20px 18px 84px;
-      overflow: hidden;
-      border-radius: 12px;
-      background: #0a0f12;
+      display: flex;
+      align-items: center;
+      gap: 14px;
     }
-
-    .exercise-demo[hidden] { display: none; }
 
     .demo-frame {
       position: relative;
-      min-height: 220px;
-      display: grid;
-      place-items: center;
-      background: #080c0e;
+      flex: 0 0 112px;
+      width: 112px;
+      height: 112px;
+      overflow: hidden;
+      border-radius: 12px;
+      background: var(--surface-soft);
     }
 
     .demo-frame img {
       display: block;
       width: 100%;
-      height: min(34vw, 340px);
-      min-height: 220px;
+      height: 100%;
       object-fit: contain;
-      background: #080c0e;
     }
 
     .demo-status {
@@ -855,7 +833,7 @@
       inset: 0;
       display: grid;
       place-items: center;
-      padding: 24px;
+      padding: 8px;
       color: var(--muted);
       text-align: center;
       font-size: 12px;
@@ -865,21 +843,20 @@
     .exercise-demo.is-error .demo-frame img { visibility: hidden; }
 
     .demo-caption {
-      min-height: 48px;
+      min-width: 0;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 10px 14px;
-      border-top: 1px solid var(--line);
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 4px;
       color: var(--muted);
       font-size: 11px;
+      overflow-wrap: anywhere;
     }
 
     .demo-caption strong { color: var(--text); }
 
     .demo-caption a {
-      min-height: 32px;
+      min-height: 44px;
       display: inline-flex;
       align-items: center;
       color: var(--mint);
@@ -1638,12 +1615,11 @@
       .exercise-cue { font-size: 13px; line-height: 1.45; }
       .exercise-head { grid-template-columns: 42px minmax(0, 1fr) auto; }
       .exercise-actions { margin-top: 10px; flex-wrap: nowrap; }
-      .rest-button, .demo-button { flex: 1 1 0; min-width: 0; padding-inline: 8px; font-size: 12px; white-space: nowrap; }
-      .rest-button svg, .demo-button svg { flex: 0 0 auto; }
+      .rest-button { flex: 1 1 0; min-width: 0; padding-inline: 8px; font-size: 12px; white-space: nowrap; }
+      .rest-button svg { flex: 0 0 auto; }
       .exercise-card.is-collapsed .exercise-head { padding-bottom: 14px; }
       .exercise-demo { margin: 0 10px 14px; }
-      .demo-frame, .demo-frame img { min-height: 190px; }
-      .demo-frame img { height: 64vw; max-height: 300px; }
+      .demo-frame { flex-basis: 96px; width: 96px; height: 96px; }
       .demo-caption { align-items: flex-start; flex-direction: column; gap: 4px; font-size: 12px; }
       .demo-caption a { min-height: 44px; }
       .sets-wrap { padding: 0 10px 12px; }
@@ -1695,7 +1671,7 @@
     }
 
     @media (pointer: coarse) {
-      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .demo-button, .apple-button, .nav-shortcut, .mobile-shortcut, .load-preset-button, .hero-toggle, .reference-auto-button { min-height: 48px; }
+      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .apple-button, .nav-shortcut, .mobile-shortcut, .load-preset-button, .hero-toggle, .reference-auto-button { min-height: 48px; }
       .set-input, .reference-input, .bodyweight-load { min-height: 46px; font-size: 16px; }
       .bodyweight-load { font-size: 10px; }
     }
@@ -1910,8 +1886,8 @@
             id: "v-a", code: "A", name: "Base de torso", duration: "36–44 min", note: "Compuestos estables primero; deltoides y brazos al final.",
             exercises: [
               { id: "va-press", name: "Press inclinado en máquina o mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 120, rir: "2", cue: "Escápulas firmes; evita rebotar en la parte baja." },
-              { id: "va-row", name: "Remo con pecho apoyado", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Pausa breve atrás sin elevar los hombros." },
-              { id: "va-pulldown", name: "Jalón al pecho con agarre neutro", muscle: "Espalda", sets: 3, reps: "8–12", rest: 90, rir: "1–2", cue: "Lleva los codos hacia las costillas; torso estable." },
+              { id: "va-row-db", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Apoya la mano libre en el banco; lleva el codo hacia la cadera sin girar el torso. Reps por lado; kg de una mancuerna." },
+              { id: "va-pulldown-chinup", name: "Dominadas supinas", muscle: "Espalda", sets: 3, reps: "6–10", rest: 120, rir: "1–2", tracking: "reps", cue: "Palmas hacia ti, agarre al ancho de hombros y subida sin balanceo. Usa una banda de asistencia si la necesitas para mantener el RIR." },
               { id: "va-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Sube con el codo y controla la vuelta." },
               { id: "va-curl", name: "Curl de bíceps en polea", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Brazos quietos; extensión completa sin perder tensión." },
               { id: "va-pushdown", name: "Extensión de tríceps con cuerda", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Separa la cuerda al final sin mover los codos." }
@@ -1921,9 +1897,9 @@
             id: "v-b", code: "B", name: "Hombros y brazos", duration: "34–42 min", note: "Trabajo de torso con baja demanda lumbar y volumen de hombro controlado.",
             exercises: [
               { id: "vb-chest", name: "Press de pecho convergente", muscle: "Pecho", sets: 3, reps: "8–12", rest: 105, rir: "2", cue: "Agarre cómodo y recorrido sin despegar los hombros." },
-              { id: "vb-highrow", name: "Remo alto unilateral en polea", muscle: "Espalda", sets: 3, reps: "8–12", rest: 90, rir: "2", cue: "Termina con el codo junto al torso; no gires la cadera." },
-              { id: "vb-shoulder", name: "Press de hombro en máquina", muscle: "Hombros", sets: 2, reps: "8–12", rest: 105, rir: "2–3", cue: "Volumen prudente por el trabajo por encima de la cabeza del vóley." },
-              { id: "vb-reverse", name: "Pájaros en máquina o polea", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Abre desde los brazos sin arquear la espalda." },
+              { id: "vb-highrow-db", name: "Remo inclinado con mancuernas", muscle: "Espalda", sets: 3, reps: "8–12", rest: 90, rir: "2", cue: "Inclina el torso desde la cadera, mantén la espalda estable y lleva los codos atrás, algo separados. Kg por mancuerna." },
+              { id: "vb-shoulder-db", name: "Press de hombro con mancuernas", muscle: "Hombros", sets: 2, reps: "8–12", rest: 105, rir: "2–3", cue: "Mantén el RIR por el trabajo de vóley. Sentado, abdomen firme y antebrazos verticales; sube sin arquear la espalda. Kg por mancuerna." },
+              { id: "vb-reverse-db", name: "Pájaros con mancuernas", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Inclina el torso y abre los brazos con los codos ligeramente flexionados, sin impulso. Kg por mancuerna." },
               { id: "vb-inclinecurl", name: "Curl inclinado con mancuernas", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Mantén el hombro atrás y evita impulso." },
               { id: "vb-overheadtri", name: "Extensión de tríceps sobre la cabeza", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Busca estiramiento largo y codos apuntando al frente." }
             ]
@@ -1934,7 +1910,7 @@
               { id: "vc-pulldown", name: "Jalón unilateral en polea", muscle: "Espalda", sets: 3, reps: "10–14", rest: 75, rir: "2", cue: "Inicia bajando la escápula; no tires con el torso." },
               { id: "vc-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 105, rir: "2", cue: "Misma trayectoria en todas las repeticiones." },
               { id: "vc-seatedrow", name: "Remo sentado en polea", muscle: "Espalda", sets: 3, reps: "10–14", rest: 90, rir: "1–2", cue: "Mantén el pecho alto y no colapses al estirar." },
-              { id: "vc-lateral", name: "Elevación lateral en máquina", muscle: "Hombros", sets: 3, reps: "15–20", rest: 60, rir: "1", cue: "Ritmo continuo y sin impulso." },
+              { id: "vc-lateral-db", name: "Elevación lateral con mancuernas", muscle: "Hombros", sets: 3, reps: "15–20", rest: 60, rir: "1", cue: "Eleva los brazos hasta la altura de los hombros, sin encogerlos ni balancearte. Kg por mancuerna." },
               { id: "vc-fly", name: "Apertura en polea o peck deck", muscle: "Pecho", sets: 2, reps: "12–18", rest: 60, rir: "1–2", cue: "Acerca los bíceps sin perder el arco natural del hombro." },
               { id: "vc-curl", name: "Curl predicador", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "No hiperextiendas el codo al final." },
               { id: "vc-tri", name: "Extensión cruzada de tríceps en polea", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Bloquea el brazo y termina cada repetición." }
@@ -1955,9 +1931,9 @@
             id: "s-1", code: "1", name: "Torso A", duration: "55–68 min", note: "Base pesada equilibrada de pecho y espalda, con final de deltoides y tríceps.",
             exercises: [
               { id: "s1-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Progresión principal del día; repite banco y ángulo." },
-              { id: "s1-row", name: "Remo con pecho apoyado", muscle: "Espalda", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Pausa atrás y estiramiento completo al frente." },
+              { id: "s1-row-db", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Apoya la mano libre en el banco; lleva el codo hacia la cadera sin girar el torso. Reps por lado; kg de una mancuerna." },
               { id: "s1-fly", name: "Apertura en polea", muscle: "Pecho", sets: 3, reps: "10–15", rest: 75, rir: "1–2", cue: "Controla la posición estirada; no choques las manos." },
-              { id: "s1-pulldown", name: "Jalón neutro al pecho", muscle: "Espalda", sets: 3, reps: "8–12", rest: 105, rir: "1–2", cue: "Codos hacia abajo, sin convertirlo en un remo." },
+              { id: "s1-pulldown-chinup", name: "Dominadas supinas", muscle: "Espalda", sets: 3, reps: "6–10", rest: 120, rir: "1–2", tracking: "reps", cue: "Palmas hacia ti, agarre al ancho de hombros y subida sin balanceo. Usa una banda de asistencia si la necesitas para mantener el RIR." },
               { id: "s1-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 4, reps: "12–20", rest: 60, rir: "1–2", cue: "Tensión constante; controla dos segundos al bajar." },
               { id: "s1-tri", name: "Extensión de tríceps con barra", muscle: "Tríceps", sets: 3, reps: "8–12", rest: 75, rir: "1–2", cue: "Codos fijos y bloqueo controlado." }
             ]
@@ -1966,9 +1942,9 @@
             id: "s-2", code: "2", name: "Espalda y bíceps", duration: "54–66 min", note: "Más volumen de dorsales y espalda alta con dos perfiles de curl.",
             exercises: [
               { id: "s2-pullup", name: "Dominada asistida/lastrada o jalón", muscle: "Espalda", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Usa la variante que mantenga el rango completo." },
-              { id: "s2-highrow", name: "Remo alto unilateral", muscle: "Espalda", sets: 3, reps: "8–12", rest: 105, rir: "2", cue: "Codo abierto moderadamente para espalda alta." },
+              { id: "s2-highrow-db", name: "Remo inclinado con mancuernas", muscle: "Espalda", sets: 3, reps: "8–12", rest: 105, rir: "2", cue: "Inclina el torso desde la cadera, mantén la espalda estable y lleva los codos atrás, algo separados. Kg por mancuerna." },
               { id: "s2-cablerow", name: "Remo sentado agarre neutro", muscle: "Espalda", sets: 3, reps: "10–14", rest: 90, rir: "1–2", cue: "Estira sin redondear la zona lumbar." },
-              { id: "s2-reverse", name: "Pájaros en peck deck", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Piensa en separar las manos, no en juntar escápulas." },
+              { id: "s2-reverse-db", name: "Pájaros con mancuernas", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Inclina el torso y abre los brazos con los codos ligeramente flexionados, sin impulso. Kg por mancuerna." },
               { id: "s2-preacher", name: "Curl predicador", muscle: "Bíceps", sets: 3, reps: "8–12", rest: 75, rir: "1–2", cue: "Recorrido largo sin despegar el brazo del apoyo." },
               { id: "s2-hammer", name: "Curl martillo con cuerda", muscle: "Bíceps", sets: 3, reps: "10–15", rest: 60, rir: "1–2", cue: "Muñeca neutra y codos quietos." }
             ]
@@ -1978,9 +1954,9 @@
             exercises: [
               { id: "s3-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Usa topes consistentes y registra la posición del asiento." },
               { id: "s3-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "No acortes la parte baja por buscar más carga." },
-              { id: "s3-shoulder", name: "Press de hombro en máquina", muscle: "Hombros", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Antebrazos verticales y espalda apoyada." },
-              { id: "s3-lateral", name: "Elevación lateral en máquina", muscle: "Hombros", sets: 4, reps: "12–20", rest: 60, rir: "1–2", cue: "Repeticiones uniformes; evita encoger los hombros." },
-              { id: "s3-fly", name: "Apertura baja a alta en polea", muscle: "Pecho", sets: 2, reps: "12–18", rest: 60, rir: "1–2", cue: "Cruza levemente la línea media sin perder control." },
+              { id: "s3-shoulder-db", name: "Press de hombro con mancuernas", muscle: "Hombros", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Sentado, abdomen firme y antebrazos verticales; sube sin arquear la espalda. Kg por mancuerna." },
+              { id: "s3-lateral-db", name: "Elevación lateral con mancuernas", muscle: "Hombros", sets: 4, reps: "12–20", rest: 60, rir: "1–2", cue: "Eleva los brazos hasta la altura de los hombros, sin encogerlos ni balancearte. Kg por mancuerna." },
+              { id: "s3-fly-db", name: "Aperturas inclinadas con mancuernas", muscle: "Pecho", sets: 2, reps: "12–18", rest: 60, rir: "1–2", cue: "Banco con inclinación suave, codos ligeramente flexionados; abre solo hasta donde controles sin molestias. Kg por mancuerna." },
               { id: "s3-overhead", name: "Extensión de tríceps sobre la cabeza", muscle: "Tríceps", sets: 3, reps: "10–15", rest: 75, rir: "1–2", cue: "Deja que el tríceps se estire sin abrir los codos." },
               { id: "s3-pushdown", name: "Extensión unilateral en polea", muscle: "Tríceps", sets: 2, reps: "12–16", rest: 60, rir: "1", cue: "Termina con el codo bloqueado, hombro quieto." }
             ]
@@ -1991,7 +1967,7 @@
               { id: "s4-legpress", name: "Prensa de piernas", muscle: "Piernas", sets: 2, reps: "8–12", rest: 150, rir: "2–3", cue: "Recorrido cómodo y controlado; no busques fatiga que afecte al vóley." },
               { id: "s4-legcurl", name: "Curl femoral sentado", muscle: "Piernas", sets: 2, reps: "10–15", rest: 90, rir: "2", cue: "Pausa en flexión y controla la vuelta." },
               { id: "s4-chest", name: "Press convergente en máquina", muscle: "Pecho", sets: 3, reps: "10–14", rest: 105, rir: "2", cue: "Carga moderada y recorrido completo." },
-              { id: "s4-pulldown", name: "Jalón al pecho agarre neutro", muscle: "Espalda", sets: 3, reps: "10–14", rest: 90, rir: "2", cue: "Movimiento suave, sin balanceo." },
+              { id: "s4-pulldown-chinup", name: "Dominadas supinas", muscle: "Espalda", sets: 3, reps: "6–10", rest: 120, rir: "2", tracking: "reps", cue: "Palmas hacia ti, agarre al ancho de hombros y subida sin balanceo. Usa una banda de asistencia si la necesitas para mantener el RIR." },
               { id: "s4-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 3, reps: "15–20", rest: 60, rir: "1–2", cue: "Serie limpia, sin convertirla en un encogimiento." },
               { id: "s4-curl", name: "Curl en polea", muscle: "Bíceps", sets: 2, reps: "12–16", rest: 60, rir: "1–2", cue: "Mantén tensión y no adelantes el codo." },
               { id: "s4-tri", name: "Extensión con cuerda", muscle: "Tríceps", sets: 2, reps: "12–16", rest: 60, rir: "1–2", cue: "Finaliza cada repetición sin impulso." }
@@ -2041,59 +2017,59 @@
     };
 
     const NORMAL_LOADS = {
-      "va-press": 18, "va-row": 22.5, "va-pulldown": 40, "va-lateral": 5, "va-curl": 15, "va-pushdown": 25,
-      "vb-chest": 45, "vb-highrow": 20, "vb-shoulder": 30, "vb-reverse": 30, "vb-inclinecurl": 10, "vb-overheadtri": 20,
-      "vc-pulldown": 17.5, "vc-incline": 40, "vc-seatedrow": 40, "vc-lateral": 25, "vc-fly": 30, "vc-curl": 20, "vc-tri": 12.5,
-      "s1-incline": 18, "s1-row": 22.5, "s1-fly": 10, "s1-pulldown": 40, "s1-lateral": 5, "s1-tri": 25,
-      "s2-pullup": null, "s2-highrow": 25, "s2-cablerow": 40, "s2-reverse": 30, "s2-preacher": 20, "s2-hammer": 15,
-      "s3-flat": 50, "s3-incline": 40, "s3-shoulder": 30, "s3-lateral": 25, "s3-fly": 7.5, "s3-overhead": 20, "s3-pushdown": 12.5,
-      "s4-legpress": 90, "s4-legcurl": 30, "s4-chest": 45, "s4-pulldown": 40, "s4-lateral": 5, "s4-curl": 15, "s4-tri": 25
+      "va-press": 18, "va-row-db": 15, "va-pulldown-chinup": null, "va-lateral": 5, "va-curl": 15, "va-pushdown": 25,
+      "vb-chest": 45, "vb-highrow-db": 12.5, "vb-shoulder-db": 10, "vb-reverse-db": 4, "vb-inclinecurl": 10, "vb-overheadtri": 20,
+      "vc-pulldown": 17.5, "vc-incline": 40, "vc-seatedrow": 40, "vc-lateral-db": 5, "vc-fly": 30, "vc-curl": 20, "vc-tri": 12.5,
+      "s1-incline": 18, "s1-row-db": 15, "s1-fly": 10, "s1-pulldown-chinup": null, "s1-lateral": 5, "s1-tri": 25,
+      "s2-pullup": null, "s2-highrow-db": 12.5, "s2-cablerow": 40, "s2-reverse-db": 4, "s2-preacher": 20, "s2-hammer": 15,
+      "s3-flat": 50, "s3-incline": 40, "s3-shoulder-db": 10, "s3-lateral-db": 5, "s3-fly-db": 6, "s3-overhead": 20, "s3-pushdown": 12.5,
+      "s4-legpress": 90, "s4-legcurl": 30, "s4-chest": 45, "s4-pulldown-chinup": null, "s4-lateral": 5, "s4-curl": 15, "s4-tri": 25
     };
 
     const GIF_BASE = "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/";
     const exerciseGifs = {
       "va-press": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
-      "va-row": ["upper-back/dumbbell-incline-row.gif", "Remo inclinado con pecho apoyado"],
-      "va-pulldown": ["lats/twin-handle-parallel-grip-lat-pulldown.gif", "Jalón con agarre paralelo"],
+      "va-row-db": ["upper-back/dumbbell-one-arm-bent-over-row.gif", "Remo a una mano con mancuerna"],
+      "va-pulldown-chinup": ["lats/chin-up.gif", "Dominadas supinas"],
       "va-lateral": ["delts/cable-one-arm-lateral-raise.gif", "Elevación lateral unilateral en polea"],
       "va-curl": ["biceps/cable-curl.gif", "Curl de bíceps en polea"],
       "va-pushdown": ["triceps/cable-pushdown-with-rope-attachment.gif", "Extensión de tríceps con cuerda"],
       "vb-chest": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
-      "vb-highrow": ["upper-back/cable-one-arm-straight-back-high-row-kneeling.gif", "Remo alto unilateral en polea"],
-      "vb-shoulder": ["delts/lever-shoulder-press.gif", "Press de hombro en máquina"],
-      "vb-reverse": ["delts/lever-seated-reverse-fly.gif", "Pájaros en máquina"],
+      "vb-highrow-db": ["upper-back/dumbbell-bent-over-row.gif", "Remo inclinado con mancuernas"],
+      "vb-shoulder-db": ["delts/dumbbell-seated-shoulder-press.gif", "Press de hombro con mancuernas"],
+      "vb-reverse-db": ["delts/dumbbell-reverse-fly.gif", "Pájaros con mancuernas"],
       "vb-inclinecurl": ["biceps/dumbbell-incline-biceps-curl.gif", "Curl inclinado con mancuernas"],
       "vb-overheadtri": ["triceps/cable-overhead-triceps-extension-rope-attachment.gif", "Extensión de tríceps sobre la cabeza con cuerda"],
       "vc-pulldown": ["lats/cable-one-arm-pulldown.gif", "Jalón unilateral en polea"],
       "vc-incline": ["pectorals/lever-incline-chest-press.gif", "Press inclinado en máquina"],
       "vc-seatedrow": ["upper-back/cable-seated-row.gif", "Remo sentado en polea"],
-      "vc-lateral": ["delts/lever-lateral-raise.gif", "Elevación lateral en máquina"],
+      "vc-lateral-db": ["delts/dumbbell-lateral-raise.gif", "Elevación lateral con mancuernas"],
       "vc-fly": ["pectorals/lever-seated-fly.gif", "Apertura sentada en máquina"],
       "vc-curl": ["biceps/barbell-preacher-curl.gif", "Curl predicador con barra"],
       "vc-tri": ["triceps/cable-standing-one-arm-triceps-extension.gif", "Extensión unilateral de tríceps en polea"],
       "s1-incline": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
-      "s1-row": ["upper-back/dumbbell-incline-row.gif", "Remo inclinado con pecho apoyado"],
+      "s1-row-db": ["upper-back/dumbbell-one-arm-bent-over-row.gif", "Remo a una mano con mancuerna"],
       "s1-fly": ["pectorals/cable-standing-fly.gif", "Apertura de pie en polea"],
-      "s1-pulldown": ["lats/twin-handle-parallel-grip-lat-pulldown.gif", "Jalón con agarre paralelo"],
+      "s1-pulldown-chinup": ["lats/chin-up.gif", "Dominadas supinas"],
       "s1-lateral": ["delts/cable-one-arm-lateral-raise.gif", "Elevación lateral unilateral en polea"],
       "s1-tri": ["triceps/cable-pushdown.gif", "Extensión de tríceps con barra"],
       "s2-pullup": ["lats/pull-up-neutral-grip.gif", "Dominada con agarre neutro"],
-      "s2-highrow": ["upper-back/lever-one-arm-lateral-high-row.gif", "Remo alto unilateral en máquina"],
+      "s2-highrow-db": ["upper-back/dumbbell-bent-over-row.gif", "Remo inclinado con mancuernas"],
       "s2-cablerow": ["upper-back/cable-seated-row.gif", "Remo sentado en polea"],
-      "s2-reverse": ["delts/lever-seated-reverse-fly.gif", "Pájaros en máquina"],
+      "s2-reverse-db": ["delts/dumbbell-reverse-fly.gif", "Pájaros con mancuernas"],
       "s2-preacher": ["biceps/barbell-preacher-curl.gif", "Curl predicador con barra"],
       "s2-hammer": ["biceps/cable-hammer-curl-with-rope.gif", "Curl martillo con cuerda"],
       "s3-flat": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
       "s3-incline": ["pectorals/lever-incline-chest-press.gif", "Press inclinado en máquina"],
-      "s3-shoulder": ["delts/lever-shoulder-press.gif", "Press de hombro en máquina"],
-      "s3-lateral": ["delts/lever-lateral-raise.gif", "Elevación lateral en máquina"],
-      "s3-fly": ["pectorals/cable-low-fly.gif", "Apertura baja en polea"],
+      "s3-shoulder-db": ["delts/dumbbell-seated-shoulder-press.gif", "Press de hombro con mancuernas"],
+      "s3-lateral-db": ["delts/dumbbell-lateral-raise.gif", "Elevación lateral con mancuernas"],
+      "s3-fly-db": ["pectorals/dumbbell-incline-fly.gif", "Aperturas inclinadas con mancuernas"],
       "s3-overhead": ["triceps/cable-overhead-triceps-extension-rope-attachment.gif", "Extensión de tríceps sobre la cabeza con cuerda"],
       "s3-pushdown": ["triceps/cable-one-arm-tricep-pushdown.gif", "Extensión unilateral de tríceps"],
       "s4-legpress": ["glutes/sled-45-leg-press.gif", "Prensa inclinada de piernas"],
       "s4-legcurl": ["hamstrings/lever-seated-leg-curl.gif", "Curl femoral sentado"],
       "s4-chest": ["pectorals/lever-chest-press.gif", "Press convergente en máquina"],
-      "s4-pulldown": ["lats/twin-handle-parallel-grip-lat-pulldown.gif", "Jalón con agarre paralelo"],
+      "s4-pulldown-chinup": ["lats/chin-up.gif", "Dominadas supinas"],
       "s4-lateral": ["delts/cable-one-arm-lateral-raise.gif", "Elevación lateral unilateral en polea"],
       "s4-curl": ["biceps/cable-curl.gif", "Curl de bíceps en polea"],
       "s4-tri": ["triceps/cable-pushdown-with-rope-attachment.gif", "Extensión de tríceps con cuerda"],
@@ -2403,9 +2379,6 @@
             <p class="exercise-cue">${exercise.cue}</p>
             <p class="exercise-collapsed-summary" data-collapsed-summary>${collapsedSummary(volume, unit, reference, ratio)}</p>
             <div class="exercise-actions">
-              ${demo ? `<button class="demo-button" type="button" data-demo-toggle aria-expanded="false" aria-controls="demo-${exercise.id}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg><span>Ver técnica</span>
-              </button>` : ""}
               <button class="rest-button" type="button" data-rest="${exercise.rest}" data-exercise-name="${escapeAttribute(exercise.name)}" aria-label="Iniciar descanso de ${formatRest(exercise.rest)}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6"/></svg>Descanso ${formatRest(exercise.rest)}
               </button>
@@ -2415,14 +2388,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
           </button>
         </div>
-        <div class="exercise-body">
-        ${demo ? `<div class="exercise-demo" id="demo-${exercise.id}" hidden>
+        ${demo ? `<div class="exercise-demo" id="demo-${exercise.id}">
           <div class="demo-frame">
-            <img data-demo-image data-src="${demoUrl}" alt="Demostración animada: ${demo[1]}" loading="lazy" decoding="async">
-            <span class="demo-status">Cargando demostración…</span>
+            <img data-demo-image data-src="${demoUrl}" alt="Demostración animada: ${demo[1]}" width="112" height="112" loading="lazy" decoding="async">
+            <span class="demo-status">Cargando GIF…</span>
           </div>
-          <div class="demo-caption"><span>Variante mostrada: <strong>${demo[1]}</strong></span><a href="${demoUrl}" target="_blank" rel="noreferrer">Abrir GIF</a></div>
+          <div class="demo-caption"><span>Variante mostrada: <strong>${demo[1]}</strong></span><a href="${demoUrl}" target="_blank" rel="noreferrer" aria-label="Abrir GIF de ${escapeAttribute(demo[1])} en una pestaña nueva">Ver en grande ↗</a></div>
         </div>` : ""}
+        <div class="exercise-body">
         <div class="sets-wrap">
           <div class="set-grid-head" aria-hidden="true"><span>#</span><span>${bodyweight ? "Carga" : "Peso"}</span><span></span><span>Reps</span><span>Hecha</span></div>
           ${Array.from({ length: exercise.sets }, (_, index) => setRow(day, exercise, index)).join("")}
@@ -2460,6 +2433,7 @@
       $("#exercise-list").innerHTML = filtered.length
         ? filtered.map((exercise) => exerciseCard(day, exercise, day.exercises.indexOf(exercise))).join("")
         : `<div class="empty-state"><strong>No hay ejercicios con este filtro.</strong>Elige otro grupo muscular para volver a la sesión.</div>`;
+      $$(".exercise-demo").forEach(loadExerciseDemo);
       updateSessionProgress();
     }
 
@@ -2711,20 +2685,13 @@
       }
     }
 
-    function toggleExerciseDemo(button) {
-      const panel = document.getElementById(button.getAttribute("aria-controls"));
-      if (!panel) return;
-      const willOpen = panel.hidden;
-      panel.hidden = !willOpen;
-      button.setAttribute("aria-expanded", String(willOpen));
-      $("span", button).textContent = willOpen ? "Ocultar técnica" : "Ver técnica";
-      if (!willOpen) return;
+    function loadExerciseDemo(panel) {
       const image = $("[data-demo-image]", panel);
       if (!image || image.getAttribute("src")) return;
       image.addEventListener("load", () => panel.classList.add("is-ready"), { once: true });
       image.addEventListener("error", () => {
         panel.classList.add("is-error");
-        $(".demo-status", panel).textContent = "No se pudo cargar el GIF. Comprueba la conexión o ábrelo en una pestaña nueva.";
+        $(".demo-status", panel).textContent = "GIF no disponible. Usa «Ver en grande».";
       }, { once: true });
       image.src = image.dataset.src;
     }
@@ -2934,8 +2901,6 @@
         state.filter = filterButton.dataset.filter;
         persist(); renderFilters(); renderExercises(); return;
       }
-      const demoButton = event.target.closest("[data-demo-toggle]");
-      if (demoButton) return toggleExerciseDemo(demoButton);
       const finishButton = event.target.closest("[data-finish-session]");
       if (finishButton) return startNewSession();
       const nextButton = event.target.closest("[data-scroll-next]");
