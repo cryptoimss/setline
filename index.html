@@ -2000,9 +2000,9 @@
         short: "Pecho · prioridad",
         mobileName: "Pecho",
         title: "Especialización de pecho",
-        navNote: "2 sesiones · 14 series semanales",
+        navNote: "Gym A/B + alternativa en casa",
         symbol: "P2",
-        description: "Haz A y B una vez por semana, separadas por 48–72 h. Sustituye el trabajo de pecho de los otros programas con estas sesiones.",
+        description: "Haz dos sesiones por semana, separadas por 48–72 h. Casa puede reemplazar A o B. Sustituye el trabajo de pecho de los otros programas con estas sesiones.",
         days: [
           {
             id: "p-a", code: "A", name: "Pecho · base fuerte", duration: "30–40 min", note: "Calienta con 2–3 series progresivas del primer press, sin registrarlas como trabajo.",
@@ -2018,6 +2018,15 @@
               { id: "pb-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 150, rir: "2", cue: "Usa siempre la misma posición del asiento. Baja con control, mantén el pecho estable y evita adelantar los hombros." },
               { id: "pb-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 2, reps: "10–12", rest: 120, rir: "1–2", cue: "Banco a 15–30°. Usa una carga que permita todo el rango sin arquear más la espalda. Kg por mancuerna." },
               { id: "pb-fly", name: "Apertura en peck deck", muscle: "Pecho", sets: 2, reps: "12–18", rest: 90, rir: "1–2", cue: "Apoya la espalda y acerca los brazos sin encoger los hombros. Controla la vuelta, sin forzar el estiramiento." }
+            ]
+          },
+          {
+            id: "p-home", code: "C", name: "Pecho en casa", duration: "25–35 min", alternative: true,
+            note: "7 series sin banco: mancuernas, flexiones y elástico. Calienta con un press liviano y flexiones fáciles. Reemplaza una sesión de gym; no es un tercer día extra.",
+            exercises: [
+              { id: "ph-floor", name: "Press con mancuernas en el suelo", muscle: "Pecho", sets: 3, reps: "8–15", rest: 120, rir: "2", cue: "Boca arriba, rodillas flexionadas y pies apoyados. Codos a unos 30–45° del torso; baja hasta apoyar suavemente los brazos en el suelo, sin rebote. Empuja hacia arriba. Registra kg por mancuerna; elige una carga que te deje 2 reps en reserva." },
+              { id: "ph-pushup", name: "Flexiones", muscle: "Pecho", sets: 2, reps: "6–15", rest: 90, rir: "1–2", tracking: "reps", cue: "Cuerpo alineado, abdomen firme y codos en diagonal. Baja el pecho entre las manos. Si no llegas a 6 limpias, apoya las rodillas o eleva las manos sobre un apoyo firme. Al llegar a 15 en ambas series, usa una variante más difícil." },
+              { id: "ph-band", name: "Press de pecho sentado con elástico", muscle: "Pecho", sets: 2, reps: "12–20", rest: 90, rir: "1–2", tracking: "reps", loadLabel: "Elástico", cue: "Siéntate en un apoyo estable. Pasa una banda larga por detrás de la espalda, bajo las axilas, sujeta sus extremos y empuja al frente; vuelve lento. Revisa que no esté dañada ni pueda deslizarse al cuello. Sin anclaje externo. Usa la misma banda y agarre para comparar reps; al llegar a 20, aumenta la resistencia. Si no tienes una banda adecuada, haz 2 series de flexiones fáciles en su lugar." }
             ]
           }
         ]
@@ -2064,6 +2073,7 @@
     };
 
     const NORMAL_LOADS = {
+      "ph-floor": null,
       "pa-incline": 18, "pa-flat": 45, "pa-fly": 10, "pb-flat": 40, "pb-incline": 14, "pb-fly": 25,
       "va-press": 18, "va-row-db": 15, "va-pulldown-chinup": null, "va-lateral": 5, "va-curl": 15, "va-pushdown": 25,
       "vb-chest": 45, "vb-highrow-db": 12.5, "vb-shoulder-db": 10, "vb-reverse-db": 4, "vb-inclinecurl": 10, "vb-overheadtri": 20,
@@ -2076,6 +2086,8 @@
 
     const GIF_BASE = "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/";
     const exerciseGifs = {
+      "ph-pushup": ["pectorals/push-up.gif", "Flexión completa"],
+      "ph-band": ["pectorals/resistance-band-seated-chest-press.gif", "Press de pecho sentado con elástico"],
       "pa-incline": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
       "pa-flat": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
       "pa-fly": ["pectorals/cable-standing-fly.gif", "Apertura en polea"],
@@ -2404,7 +2416,7 @@
       return `<div class="set-row ${entry.completed ? "is-done" : ""}" data-set-row="${index}">
         <span class="set-number">${index + 1}</span>
         ${bodyweight
-          ? `<span class="bodyweight-load" aria-label="Carga: peso corporal">Corporal</span>`
+          ? `<span class="bodyweight-load" aria-label="Carga: ${exercise.loadLabel || "peso corporal"}">${exercise.loadLabel || "Corporal"}</span>`
           : `<input class="set-input" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Peso de la serie ${index + 1} en kilogramos" placeholder="kg" value="${escapeAttribute(entry.weight)}" data-weight data-exercise="${exercise.id}" data-set="${index}">`}
         <span class="times" aria-hidden="true">${bodyweight ? "" : "×"}</span>
         <input class="set-input" type="text" inputmode="numeric" enterkeyhint="${index + 1 === exercise.sets ? "done" : "next"}" autocomplete="off" aria-label="Repeticiones de la serie ${index + 1}" placeholder="${exercise.reps}" value="${escapeAttribute(entry.reps)}" data-reps data-exercise="${exercise.id}" data-set="${index}">
@@ -2420,7 +2432,7 @@
       const load = suggestedLoad(exercise.id);
       const bodyweight = exercise.tracking === "reps";
       const unit = volumeUnit(exercise);
-      const loadHint = bodyweight ? "Peso corporal · ajusta la variante" : (load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`);
+      const loadHint = bodyweight ? (exercise.loadLabel ? "Elástico · registra repeticiones" : "Peso corporal · ajusta la variante") : (load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`);
       const demo = exerciseGifs[exercise.id];
       const demoUrl = demo ? GIF_BASE + demo[0] : "";
       const collapsed = complete && !expandedCompleteCards.has(exercise.id);
@@ -2495,8 +2507,8 @@
       const program = activeProgram();
       const bodyweight = program.id === "calisthenics";
       $("#weekly-title").textContent = bodyweight ? "Volumen base A+B" : "Volumen semanal";
-      $("#weekly-caption").textContent = bodyweight ? "Series directas al completar una vez cada sesión." : "Series directas por grupo muscular.";
-      const includedDays = program.days.filter(day => !day.optional || state.includeOptionalByProgram[program.id]);
+      $("#weekly-caption").textContent = bodyweight ? "Series directas al completar una vez cada sesión." : program.id === "chest" ? "Plan de 2 sesiones: A+B, o Casa en lugar de una de ellas. Casa no suma un tercer día." : "Series directas por grupo muscular.";
+      const includedDays = program.days.filter(day => !day.alternative && (!day.optional || state.includeOptionalByProgram[program.id]));
       const totals = {};
       includedDays.forEach(day => day.exercises.forEach(exercise => { totals[exercise.muscle] = (totals[exercise.muscle] || 0) + exercise.sets; }));
       const activeMuscles = MUSCLE_ORDER.filter(muscle => totals[muscle]);
@@ -2520,7 +2532,7 @@
           <li><b>2</b><span>Sube repeticiones manteniendo técnica y control.</span></li>
           <li><b>3</b><span>${bodyweight ? "Al lograr el máximo, usa menos apoyo o una variante más difícil y vuelve al mínimo del rango." : "Al lograr el máximo en todas las series, sube 2–5% la carga."}</span></li>
         </ol>
-        ${activeProgram().id === "chest" ? `<p>Deja 1–2 repeticiones en reserva (RIR). Si llegas fatigado o baja tu rendimiento, reduce una serie por ejercicio esa semana. Mantén el entrenamiento de espalda y piernas.</p><p>A+B suman 14 series de pecho: reemplazan las de Hiper, Vóley o Calis. El resumen cuenta solo este programa. Evalúa el progreso durante varias semanas.</p>` : ""}`;
+        ${activeProgram().id === "chest" ? `<p>Deja 1–2 repeticiones en reserva (RIR). Si llegas fatigado o baja tu rendimiento, reduce una serie por ejercicio esa semana. Mantén el entrenamiento de espalda y piernas.</p><p>En casa: sube primero las reps. Después aumenta el peso de las mancuernas, la dificultad de las flexiones o la resistencia del elástico. Compara las reps con la misma variante y banda.</p><p>A+B, A+Casa o B+Casa suman 14 series de pecho: reemplazan las de Hiper, Vóley o Calis. El resumen cuenta solo este programa. Evalúa el progreso durante varias semanas.</p>` : ""}`;
     }
 
     function renderAll() {

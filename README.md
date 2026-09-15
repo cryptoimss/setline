@@ -49,3 +49,5 @@ Después abre `http://localhost:8080`.
 - `assets/icons/`: iconos de la PWA.
 - `.github/workflows/pages.yml`: publicación automática.
 - `docs/`: definición de producto y sistema visual para futuras mejoras.
+
+**Pecho en casa** es una alternativa de 7 series dentro de Pecho: press con mancuernas en el suelo (3×8–15), flexiones (2×6–15) y press sentado con elástico (2×12–20). Reemplaza A o B, conservando 14 series en el plan semanal. El press registra kg por mancuerna; flexiones y banda registran reps. No requiere banco ni anclaje externo. Selección de movimientos apoyada en la [guía de pecho de ACE](https://www.acefitness.org/resources/pros/expert-articles/8972/be-a-chest-day-champion-an-evidence-based-approach-to-training-the-chest/).
