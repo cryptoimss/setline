@@ -2022,11 +2022,12 @@
           },
           {
             id: "p-home", code: "C", name: "Pecho en casa", duration: "25–35 min", alternative: true,
-            note: "7 series sin banco: mancuernas, flexiones y elástico. Calienta con un press liviano y flexiones fáciles. Reemplaza una sesión de gym; no es un tercer día extra.",
+            note: "7 series: mancuernas en el suelo, flexiones, apoyo elevado y elástico. Calienta con un press liviano y flexiones fáciles. Reemplaza una sesión de gym; no es un tercer día extra.",
             exercises: [
               { id: "ph-floor", name: "Press con mancuernas en el suelo", muscle: "Pecho", sets: 3, reps: "8–15", rest: 120, rir: "2", cue: "Boca arriba, rodillas flexionadas y pies apoyados. Codos a unos 30–45° del torso; baja hasta apoyar suavemente los brazos en el suelo, sin rebote. Empuja hacia arriba. Registra kg por mancuerna; elige una carga que te deje 2 reps en reserva." },
-              { id: "ph-pushup", name: "Flexiones", muscle: "Pecho", sets: 2, reps: "6–15", rest: 90, rir: "1–2", tracking: "reps", cue: "Cuerpo alineado, abdomen firme y codos en diagonal. Baja el pecho entre las manos. Si no llegas a 6 limpias, apoya las rodillas o eleva las manos sobre un apoyo firme. Al llegar a 15 en ambas series, usa una variante más difícil." },
-              { id: "ph-band", name: "Press de pecho sentado con elástico", muscle: "Pecho", sets: 2, reps: "12–20", rest: 90, rir: "1–2", tracking: "reps", loadLabel: "Elástico", cue: "Siéntate en un apoyo estable. Pasa una banda larga por detrás de la espalda, bajo las axilas, sujeta sus extremos y empuja al frente; vuelve lento. Revisa que no esté dañada ni pueda deslizarse al cuello. Sin anclaje externo. Usa la misma banda y agarre para comparar reps; al llegar a 20, aumenta la resistencia. Si no tienes una banda adecuada, haz 2 series de flexiones fáciles en su lugar." }
+              { id: "ph-pushup", name: "Flexiones", muscle: "Pecho", sets: 1, reps: "6–15", rest: 90, rir: "1–2", tracking: "reps", cue: "Cuerpo alineado, abdomen firme y codos en diagonal. Baja el pecho entre las manos. Si no llegas a 6 limpias, apoya las rodillas o eleva las manos sobre un apoyo firme. Al llegar a 15 con control, usa una variante más difícil." },
+              { id: "ph-incline", name: "Flexiones con manos en apoyo elevado", muscle: "Pecho", sets: 1, reps: "10–20", rest: 90, rir: "2", tracking: "reps", cue: "Puedes usar el asiento solo si la estructura es firme, no desliza ni vuelca y el acolchado no se hunde bajo las manos. Compruébalo sin hacer la flexión primero. Si no cumple, hazlas contra una pared. Manos al ancho de hombros, cuerpo alineado; acerca el pecho al apoyo y empuja sin dejar caer la cadera. El GIF muestra un banco rígido, no valida tu sillón." },
+              { id: "ph-band", name: "Press de pecho sentado con elástico", muscle: "Pecho", sets: 2, reps: "12–20", rest: 90, rir: "1–2", tracking: "reps", loadLabel: "Elástico", cue: "Puedes sentarte en ese asiento si queda estable, con ambos pies firmes en el suelo y sin hundirte. Pasa una banda larga por detrás de la espalda, bajo las axilas, sujeta sus extremos y empuja al frente; vuelve lento. Revisa que no esté dañada ni pueda deslizarse al cuello. Sin anclaje externo. Usa la misma banda y agarre para comparar reps; al llegar a 20, aumenta la resistencia. Si no tienes una banda adecuada, haz 2 series de flexiones fáciles en su lugar." }
             ]
           }
         ]
@@ -2086,6 +2087,8 @@
 
     const GIF_BASE = "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/";
     const exerciseGifs = {
+      "ph-floor": ["https://i.makeagif.com/media/6-22-2017/gF8Nwb.gif", "Press con mancuernas en el suelo", "https://makeagif.com/gif/how-to-dumbbell-floor-press-gF8Nwb"],
+      "ph-incline": ["pectorals/incline-push-up.gif", "Flexión inclinada sobre banco rígido"],
       "ph-pushup": ["pectorals/push-up.gif", "Flexión completa"],
       "ph-band": ["pectorals/resistance-band-seated-chest-press.gif", "Press de pecho sentado con elástico"],
       "pa-incline": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
@@ -2434,7 +2437,7 @@
       const unit = volumeUnit(exercise);
       const loadHint = bodyweight ? (exercise.loadLabel ? "Elástico · registra repeticiones" : "Peso corporal · ajusta la variante") : (load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`);
       const demo = exerciseGifs[exercise.id];
-      const demoUrl = demo ? GIF_BASE + demo[0] : "";
+      const demoUrl = demo ? exerciseGifUrl(demo) : "";
       const collapsed = complete && !expandedCompleteCards.has(exercise.id);
       return `<article class="exercise-card ${complete ? "is-complete" : ""} ${collapsed ? "is-collapsed" : ""}" data-exercise-card="${exercise.id}">
         <div class="exercise-head">
@@ -2459,7 +2462,7 @@
             <img data-demo-image data-src="${demoUrl}" alt="Demostración animada: ${demo[1]}" width="112" height="112" loading="lazy" decoding="async">
             <span class="demo-status">Cargando GIF…</span>
           </button>
-          <div class="demo-caption"><span>Variante mostrada: <strong>${demo[1]}</strong></span><button type="button" data-expand-gif="${exercise.id}" aria-label="Ampliar demostración de ${escapeAttribute(demo[1])}" aria-haspopup="dialog">Ver en grande</button></div>
+          <div class="demo-caption"><span>Variante mostrada: <strong>${demo[1]}</strong></span><button type="button" data-expand-gif="${exercise.id}" aria-label="Ampliar demostración de ${escapeAttribute(demo[1])}" aria-haspopup="dialog">Ver en grande</button>${demo[2] ? `<a href="${demo[2]}" target="_blank" rel="noreferrer">Fuente: Make a GIF</a>` : ""}</div>
         </div>` : ""}
         <div class="exercise-body">
         <div class="sets-wrap">
@@ -2775,9 +2778,13 @@
       gifViewerImage.hidden = false;
       gifViewerImage.style.display = "block";
       gifViewerImage.alt = `Demostración animada: ${demo[1]}`;
-      gifViewerImage.src = GIF_BASE + demo[0];
+      gifViewerImage.src = exerciseGifUrl(demo);
       gifViewer.showModal();
     });
+
+    function exerciseGifUrl(demo) {
+      return demo[0].startsWith("https://") ? demo[0] : GIF_BASE + demo[0];
+    }
 
     function loadExerciseDemo(panel) {
       const image = $("[data-demo-image]", panel);
