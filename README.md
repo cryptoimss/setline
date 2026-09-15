@@ -8,6 +8,8 @@ La app abre primero **Hipertrofia 3–4 días** e incluye cargas iniciales estim
 
 **Calistenia 20 min** añade dos sesiones A/B de iniciación para alternar 2–3 veces por semana. Sus ejercicios se registran por repeticiones, sin pedir kilos ficticios, y comparan el total con la última sesión completa del mismo movimiento.
 
+**Pecho · prioridad** añade dos sesiones A/B de 30–40 minutos, con 7 series cada una, descansos, demostraciones y registro de cargas. Haz cada sesión una vez por semana con 48–72 h entre ellas, sustituyendo el trabajo de pecho de los otros programas. Incluye press inclinado, press en máquina y aperturas, con 1–2 repeticiones en reserva y doble progresión. La navegación móvil muestra los cuatro programas en dos filas. Referencia general de programación: [guías ACSM 2026](https://acsm.org/resistance-training-guidelines-update-2026/).
+
 ## Instalar en iPhone
 
 1. Abre la web publicada en Safari.

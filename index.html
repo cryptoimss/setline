@@ -821,6 +821,16 @@
       background: var(--surface-soft);
     }
 
+    .demo-frame { padding: 0; border: 0; cursor: zoom-in; }
+    .gif-viewer { width: min(680px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--text); overflow: auto; }
+    .gif-viewer::backdrop { background: rgba(0, 0, 0, .82); }
+    body:has(.gif-viewer[open]) { overflow: hidden; }
+    .gif-viewer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .gif-viewer h2 { margin: 0; font-size: 18px; }
+    .gif-viewer-close { min-width: 72px; min-height: 44px; border: 0; border-radius: 8px; background: var(--surface-soft); color: var(--text); cursor: pointer; }
+    .gif-viewer img { display: block; width: 100%; height: min(65dvh, 600px); object-fit: contain; }
+    .gif-viewer-error { color: var(--muted); }
+
     .demo-frame img {
       display: block;
       width: 100%;
@@ -855,7 +865,8 @@
 
     .demo-caption strong { color: var(--text); }
 
-    .demo-caption a {
+    .demo-caption button {
+      padding: 0; border: 0; background: transparent; font: inherit; cursor: pointer; min-height: 44px;
       min-height: 44px;
       display: inline-flex;
       align-items: center;
@@ -864,7 +875,7 @@
       text-decoration: none;
     }
 
-    .demo-caption a:hover { text-decoration: underline; }
+    .demo-caption button:hover { text-decoration: underline; }
 
     .sets-wrap {
       padding: 0 20px 16px 84px;
@@ -1491,7 +1502,7 @@
       .mobile-programs {
         min-width: 0;
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 4px;
         padding: 4px;
         overflow: hidden;
@@ -1621,7 +1632,8 @@
       .exercise-demo { margin: 0 10px 14px; }
       .demo-frame { flex-basis: 96px; width: 96px; height: 96px; }
       .demo-caption { align-items: flex-start; flex-direction: column; gap: 4px; font-size: 12px; }
-      .demo-caption a { min-height: 44px; }
+      .demo-caption button {
+      padding: 0; border: 0; background: transparent; font: inherit; cursor: pointer; min-height: 44px; min-height: 44px; }
       .sets-wrap { padding: 0 10px 12px; }
       .set-grid-head, .set-row { grid-template-columns: 24px minmax(56px, 1fr) 12px minmax(56px, 1fr) 48px; gap: 6px; }
       .set-check { width: 48px; height: 48px; }
@@ -1850,6 +1862,14 @@
     </div>
   </section>
   <div class="toast" id="toast" role="status"></div>
+  <dialog class="gif-viewer" id="gif-viewer" aria-labelledby="gif-viewer-title">
+    <div class="gif-viewer-head">
+      <h2 id="gif-viewer-title">Demostración</h2>
+      <button class="gif-viewer-close" id="gif-viewer-close" type="button" autofocus>Cerrar</button>
+    </div>
+    <img id="gif-viewer-image" alt="">
+    <p class="gif-viewer-error" id="gif-viewer-error" role="status" hidden>No se pudo cargar el GIF. Cierra y vuelve a intentarlo cuando tengas conexión.</p>
+  </dialog>
   <dialog class="sheet" id="confirm-sheet" aria-labelledby="sheet-title">
     <form method="dialog" class="sheet-body">
       <h2 id="sheet-title"></h2>
@@ -1976,6 +1996,33 @@
         ]
       },
       {
+        id: "chest",
+        short: "Pecho · prioridad",
+        mobileName: "Pecho",
+        title: "Especialización de pecho",
+        navNote: "2 sesiones · 14 series semanales",
+        symbol: "P2",
+        description: "Haz A y B una vez por semana, separadas por 48–72 h. Sustituye el trabajo de pecho de los otros programas con estas sesiones.",
+        days: [
+          {
+            id: "p-a", code: "A", name: "Pecho · base fuerte", duration: "30–40 min", note: "Calienta con 2–3 series progresivas del primer press, sin registrarlas como trabajo.",
+            exercises: [
+              { id: "pa-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 150, rir: "2", cue: "Banco a 15–30°, pies firmes y escápulas estables. Baja con control y sin rebote. Registra kg por mancuerna." },
+              { id: "pa-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 2, reps: "8–12", rest: 120, rir: "1–2", cue: "Ajusta el asiento con las asas a la altura media del pecho. Mantén los hombros apoyados y un recorrido cómodo." },
+              { id: "pa-fly", name: "Apertura en polea", muscle: "Pecho", sets: 2, reps: "12–15", rest: 90, rir: "1–2", cue: "Codos ligeramente flexionados; junta los brazos sin impulso. Abre solo hasta donde controles sin molestias. Kg por lado." }
+            ]
+          },
+          {
+            id: "p-b", code: "B", name: "Pecho · volumen y control", duration: "30–40 min", note: "Calienta con 2–3 series progresivas del primer press. Busca más repeticiones limpias antes de subir peso.",
+            exercises: [
+              { id: "pb-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 150, rir: "2", cue: "Usa siempre la misma posición del asiento. Baja con control, mantén el pecho estable y evita adelantar los hombros." },
+              { id: "pb-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 2, reps: "10–12", rest: 120, rir: "1–2", cue: "Banco a 15–30°. Usa una carga que permita todo el rango sin arquear más la espalda. Kg por mancuerna." },
+              { id: "pb-fly", name: "Apertura en peck deck", muscle: "Pecho", sets: 2, reps: "12–18", rest: 90, rir: "1–2", cue: "Apoya la espalda y acerca los brazos sin encoger los hombros. Controla la vuelta, sin forzar el estiramiento." }
+            ]
+          }
+        ]
+      },
+      {
         id: "calisthenics",
         short: "Calistenia 20 min",
         mobileName: "Calis",
@@ -2017,6 +2064,7 @@
     };
 
     const NORMAL_LOADS = {
+      "pa-incline": 18, "pa-flat": 45, "pa-fly": 10, "pb-flat": 40, "pb-incline": 14, "pb-fly": 25,
       "va-press": 18, "va-row-db": 15, "va-pulldown-chinup": null, "va-lateral": 5, "va-curl": 15, "va-pushdown": 25,
       "vb-chest": 45, "vb-highrow-db": 12.5, "vb-shoulder-db": 10, "vb-reverse-db": 4, "vb-inclinecurl": 10, "vb-overheadtri": 20,
       "vc-pulldown": 17.5, "vc-incline": 40, "vc-seatedrow": 40, "vc-lateral-db": 5, "vc-fly": 30, "vc-curl": 20, "vc-tri": 12.5,
@@ -2028,6 +2076,12 @@
 
     const GIF_BASE = "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/";
     const exerciseGifs = {
+      "pa-incline": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
+      "pa-flat": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
+      "pa-fly": ["pectorals/cable-standing-fly.gif", "Apertura en polea"],
+      "pb-flat": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
+      "pb-incline": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
+      "pb-fly": ["pectorals/lever-seated-fly.gif", "Apertura sentada en máquina"],
       "va-press": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
       "va-row-db": ["upper-back/dumbbell-one-arm-bent-over-row.gif", "Remo a una mano con mancuerna"],
       "va-pulldown-chinup": ["lats/chin-up.gif", "Dominadas supinas"],
@@ -2089,14 +2143,14 @@
     const defaultState = {
       schemaVersion: 3,
       programId: "solo",
-      dayByProgram: { volley: "v-a", solo: "s-1", calisthenics: "c-a" },
+      dayByProgram: { volley: "v-a", solo: "s-1", chest: "p-a", calisthenics: "c-a" },
       filter: "Todos",
       loadPreset: "normal",
       entries: {},
       references: {},
       lastVolumes: {},
-      heroSeenByProgram: { volley: false, solo: false, calisthenics: false },
-      includeOptionalByProgram: { volley: false, solo: false, calisthenics: false }
+      heroSeenByProgram: { volley: false, solo: false, chest: false, calisthenics: false },
+      includeOptionalByProgram: { volley: false, solo: false, chest: false, calisthenics: false }
     };
 
     function loadState() {
@@ -2389,11 +2443,11 @@
           </button>
         </div>
         ${demo ? `<div class="exercise-demo" id="demo-${exercise.id}">
-          <div class="demo-frame">
+          <button class="demo-frame" type="button" data-expand-gif="${exercise.id}" aria-label="Ampliar demostración de ${escapeAttribute(demo[1])}" aria-haspopup="dialog">
             <img data-demo-image data-src="${demoUrl}" alt="Demostración animada: ${demo[1]}" width="112" height="112" loading="lazy" decoding="async">
             <span class="demo-status">Cargando GIF…</span>
-          </div>
-          <div class="demo-caption"><span>Variante mostrada: <strong>${demo[1]}</strong></span><a href="${demoUrl}" target="_blank" rel="noreferrer" aria-label="Abrir GIF de ${escapeAttribute(demo[1])} en una pestaña nueva">Ver en grande ↗</a></div>
+          </button>
+          <div class="demo-caption"><span>Variante mostrada: <strong>${demo[1]}</strong></span><button type="button" data-expand-gif="${exercise.id}" aria-label="Ampliar demostración de ${escapeAttribute(demo[1])}" aria-haspopup="dialog">Ver en grande</button></div>
         </div>` : ""}
         <div class="exercise-body">
         <div class="sets-wrap">
@@ -2465,7 +2519,8 @@
           <li><b>1</b><span>Completa el mínimo del rango con el RIR indicado.</span></li>
           <li><b>2</b><span>Sube repeticiones manteniendo técnica y control.</span></li>
           <li><b>3</b><span>${bodyweight ? "Al lograr el máximo, usa menos apoyo o una variante más difícil y vuelve al mínimo del rango." : "Al lograr el máximo en todas las series, sube 2–5% la carga."}</span></li>
-        </ol>`;
+        </ol>
+        ${activeProgram().id === "chest" ? `<p>Deja 1–2 repeticiones en reserva (RIR). Si llegas fatigado o baja tu rendimiento, reduce una serie por ejercicio esa semana. Mantén el entrenamiento de espalda y piernas.</p><p>A+B suman 14 series de pecho: reemplazan las de Hiper, Vóley o Calis. El resumen cuenta solo este programa. Evalúa el progreso durante varias semanas.</p>` : ""}`;
     }
 
     function renderAll() {
@@ -2684,6 +2739,33 @@
         console.warn("Setline no pudo activar el modo offline.", error);
       }
     }
+
+    const gifViewer = $("#gif-viewer");
+    const gifViewerImage = $("#gif-viewer-image");
+    gifViewerImage.addEventListener("error", () => {
+      gifViewerImage.hidden = true;
+      gifViewerImage.style.display = "none";
+      $("#gif-viewer-error").hidden = false;
+    });
+    $("#gif-viewer-close").addEventListener("click", () => gifViewer.close());
+    gifViewer.addEventListener("click", event => {
+      const rect = gifViewer.getBoundingClientRect();
+      if (event.target === gifViewer && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) gifViewer.close();
+    });
+    gifViewer.addEventListener("close", () => gifViewerImage.removeAttribute("src"));
+    document.addEventListener("click", event => {
+      const trigger = event.target.closest("[data-expand-gif]");
+      if (!trigger) return;
+      const demo = exerciseGifs[trigger.dataset.expandGif];
+      if (!demo) return;
+      $("#gif-viewer-title").textContent = demo[1];
+      $("#gif-viewer-error").hidden = true;
+      gifViewerImage.hidden = false;
+      gifViewerImage.style.display = "block";
+      gifViewerImage.alt = `Demostración animada: ${demo[1]}`;
+      gifViewerImage.src = GIF_BASE + demo[0];
+      gifViewer.showModal();
+    });
 
     function loadExerciseDemo(panel) {
       const image = $("[data-demo-image]", panel);
