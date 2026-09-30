@@ -192,7 +192,7 @@ The palette is a low-light slate field animated by three disciplined signals: co
 
 On wide screens, the application uses three visual stations: a persistent 258px rail, a flexible primary work sheet, and a sticky 286px readout column. The inner sheet is capped at 1280px with a 26px column gap, while page gutters breathe between 18px and 44px. The primary sheet leads; the readout remains visibly subordinate.
 
-At 1100px, the rail and readout narrow to 228px and 252px, and the main gap contracts to 18px. At 880px, the rail becomes a sticky horizontal top bar, the main work becomes a single column, and readouts form a two-column band below it. At 620px, a compact dumbbell mark, two-way segmented program control, Watch action, and horizontally scrolling day rail share the command area. The session header uses progressive disclosure: its explanation and signal plate appear on the first visit to each program, then default to a thin title-and-metadata row that can be reopened without moving keyboard focus. Filters and reset share one row, all panels stack, and gutters contract to 12px without shrinking touch targets below 44px where practical. Safe-area insets protect the sticky top bar and floating dock.
+At 1100px, the rail and readout narrow to 228px and 252px, and the main gap contracts to 18px. At 880px, the rail becomes a sticky horizontal top bar, the main work becomes a single column, and readouts form a two-column band below it. At 620px, a compact dumbbell mark, four-program segmented control and horizontally scrolling day rail share the command area. The session header uses progressive disclosure: its explanation and signal plate appear on the first visit to each program, then default to a thin title-and-metadata row that can be reopened without moving keyboard focus. Filters and reset share one row, all panels stack, and gutters contract to 12px without shrinking touch targets below 44px where practical. Safe-area insets protect the sticky top bar and floating dock.
 
 Spacing follows a compact 8px base with recurring 12px, 16px, 20px, 24px, and 28px steps. Use tighter gaps inside ruled rows and wider gaps between major stations.
 
@@ -220,7 +220,7 @@ The form language is engineered but approachable: 8px corners on controls and fi
 
 - **Program control:** A 48px-high, left-aligned equipment label with an outlined code block. Hover lifts the text from muted steel to chalk; selection raises the slate surface and adds a 3px coral inset rule.
 - **Day control:** A 44px-high row with a circular code. The selected state becomes a solid coral plate with Signal Ink text.
-- **Responsive treatment:** Below 880px, programs become a compact three-way segmented control and days scroll horizontally inside the sticky top bar. At phone width, the brand collapses to its dumbbell mark while the Watch action stays in immediate reach.
+- **Responsive treatment:** Below 880px, programs become a compact four-program segmented control and days scroll horizontally inside the sticky top bar. At phone width, the brand collapses to its dumbbell mark and the program selector uses the remaining width.
 
 ### Buttons and Chips
 
@@ -260,7 +260,7 @@ The session header is expanded only for the first reading of each program. Later
 
 ### Session Finish Panel
 
-A raised slate panel after the last card shows `Sesión en curso` or `Sesión completa` with the done/total count and a primary `Terminar y guardar` action. Completion swaps the panel to the deep green surface and the button to mint. Confirmation uses an in-app `<dialog>` sheet (bottom-anchored on phones) instead of a native confirm.
+A raised slate panel after the last card shows `Sesión en curso` or `Sesión completa` with the done/total count and a primary `RESET` action. Completion swaps the panel to the deep green surface and the button to mint. RESET also appears beside the filters. Confirmation uses an in-app `<dialog>` sheet (bottom-anchored on phones), focusing Cancel by default. Reset clears only the current day and timer, preserves references and other days, and restores focus to the upper RESET control.
 
 ### Timer Dock
 

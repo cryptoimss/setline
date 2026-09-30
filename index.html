@@ -235,27 +235,6 @@
 
     .day-button small { margin-left: auto; opacity: .72; font-size: 10px; }
 
-    .nav-shortcut {
-      min-height: 52px;
-      margin-top: 18px;
-      padding: 9px 11px;
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      border-radius: 12px;
-      background: var(--mint);
-      color: #0d1b19;
-      text-decoration: none;
-      transition: filter .2s var(--ease), transform .2s var(--ease);
-    }
-
-    .nav-shortcut:hover { filter: brightness(1.06); }
-    .nav-shortcut:active { transform: scale(.985); }
-    .nav-shortcut svg { width: 22px; height: 22px; flex: 0 0 auto; }
-    .nav-shortcut span { min-width: 0; display: grid; line-height: 1.15; }
-    .nav-shortcut strong { font-size: 12px; }
-    .nav-shortcut small { margin-top: 3px; color: #315a52; font-size: 10px; }
-
     .sidebar-note {
       margin-top: 28px;
       padding: 14px;
@@ -1254,57 +1233,6 @@
       font-size: 11px;
     }
 
-    .apple-panel { background: #18201f; }
-
-    .apple-actions { display: grid; gap: 8px; }
-
-    .apple-button {
-      min-height: 48px;
-      padding: 0 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      border-radius: 10px;
-      background: var(--mint);
-      color: #0d1b19;
-      font-size: 12px;
-      font-weight: 850;
-      text-align: center;
-      text-decoration: none;
-    }
-
-    .apple-button.secondary { background: var(--surface-soft); color: var(--text); }
-    .apple-button svg { width: 18px; height: 18px; }
-
-    .shortcut-setup { margin-top: 14px; border-top: 1px solid var(--line); }
-
-    .shortcut-setup summary {
-      min-height: 46px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--mint);
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      list-style: none;
-    }
-
-    .shortcut-setup summary::-webkit-details-marker { display: none; }
-    .shortcut-setup summary::after { content: "+"; font-size: 18px; font-weight: 500; }
-    .shortcut-setup[open] summary::after { content: "−"; }
-
-    .shortcut-setup ol {
-      margin: 2px 0 14px;
-      padding-left: 20px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .shortcut-setup li + li { margin-top: 8px; }
-
     .footer-note {
       margin: 30px 0 0;
       color: var(--faint);
@@ -1486,7 +1414,7 @@
       .mobile-command-row {
         min-width: 0;
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-columns: auto minmax(0, 1fr);
         gap: 8px;
         align-items: center;
       }
@@ -1526,22 +1454,6 @@
       .mobile-programs .program-mobile-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 850; }
       .mobile-days .day-button { width: auto; min-width: max-content; min-height: 44px; padding: 5px 10px; }
       .mobile-days .day-button small { display: none; }
-      .mobile-shortcut {
-        min-width: 82px;
-        min-height: 48px;
-        padding: 0 11px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 7px;
-        border-radius: 11px;
-        background: var(--mint);
-        color: #0d1b19;
-        font-size: 12px;
-        font-weight: 900;
-        text-decoration: none;
-      }
-      .mobile-shortcut svg { width: 19px; height: 19px; }
       .session-layout { display: block; }
       .summary-column { position: static; margin-top: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .session-hero { min-height: 218px; }
@@ -1612,11 +1524,11 @@
       }
       .load-preset-controls { min-width: 0; }
       .load-preset-button { min-height: 44px; padding-inline: 10px; font-size: 11px; }
-      .session-tools { margin: 16px 0 12px; display: grid; grid-template-columns: minmax(0, 1fr) 48px; gap: 8px; }
+      .session-tools { margin: 16px 0 12px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
       .filter-row { min-width: 0; margin: 0; padding: 0; }
       .filter-button { min-height: 48px; padding-inline: 14px; }
-      .quiet-button { width: 48px; padding: 0; border-radius: 12px; }
-      .quiet-button span { display: none; }
+      .quiet-button { width: auto; padding: 0 12px; border-radius: 12px; }
+      .quiet-button span { display: inline; }
       .session-progress { margin-bottom: 12px; gap: 9px; }
       .session-progress-output { font-size: 11px; }
       .exercise-head { gap: 12px; padding: 16px 14px 12px; }
@@ -1683,15 +1595,13 @@
     }
 
     @media (pointer: coarse) {
-      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .apple-button, .nav-shortcut, .mobile-shortcut, .load-preset-button, .hero-toggle, .reference-auto-button { min-height: 48px; }
+      .program-button, .day-button, .filter-button, .quiet-button, .rest-button, .load-preset-button, .hero-toggle, .reference-auto-button { min-height: 48px; }
       .set-input, .reference-input, .bodyweight-load { min-height: 46px; font-size: 16px; }
       .bodyweight-load { font-size: 10px; }
     }
 
     @media (max-width: 350px) {
       .mobile-command-row { gap: 6px; }
-      .mobile-shortcut { min-width: 48px; width: 48px; padding: 0; }
-      .mobile-shortcut span { display: none; }
       .mobile-programs .program-mobile-name { font-size: 10px; }
       .session-hero.is-compact .hero-toggle { width: 44px; min-width: 44px; padding: 0; }
       .session-hero.is-compact .hero-toggle span { display: none; }
@@ -1734,10 +1644,6 @@
       <nav class="program-nav" id="desktop-programs" aria-label="Programas"></nav>
       <p class="nav-label">Sesiones</p>
       <nav class="day-nav" id="desktop-days" aria-label="Días"></nav>
-      <a class="nav-shortcut" href="shortcuts://run-shortcut?name=Setline%20Fuerza" data-health-shortcut aria-label="Iniciar entrenamiento en Apple Watch y volver a Setline">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/><path d="M7.5 12h2l1-2 2 4 1-2h3"/></svg>
-        <span><strong>Iniciar en Watch</strong><small>Atajo · vuelve a Setline</small></span>
-      </a>
       <div class="sidebar-note"><strong>Regla de esfuerzo</strong><br>Termina la mayoría de series con 1–2 repeticiones posibles en reserva. Prioriza técnica limpia.</div>
     </aside>
 
@@ -1755,10 +1661,6 @@
             <span class="brand-name">Setline</span>
           </div>
           <nav class="mobile-programs" id="mobile-programs" aria-label="Programas"></nav>
-          <a class="mobile-shortcut" href="shortcuts://run-shortcut?name=Setline%20Fuerza" data-health-shortcut aria-label="Iniciar entrenamiento en Apple Watch y volver a Setline">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/><path d="M7.5 12h2l1-2 2 4 1-2h3"/></svg>
-            <span>Watch</span>
-          </a>
         </div>
         <nav class="mobile-days" id="mobile-days" aria-label="Días"></nav>
       </header>
@@ -1775,9 +1677,9 @@
           </section>
           <div class="session-tools">
             <div class="filter-row" id="filters" aria-label="Filtrar por grupo muscular"></div>
-            <button class="quiet-button" id="reset-session" type="button" aria-label="Terminar sesión, guardar referencias y empezar de nuevo">
+            <button class="quiet-button" id="reset-session" type="button" aria-label="RESET del entrenamiento actual">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-              <span>Terminar sesión</span>
+              <span>RESET</span>
             </button>
           </div>
           <div class="session-progress" aria-label="Progreso de la sesión">
@@ -1793,9 +1695,9 @@
           <div class="exercise-list" id="exercise-list"></div>
           <div class="session-finish" id="session-finish" hidden>
             <div><strong id="session-finish-title">Sesión en curso</strong><span id="session-finish-note"></span></div>
-            <button class="finish-button" type="button" data-finish-session>Terminar y guardar</button>
+            <button class="finish-button" type="button" data-reset-session>RESET</button>
           </div>
-          <p class="footer-note">Los datos se guardan solo en este navegador. Carga y repeticiones son notas de entrenamiento, no una evaluación médica.<br>Demostraciones servidas por <a href="https://github.com/JahelCuadrado/ExerciseGymGifsDB" target="_blank" rel="noreferrer">ExerciseGymGifsDB</a>.</p>
+          <p class="footer-note">La sesión actual se conserva automáticamente en este navegador. RESET vacía este día y conserva las referencias previas.<br>Demostraciones servidas por <a href="https://github.com/JahelCuadrado/ExerciseGymGifsDB" target="_blank" rel="noreferrer">ExerciseGymGifsDB</a>.</p>
         </section>
 
         <aside class="summary-column" aria-label="Resumen del programa">
@@ -1817,27 +1719,8 @@
             <ol class="guidance-list">
               <li><b>1</b><span>Completa el mínimo del rango con el RIR indicado.</span></li>
               <li><b>2</b><span>Sube repeticiones manteniendo técnica y control.</span></li>
-              <li><b>3</b><span>Al lograr el máximo en todas las series, sube 2–5% la carga.</span></li>
+              <li><b>3</b><span>Al lograr el máximo en todas las series con el RIR indicado en dos sesiones, sube el menor salto disponible (aprox. 2–5%) y vuelve al mínimo del rango.</span></li>
             </ol>
-          </section>
-          <section class="summary-panel apple-panel">
-            <h2>Apple Salud</h2>
-            <p>El atajo inicia Fuerza tradicional en tu Apple Watch. iOS abre Atajos un instante y después vuelve automáticamente a Setline.</p>
-            <div class="apple-actions">
-              <a class="apple-button" href="shortcuts://run-shortcut?name=Setline%20Fuerza" data-health-shortcut>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/><path d="M7.5 12h2l1-2 2 4 1-2h3"/></svg>
-                Iniciar y volver a Setline
-              </a>
-            </div>
-            <details class="shortcut-setup">
-              <summary>Configurar el atajo una vez</summary>
-              <ol>
-                <li>Abre Atajos y crea uno llamado <strong>Setline Fuerza</strong>.</li>
-                <li>Con un Apple Watch emparejado, añade “Iniciar entrenamiento” y selecciona <strong>Fuerza tradicional</strong>.</li>
-                <li>Al terminar, detenlo desde el reloj. Si esa acción no aparece, usa “Registrar entrenamiento” al final como alternativa.</li>
-              </ol>
-              <a class="apple-button secondary" href="shortcuts://create-shortcut">Abrir editor de Atajos</a>
-            </details>
           </section>
         </aside>
       </div>
@@ -1875,7 +1758,7 @@
       <h2 id="sheet-title"></h2>
       <p id="sheet-message"></p>
       <div class="sheet-actions">
-        <button class="sheet-cancel" type="submit" value="cancel">Cancelar</button>
+        <button class="sheet-cancel" type="submit" value="cancel" autofocus>Cancelar</button>
         <button class="sheet-confirm" id="sheet-confirm" type="submit" value="confirm">Confirmar</button>
       </div>
     </form>
@@ -1903,37 +1786,37 @@
         description: "Solo la parte de gimnasio. Si haces dos días, alterna A y B; añade C cuando recuperes bien.",
         days: [
           {
-            id: "v-a", code: "A", name: "Base de torso", duration: "36–44 min", note: "Compuestos estables primero; deltoides y brazos al final.",
+            id: "v-a", code: "A", name: "Base de torso", note: "Compuestos estables primero; deltoides y brazos al final.",
             exercises: [
-              { id: "va-press", name: "Press inclinado en máquina o mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 120, rir: "2", cue: "Escápulas firmes; evita rebotar en la parte baja." },
-              { id: "va-row-db", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Apoya la mano libre en el banco; lleva el codo hacia la cadera sin girar el torso. Reps por lado; kg de una mancuerna." },
-              { id: "va-pulldown-chinup", name: "Dominadas supinas", muscle: "Espalda", sets: 3, reps: "6–10", rest: 120, rir: "1–2", tracking: "reps", cue: "Palmas hacia ti, agarre al ancho de hombros y subida sin balanceo. Usa una banda de asistencia si la necesitas para mantener el RIR." },
-              { id: "va-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Sube con el codo y controla la vuelta." },
-              { id: "va-curl", name: "Curl de bíceps en polea", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Brazos quietos; extensión completa sin perder tensión." },
-              { id: "va-pushdown", name: "Extensión de tríceps con cuerda", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Separa la cuerda al final sin mover los codos." }
+              { id: "va-press", name: "Press inclinado en máquina o mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 120, rir: "2", cue: "Escápulas firmes; evita rebotar en la parte baja. Si no hay inclinado, usa el press de pecho disponible; conserva series, reps, descanso y RIR, y calibra la carga de esa máquina." },
+              { id: "va-row-db", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", unilateral: true, cue: "Apoya la mano libre en el banco; lleva el codo hacia la cadera sin girar el torso. Reps por lado; kg de una mancuerna." },
+              { id: "va-pulldown-chinup", name: "Dominadas supinas", muscle: "Espalda", sets: 2, reps: "6–10", rest: 120, rir: "1–2", tracking: "reps", cue: "Palmas hacia ti, agarre al ancho de hombros y subida sin balanceo. Usa una banda de asistencia si la necesitas para mantener el RIR." },
+              { id: "va-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "1–2", unilateral: true, cue: "Sube con el codo y controla la vuelta." },
+              { id: "va-curl", name: "Curl de bíceps en polea", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "Brazos quietos; extensión completa sin perder tensión." },
+              { id: "va-pushdown", name: "Extensión de tríceps con cuerda", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "Separa la cuerda al final sin mover los codos." }
             ]
           },
           {
-            id: "v-b", code: "B", name: "Hombros y brazos", duration: "34–42 min", note: "Trabajo de torso con baja demanda lumbar y volumen de hombro controlado.",
+            id: "v-b", code: "B", name: "Hombros y brazos", note: "Trabajo de torso con baja demanda lumbar y volumen de hombro controlado.",
             exercises: [
-              { id: "vb-chest", name: "Press de pecho convergente", muscle: "Pecho", sets: 3, reps: "8–12", rest: 105, rir: "2", cue: "Agarre cómodo y recorrido sin despegar los hombros." },
-              { id: "vb-highrow-db", name: "Remo inclinado con mancuernas", muscle: "Espalda", sets: 3, reps: "8–12", rest: 90, rir: "2", cue: "Inclina el torso desde la cadera, mantén la espalda estable y lleva los codos atrás, algo separados. Kg por mancuerna." },
-              { id: "vb-shoulder-db", name: "Press de hombro con mancuernas", muscle: "Hombros", sets: 2, reps: "8–12", rest: 105, rir: "2–3", cue: "Mantén el RIR por el trabajo de vóley. Sentado, abdomen firme y antebrazos verticales; sube sin arquear la espalda. Kg por mancuerna." },
-              { id: "vb-reverse-db", name: "Pájaros con mancuernas", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Inclina el torso y abre los brazos con los codos ligeramente flexionados, sin impulso. Kg por mancuerna." },
-              { id: "vb-inclinecurl", name: "Curl inclinado con mancuernas", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Mantén el hombro atrás y evita impulso." },
-              { id: "vb-overheadtri", name: "Extensión de tríceps sobre la cabeza", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Busca estiramiento largo y codos apuntando al frente." }
+              { id: "vb-chest", name: "Press de pecho convergente", muscle: "Pecho", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Agarre cómodo y recorrido sin despegar los hombros." },
+              { id: "vb-highrow-db", name: "Remo inclinado con mancuernas", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Inclina el torso desde la cadera, mantén la espalda estable y lleva los codos atrás, algo separados. Kg por mancuerna." },
+              { id: "vb-shoulder-db", name: "Press de hombro con mancuernas", muscle: "Hombros", sets: 2, reps: "8–12", rest: 120, rir: "2–3", cue: "Mantén el RIR por el trabajo de vóley. Sentado, abdomen firme y antebrazos verticales; sube sin arquear la espalda. Kg por mancuerna." },
+              { id: "vb-reverse-db", name: "Pájaros con mancuernas", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "1–2", cue: "Inclina el torso y abre los brazos con los codos ligeramente flexionados, sin impulso. Kg por mancuerna." },
+              { id: "vb-inclinecurl", name: "Curl inclinado con mancuernas", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "Mantén el hombro atrás y evita impulso." },
+              { id: "vb-overheadtri", name: "Extensión de tríceps sobre la cabeza", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "Busca estiramiento largo y codos apuntando al frente." }
             ]
           },
           {
-            id: "v-c", code: "C", name: "Densidad de torso", duration: "38–46 min", note: "Tercer estímulo opcional, con cargas moderadas y ejecución muy controlada.", optional: true,
+            id: "v-c", code: "C", name: "Densidad de torso", note: "Tercer estímulo opcional, con cargas moderadas y ejecución muy controlada.", optional: true,
             exercises: [
-              { id: "vc-pulldown", name: "Jalón unilateral en polea", muscle: "Espalda", sets: 3, reps: "10–14", rest: 75, rir: "2", cue: "Inicia bajando la escápula; no tires con el torso." },
-              { id: "vc-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 105, rir: "2", cue: "Misma trayectoria en todas las repeticiones." },
-              { id: "vc-seatedrow", name: "Remo sentado en polea", muscle: "Espalda", sets: 3, reps: "10–14", rest: 90, rir: "1–2", cue: "Mantén el pecho alto y no colapses al estirar." },
-              { id: "vc-lateral-db", name: "Elevación lateral con mancuernas", muscle: "Hombros", sets: 3, reps: "15–20", rest: 60, rir: "1", cue: "Eleva los brazos hasta la altura de los hombros, sin encogerlos ni balancearte. Kg por mancuerna." },
-              { id: "vc-fly", name: "Apertura en polea o peck deck", muscle: "Pecho", sets: 2, reps: "12–18", rest: 60, rir: "1–2", cue: "Acerca los bíceps sin perder el arco natural del hombro." },
-              { id: "vc-curl", name: "Curl predicador", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "No hiperextiendas el codo al final." },
-              { id: "vc-tri", name: "Extensión cruzada de tríceps en polea", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 60, rir: "1–2", cue: "Bloquea el brazo y termina cada repetición." }
+              { id: "vc-pulldown", name: "Jalón unilateral en polea", muscle: "Espalda", sets: 2, reps: "10–14", rest: 120, rir: "2", unilateral: true, cue: "Inicia bajando la escápula; no tires con el torso." },
+              { id: "vc-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Misma trayectoria en todas las repeticiones. Si no hay inclinado, usa el press horizontal disponible con la misma pauta y RIR. Calibra su carga desde liviano." },
+              { id: "vc-seatedrow", name: "Remo sentado en polea", muscle: "Espalda", sets: 2, reps: "10–14", rest: 120, rir: "1–2", cue: "Mantén el pecho alto y no colapses al estirar." },
+              { id: "vc-lateral-db", name: "Elevación lateral con mancuernas", muscle: "Hombros", sets: 2, reps: "15–20", rest: 75, rir: "2", cue: "Eleva los brazos hasta la altura de los hombros, sin encogerlos ni balancearte. Kg por mancuerna." },
+              { id: "vc-fly", name: "Apertura en polea o peck deck", muscle: "Pecho", sets: 2, reps: "12–18", rest: 75, rir: "1–2", cue: "Acerca los bíceps sin perder el arco natural del hombro." },
+              { id: "vc-curl", name: "Curl predicador", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "No hiperextiendas el codo al final." },
+              { id: "vc-tri", name: "Extensión cruzada de tríceps en polea", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", unilateral: true, cue: "Bloquea el brazo y termina cada repetición." }
             ]
           }
         ]
@@ -1945,52 +1828,52 @@
         title: "Hipertrofia sin vóley",
         navNote: "3 días + full-body opcional",
         symbol: "H4",
-        description: "Tres días base para torso y brazos. El cuarto añade frecuencia y el mínimo necesario de piernas.",
+        description: "Tres días de 30–45 min para torso y brazos; deja un día de recuperación entre sesiones. El cuarto es opcional. Usa este plan en semanas sin vóley, no encima del plan Vóley.",
         days: [
           {
-            id: "s-1", code: "1", name: "Torso A", duration: "55–68 min", note: "Base pesada equilibrada de pecho y espalda, con final de deltoides y tríceps.",
+            id: "s-1", code: "1", name: "Torso A", note: "Base pesada equilibrada de pecho y espalda, con final de deltoides y tríceps.",
             exercises: [
-              { id: "s1-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Progresión principal del día; repite banco y ángulo." },
-              { id: "s1-row-db", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Apoya la mano libre en el banco; lleva el codo hacia la cadera sin girar el torso. Reps por lado; kg de una mancuerna." },
-              { id: "s1-fly", name: "Apertura en polea", muscle: "Pecho", sets: 3, reps: "10–15", rest: 75, rir: "1–2", cue: "Controla la posición estirada; no choques las manos." },
-              { id: "s1-pulldown-chinup", name: "Dominadas supinas", muscle: "Espalda", sets: 3, reps: "6–10", rest: 120, rir: "1–2", tracking: "reps", cue: "Palmas hacia ti, agarre al ancho de hombros y subida sin balanceo. Usa una banda de asistencia si la necesitas para mantener el RIR." },
-              { id: "s1-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 4, reps: "12–20", rest: 60, rir: "1–2", cue: "Tensión constante; controla dos segundos al bajar." },
-              { id: "s1-tri", name: "Extensión de tríceps con barra", muscle: "Tríceps", sets: 3, reps: "8–12", rest: 75, rir: "1–2", cue: "Codos fijos y bloqueo controlado." }
+              { id: "s1-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 150, rir: "2", cue: "Progresión principal del día; repite banco y ángulo. Si no tienes banco inclinable, usa press horizontal con mancuernas o la máquina de press disponible, con la misma pauta y RIR." },
+              { id: "s1-row-db", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 3, reps: "6–10", rest: 120, rir: "2", unilateral: true, cue: "Apoya la mano libre en el banco; lleva el codo hacia la cadera sin girar el torso. Reps por lado; kg de una mancuerna." },
+              { id: "s1-fly", name: "Apertura en polea", muscle: "Pecho", sets: 2, reps: "10–15", rest: 90, rir: "1–2", cue: "Controla la posición estirada; no choques las manos. Si no hay polea, usa peck deck; si tampoco hay, 2 series de flexiones ajustadas al mismo rango y RIR, sin añadirlas al press." },
+              { id: "s1-pulldown-chinup", name: "Dominadas supinas", muscle: "Espalda", sets: 2, reps: "6–10", rest: 120, rir: "1–2", tracking: "reps", cue: "Palmas hacia ti, agarre al ancho de hombros y subida sin balanceo. Usa una banda de asistencia si la necesitas para mantener el RIR." },
+              { id: "s1-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "1–2", unilateral: true, cue: "Tensión constante; controla dos segundos al bajar." },
+              { id: "s1-tri", name: "Extensión de tríceps con barra", muscle: "Tríceps", sets: 2, reps: "8–12", rest: 75, rir: "1–2", cue: "Codos fijos y bloqueo controlado." }
             ]
           },
           {
-            id: "s-2", code: "2", name: "Espalda y bíceps", duration: "54–66 min", note: "Más volumen de dorsales y espalda alta con dos perfiles de curl.",
+            id: "s-2", code: "2", name: "Espalda y bíceps", note: "Tirón vertical y horizontal, deltoides posterior y dos perfiles de curl. Volumen moderado para sostener la progresión.",
             exercises: [
-              { id: "s2-pullup", name: "Dominada asistida/lastrada o jalón", muscle: "Espalda", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Usa la variante que mantenga el rango completo." },
-              { id: "s2-highrow-db", name: "Remo inclinado con mancuernas", muscle: "Espalda", sets: 3, reps: "8–12", rest: 105, rir: "2", cue: "Inclina el torso desde la cadera, mantén la espalda estable y lleva los codos atrás, algo separados. Kg por mancuerna." },
-              { id: "s2-cablerow", name: "Remo sentado agarre neutro", muscle: "Espalda", sets: 3, reps: "10–14", rest: 90, rir: "1–2", cue: "Estira sin redondear la zona lumbar." },
-              { id: "s2-reverse-db", name: "Pájaros con mancuernas", muscle: "Hombros", sets: 3, reps: "12–20", rest: 60, rir: "1–2", cue: "Inclina el torso y abre los brazos con los codos ligeramente flexionados, sin impulso. Kg por mancuerna." },
-              { id: "s2-preacher", name: "Curl predicador", muscle: "Bíceps", sets: 3, reps: "8–12", rest: 75, rir: "1–2", cue: "Recorrido largo sin despegar el brazo del apoyo." },
-              { id: "s2-hammer", name: "Curl martillo con cuerda", muscle: "Bíceps", sets: 3, reps: "10–15", rest: 60, rir: "1–2", cue: "Muñeca neutra y codos quietos." }
+              { id: "s2-pullup", name: "Dominada asistida/lastrada o jalón", muscle: "Espalda", sets: 3, reps: "6–10", rest: 150, rir: "2", cue: "Usa la variante que mantenga el rango completo." },
+              { id: "s2-highrow-db", name: "Remo inclinado con mancuernas", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Inclina el torso desde la cadera, mantén la espalda estable y lleva los codos atrás, algo separados. Kg por mancuerna." },
+              { id: "s2-cablerow", name: "Remo sentado agarre neutro", muscle: "Espalda", sets: 2, reps: "10–14", rest: 90, rir: "1–2", cue: "Estira sin redondear la zona lumbar. Si no hay polea, usa remo con mancuernas con la misma pauta y RIR." },
+              { id: "s2-reverse-db", name: "Pájaros con mancuernas", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "1–2", cue: "Inclina el torso y abre los brazos con los codos ligeramente flexionados, sin impulso. Kg por mancuerna." },
+              { id: "s2-preacher", name: "Curl predicador", muscle: "Bíceps", sets: 2, reps: "8–12", rest: 75, rir: "1–2", cue: "Recorrido largo sin despegar el brazo del apoyo." },
+              { id: "s2-hammer", name: "Curl martillo con cuerda", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "Muñeca neutra y codos quietos." }
             ]
           },
           {
-            id: "s-3", code: "3", name: "Pecho, hombros y tríceps", duration: "58–70 min", note: "Segundo estímulo fuerte de pecho con prioridad de deltoides lateral y tríceps.",
+            id: "s-3", code: "3", name: "Pecho, hombros y tríceps", note: "Segundo estímulo de pecho, hombros y tríceps; mantén el RIR y los descansos en vez de añadir series.",
             exercises: [
-              { id: "s3-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 4, reps: "6–10", rest: 150, rir: "2", cue: "Usa topes consistentes y registra la posición del asiento." },
-              { id: "s3-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "No acortes la parte baja por buscar más carga." },
-              { id: "s3-shoulder-db", name: "Press de hombro con mancuernas", muscle: "Hombros", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Sentado, abdomen firme y antebrazos verticales; sube sin arquear la espalda. Kg por mancuerna." },
-              { id: "s3-lateral-db", name: "Elevación lateral con mancuernas", muscle: "Hombros", sets: 4, reps: "12–20", rest: 60, rir: "1–2", cue: "Eleva los brazos hasta la altura de los hombros, sin encogerlos ni balancearte. Kg por mancuerna." },
-              { id: "s3-fly-db", name: "Aperturas inclinadas con mancuernas", muscle: "Pecho", sets: 2, reps: "12–18", rest: 60, rir: "1–2", cue: "Banco con inclinación suave, codos ligeramente flexionados; abre solo hasta donde controles sin molestias. Kg por mancuerna." },
-              { id: "s3-overhead", name: "Extensión de tríceps sobre la cabeza", muscle: "Tríceps", sets: 3, reps: "10–15", rest: 75, rir: "1–2", cue: "Deja que el tríceps se estire sin abrir los codos." },
-              { id: "s3-pushdown", name: "Extensión unilateral en polea", muscle: "Tríceps", sets: 2, reps: "12–16", rest: 60, rir: "1", cue: "Termina con el codo bloqueado, hombro quieto." }
+              { id: "s3-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 3, reps: "6–10", rest: 150, rir: "2", cue: "Usa topes consistentes y registra la posición del asiento." },
+              { id: "s3-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 2, reps: "8–12", rest: 120, rir: "2", cue: "No acortes la parte baja por buscar más carga. Si no hay inclinado, usa press horizontal con mancuernas o la máquina disponible con la misma pauta y RIR." },
+              { id: "s3-shoulder-db", name: "Press de hombro con mancuernas", muscle: "Hombros", sets: 2, reps: "8–12", rest: 120, rir: "2", cue: "Sentado, abdomen firme y antebrazos verticales; sube sin arquear la espalda. Kg por mancuerna." },
+              { id: "s3-lateral-db", name: "Elevación lateral con mancuernas", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "1–2", cue: "Eleva los brazos hasta la altura de los hombros, sin encogerlos ni balancearte. Kg por mancuerna." },
+              { id: "s3-fly-db", name: "Aperturas inclinadas con mancuernas", muscle: "Pecho", sets: 2, reps: "12–18", rest: 90, rir: "1–2", cue: "Banco con inclinación suave, codos ligeramente flexionados; abre solo hasta donde controles sin molestias. Kg por mancuerna." },
+              { id: "s3-overhead", name: "Extensión de tríceps sobre la cabeza", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "Deja que el tríceps se estire sin abrir los codos." },
+              { id: "s3-pushdown", name: "Extensión unilateral en polea", muscle: "Tríceps", sets: 2, reps: "12–16", rest: 75, rir: "1", unilateral: true, cue: "Termina con el codo bloqueado, hombro quieto." }
             ]
           },
           {
-            id: "s-4", code: "4", name: "Full-body mínimo", duration: "45–55 min", note: "Opcional. Cubre piernas con poco coste y suma frecuencia de torso y brazos.", optional: true,
+            id: "s-4", code: "4", name: "Full-body complementario", note: "Opcional. Piernas, torso y brazos con 2 series por movimiento. Añádelo solo si recuperas bien de los tres días base.", optional: true,
             exercises: [
               { id: "s4-legpress", name: "Prensa de piernas", muscle: "Piernas", sets: 2, reps: "8–12", rest: 150, rir: "2–3", cue: "Recorrido cómodo y controlado; no busques fatiga que afecte al vóley." },
               { id: "s4-legcurl", name: "Curl femoral sentado", muscle: "Piernas", sets: 2, reps: "10–15", rest: 90, rir: "2", cue: "Pausa en flexión y controla la vuelta." },
-              { id: "s4-chest", name: "Press convergente en máquina", muscle: "Pecho", sets: 3, reps: "10–14", rest: 105, rir: "2", cue: "Carga moderada y recorrido completo." },
-              { id: "s4-pulldown-chinup", name: "Dominadas supinas", muscle: "Espalda", sets: 3, reps: "6–10", rest: 120, rir: "2", tracking: "reps", cue: "Palmas hacia ti, agarre al ancho de hombros y subida sin balanceo. Usa una banda de asistencia si la necesitas para mantener el RIR." },
-              { id: "s4-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 3, reps: "15–20", rest: 60, rir: "1–2", cue: "Serie limpia, sin convertirla en un encogimiento." },
-              { id: "s4-curl", name: "Curl en polea", muscle: "Bíceps", sets: 2, reps: "12–16", rest: 60, rir: "1–2", cue: "Mantén tensión y no adelantes el codo." },
-              { id: "s4-tri", name: "Extensión con cuerda", muscle: "Tríceps", sets: 2, reps: "12–16", rest: 60, rir: "1–2", cue: "Finaliza cada repetición sin impulso." }
+              { id: "s4-chest", name: "Press convergente en máquina", muscle: "Pecho", sets: 2, reps: "10–14", rest: 120, rir: "2", cue: "Carga moderada y recorrido completo." },
+              { id: "s4-pulldown-chinup", name: "Dominadas supinas", muscle: "Espalda", sets: 2, reps: "6–10", rest: 120, rir: "2", tracking: "reps", cue: "Palmas hacia ti, agarre al ancho de hombros y subida sin balanceo. Usa una banda de asistencia si la necesitas para mantener el RIR." },
+              { id: "s4-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 2, reps: "15–20", rest: 75, rir: "1–2", unilateral: true, cue: "Serie limpia, sin convertirla en un encogimiento." },
+              { id: "s4-curl", name: "Curl en polea", muscle: "Bíceps", sets: 2, reps: "12–16", rest: 75, rir: "1–2", cue: "Mantén tensión y no adelantes el codo." },
+              { id: "s4-tri", name: "Extensión con cuerda", muscle: "Tríceps", sets: 2, reps: "12–16", rest: 75, rir: "1–2", cue: "Finaliza cada repetición sin impulso." }
             ]
           }
         ]
@@ -2002,69 +1885,95 @@
         title: "Especialización de pecho",
         navNote: "Gym A/B + alternativa en casa",
         symbol: "P2",
-        description: "Haz dos sesiones por semana, separadas por 48–72 h. Casa puede reemplazar A o B. Sustituye el trabajo de pecho de los otros programas con estas sesiones.",
+        description: "Dos sesiones de torso con prioridad de pecho por semana, separadas por 48–72 h. Casa reemplaza A o B. Sustituye el trabajo equivalente de otros programas; no acumules los planes.",
         days: [
           {
-            id: "p-a", code: "A", name: "Pecho · base fuerte", duration: "30–40 min", note: "Calienta con 2–3 series progresivas del primer press, sin registrarlas como trabajo.",
+            id: "p-a", code: "A", name: "Pecho · base fuerte", note: "Calienta con 2–3 series progresivas del primer press, sin registrarlas como trabajo.",
             exercises: [
-              { id: "pa-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 150, rir: "2", cue: "Banco a 15–30°, pies firmes y escápulas estables. Baja con control y sin rebote. Registra kg por mancuerna." },
-              { id: "pa-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 2, reps: "8–12", rest: 120, rir: "1–2", cue: "Ajusta el asiento con las asas a la altura media del pecho. Mantén los hombros apoyados y un recorrido cómodo." },
-              { id: "pa-fly", name: "Apertura en polea", muscle: "Pecho", sets: 2, reps: "12–15", rest: 90, rir: "1–2", cue: "Codos ligeramente flexionados; junta los brazos sin impulso. Abre solo hasta donde controles sin molestias. Kg por lado." }
+              { id: "pa-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 150, rir: "2", cue: "Banco a 15–30°, pies firmes y escápulas estables. Baja con control y sin rebote. Registra kg por mancuerna. Si no hay banco inclinable o máquina inclinada, usa el press de pecho disponible con las mismas 3 series, reps, descanso y RIR." },
+              { id: "pa-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 2, reps: "8–12", rest: 120, rir: "1–2", cue: "Ajusta el asiento con las asas a la altura media del pecho. Mantén los hombros apoyados y un recorrido cómodo. Si falta esta máquina, usa press horizontal con mancuernas en banco o suelo con la misma pauta y RIR." },
+              { id: "pa-fly", name: "Apertura en polea", muscle: "Pecho", sets: 2, reps: "12–15", rest: 90, rir: "1–2", cue: "Codos ligeramente flexionados; junta los brazos sin impulso. Abre solo hasta donde controles sin molestias. Kg por lado. Sin polea, usa peck deck con la misma pauta; sin ambas, flexiones escaladas al mismo rango y RIR. Reemplaza, no añade." },
+              { id: "pa-row", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", unilateral: true, cue: "Apoya la mano libre en un soporte firme. Lleva el codo hacia la cadera sin girarte. Reps y kg por lado; completa ambos lados antes de descansar." },
+              { id: "pa-lateral", name: "Elevación lateral con mancuernas", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "2", cue: "Carga ligera, sin impulso ni encoger los hombros. Sube solo hasta un recorrido cómodo. Kg por mancuerna." }
             ]
           },
           {
-            id: "p-b", code: "B", name: "Pecho · volumen y control", duration: "30–40 min", note: "Calienta con 2–3 series progresivas del primer press. Busca más repeticiones limpias antes de subir peso.",
+            id: "p-b", code: "B", name: "Pecho · volumen y control", note: "Calienta con 2–3 series progresivas del primer press. Busca más repeticiones limpias antes de subir peso.",
             exercises: [
-              { id: "pb-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 150, rir: "2", cue: "Usa siempre la misma posición del asiento. Baja con control, mantén el pecho estable y evita adelantar los hombros." },
-              { id: "pb-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 2, reps: "10–12", rest: 120, rir: "1–2", cue: "Banco a 15–30°. Usa una carga que permita todo el rango sin arquear más la espalda. Kg por mancuerna." },
-              { id: "pb-fly", name: "Apertura en peck deck", muscle: "Pecho", sets: 2, reps: "12–18", rest: 90, rir: "1–2", cue: "Apoya la espalda y acerca los brazos sin encoger los hombros. Controla la vuelta, sin forzar el estiramiento." }
+              { id: "pb-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 150, rir: "2", cue: "Usa siempre la misma posición del asiento. Baja con control, mantén el pecho estable y evita adelantar los hombros. Si falta esta máquina, usa press horizontal con mancuernas en banco o suelo con la misma pauta y RIR." },
+              { id: "pb-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 2, reps: "10–12", rest: 120, rir: "1–2", cue: "Banco a 15–30°. Usa una carga que permita todo el rango sin arquear más la espalda. Kg por mancuerna. Si no hay inclinado, usa el press horizontal disponible o mancuernas en banco plano con la misma pauta y RIR." },
+              { id: "pb-fly", name: "Apertura en peck deck", muscle: "Pecho", sets: 2, reps: "12–18", rest: 90, rir: "1–2", cue: "Apoya la espalda y acerca los brazos sin encoger los hombros. Controla la vuelta, sin forzar el estiramiento. Sin peck deck, usa apertura en polea con la misma pauta; sin ambas, flexiones escaladas al mismo rango y RIR. Reemplaza, no añade." },
+              { id: "pb-row", name: "Remo sentado en polea", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Torso estable y agarre cómodo. Si falta esta estación, usa remo inclinado con mancuernas, con las mismas series, reps y descanso; registra kg por mancuerna." },
+              { id: "pb-reverse", name: "Pájaros con mancuernas", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "2", cue: "Inclina el torso desde la cadera y abre sin impulso. Kg por mancuerna; usa un recorrido cómodo." }
             ]
           },
           {
-            id: "p-home", code: "C", name: "Pecho en casa", duration: "25–35 min", alternative: true,
-            note: "7 series: mancuernas en el suelo, flexiones, apoyo elevado y elástico. Calienta con un press liviano y flexiones fáciles. Reemplaza una sesión de gym; no es un tercer día extra.",
+            id: "p-home", code: "C", name: "Pecho en casa", alternative: true,
+            note: "7 series de pecho + 3 de remo + 2 de hombros. Mancuernas, peso corporal y elástico; sin banco ni máquinas. Casa reemplaza A o B; no añade un tercer día.",
             exercises: [
               { id: "ph-floor", name: "Press con mancuernas en el suelo", muscle: "Pecho", sets: 3, reps: "8–15", rest: 120, rir: "2", cue: "Boca arriba, rodillas flexionadas y pies apoyados. Codos a unos 30–45° del torso; baja hasta apoyar suavemente los brazos en el suelo, sin rebote. Empuja hacia arriba. Registra kg por mancuerna; elige una carga que te deje 2 reps en reserva." },
               { id: "ph-pushup", name: "Flexiones", muscle: "Pecho", sets: 1, reps: "6–15", rest: 90, rir: "1–2", tracking: "reps", cue: "Cuerpo alineado, abdomen firme y codos en diagonal. Baja el pecho entre las manos. Si no llegas a 6 limpias, apoya las rodillas o eleva las manos sobre un apoyo firme. Al llegar a 15 con control, usa una variante más difícil." },
               { id: "ph-incline", name: "Flexiones con manos en apoyo elevado", muscle: "Pecho", sets: 1, reps: "10–20", rest: 90, rir: "2", tracking: "reps", cue: "Puedes usar el asiento solo si la estructura es firme, no desliza ni vuelca y el acolchado no se hunde bajo las manos. Compruébalo sin hacer la flexión primero. Si no cumple, hazlas contra una pared. Manos al ancho de hombros, cuerpo alineado; acerca el pecho al apoyo y empuja sin dejar caer la cadera. El GIF muestra un banco rígido, no valida tu sillón." },
-              { id: "ph-band", name: "Press de pecho sentado con elástico", muscle: "Pecho", sets: 2, reps: "12–20", rest: 90, rir: "1–2", tracking: "reps", loadLabel: "Elástico", cue: "Puedes sentarte en ese asiento si queda estable, con ambos pies firmes en el suelo y sin hundirte. Pasa una banda larga por detrás de la espalda, bajo las axilas, sujeta sus extremos y empuja al frente; vuelve lento. Revisa que no esté dañada ni pueda deslizarse al cuello. Sin anclaje externo. Usa la misma banda y agarre para comparar reps; al llegar a 20, aumenta la resistencia. Si no tienes una banda adecuada, haz 2 series de flexiones fáciles en su lugar." }
+              { id: "ph-band", name: "Press de pecho sentado con elástico", muscle: "Pecho", sets: 2, reps: "12–20", rest: 90, rir: "1–2", tracking: "reps", loadLabel: "Elástico", cue: "Puedes sentarte en ese asiento si queda estable, con ambos pies firmes en el suelo y sin hundirte. Pasa una banda larga por detrás de la espalda, bajo las axilas, sujeta sus extremos y empuja al frente; vuelve lento. Revisa que no esté dañada ni pueda deslizarse al cuello. Sin anclaje externo. Usa la misma banda y agarre para comparar reps; al llegar a 20, aumenta la resistencia. Si no tienes una banda adecuada, haz 2 series de flexiones fáciles en su lugar." },
+              { id: "ph-row", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 3, reps: "8–15", rest: 120, rir: "2", unilateral: true, cue: "Apoya la mano libre en un soporte firme o en el muslo. Espalda estable, codo hacia la cadera y sin girarte. Reps y kg por lado; completa ambos lados antes de descansar." },
+              { id: "ph-lateral", name: "Elevación lateral con mancuernas", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "2", cue: "Carga ligera, codos algo flexionados y sin balanceo. Kg por mancuerna; no fuerces un recorrido molesto." }
             ]
           }
         ]
       },
       {
         id: "calisthenics",
-        short: "Calistenia 20 min",
+        short: "Calistenia 30–45 min",
         mobileName: "Calis",
         title: "Calistenia principiante",
         navNote: "2 sesiones A/B · peso corporal",
         symbol: "BW",
-        description: "Alterna A y B dos o tres veces por semana. Usa una variante que te deje unas 2 repeticiones en reserva.",
+        description: "Alterna A y B dos veces por semana con un día de recuperación entre ellas. Un tercer día es opcional si recuperas bien. Usa una variante que deje unas 2 repeticiones en reserva.",
         days: [
           {
-            id: "c-a", code: "A", name: "Base A", duration: "18–22 min", note: "Empuje, tirón, piernas y core con descansos breves y técnica limpia.",
+            id: "c-a", code: "A", name: "Base A", note: "Empuje, tirón, piernas, hombros y core: 3 series por movimiento con descansos completos.",
             exercises: [
-              { id: "ca-pushup", name: "Flexión inclinada", muscle: "Pecho", sets: 3, reps: "8–15", rest: 60, rir: "2", tracking: "reps", cue: "Apoya las manos en una mesa o banco firme; baja el pecho entre las manos." },
-              { id: "ca-row", name: "Remo invertido con rodillas flexionadas", muscle: "Espalda", sets: 3, reps: "6–12", rest: 75, rir: "2", tracking: "reps", cue: "Usa solo una barra o mesa muy estable y mantén el cuerpo en bloque." },
-              { id: "ca-squat", name: "Sentadilla asistida", muscle: "Piernas", sets: 2, reps: "12–20", rest: 45, rir: "2–3", tracking: "reps", cue: "Usa un apoyo estable solo lo necesario; controla la bajada y empuja el suelo al subir." },
-              { id: "ca-pike", name: "Flexión pike a cobra", muscle: "Hombros", sets: 2, reps: "6–10", rest: 60, rir: "2", tracking: "reps", cue: "Empieza con la cadera alta y pasa hacia delante sin colapsar los hombros." },
-              { id: "ca-deadbug", name: "Dead bug", muscle: "Core", sets: 2, reps: "8–12/lado", rest: 45, rir: "2", tracking: "reps", cue: "Mantén la zona lumbar apoyada y mueve brazo y pierna con control." }
+              { id: "ca-pushup", name: "Flexión inclinada", muscle: "Pecho", sets: 3, reps: "8–15", rest: 90, rir: "2", tracking: "reps", cue: "Apoya las manos en una mesa o banco firme; baja el pecho entre las manos." },
+              { id: "ca-row", name: "Remo invertido con rodillas flexionadas", muscle: "Espalda", sets: 3, reps: "6–12", rest: 90, rir: "2", tracking: "reps", cue: "Usa solo una barra o mesa muy estable y mantén el cuerpo en bloque." },
+              { id: "ca-squat", name: "Sentadilla asistida", muscle: "Piernas", sets: 3, reps: "12–20", rest: 75, rir: "2–3", tracking: "reps", cue: "Usa un apoyo estable solo lo necesario; controla la bajada y empuja el suelo al subir." },
+              { id: "ca-pike", name: "Flexión pike a cobra", muscle: "Hombros", sets: 3, reps: "6–10", rest: 90, rir: "2", tracking: "reps", cue: "Empieza con la cadera alta y pasa hacia delante sin colapsar los hombros." },
+              { id: "ca-deadbug", name: "Dead bug", muscle: "Core", sets: 3, reps: "8–12/lado", rest: 60, rir: "2", tracking: "reps", unilateral: true, cue: "Mantén la zona lumbar apoyada y mueve brazo y pierna con control." }
             ]
           },
           {
-            id: "c-b", code: "B", name: "Base B", duration: "18–22 min", note: "Segunda variante de cuerpo completo para repetir patrones sin cargar siempre igual.",
+            id: "c-b", code: "B", name: "Base B", note: "Segunda variante de cuerpo completo para repetir patrones sin cargar siempre igual.",
             exercises: [
-              { id: "cb-pushup", name: "Flexión con rodillas o completa", muscle: "Pecho", sets: 3, reps: "6–12", rest: 60, rir: "2", tracking: "reps", cue: "Elige la variante que te permita mantener el cuerpo alineado hasta la última repetición." },
-              { id: "cb-row", name: "Remo invertido", muscle: "Espalda", sets: 3, reps: "6–12", rest: 75, rir: "2", tracking: "reps", cue: "Comprueba el apoyo antes de empezar y acerca el pecho con control." },
-              { id: "cb-lunge", name: "Zancada al frente", muscle: "Piernas", sets: 2, reps: "8–12/lado", rest: 45, rir: "2–3", tracking: "reps", cue: "Da un paso cómodo, mantén el tronco estable y vuelve empujando el suelo." },
-              { id: "cb-scapular", name: "Flexión escapular", muscle: "Hombros", sets: 2, reps: "10–15", rest: 45, rir: "2", tracking: "reps", cue: "Mantén los codos extendidos; separa y junta las escápulas sin hundir la espalda." },
-              { id: "cb-crunch", name: "Crunch inverso", muscle: "Core", sets: 2, reps: "8–15", rest: 45, rir: "2", tracking: "reps", cue: "Eleva la pelvis sin impulso y baja de forma lenta y controlada." }
+              { id: "cb-pushup", name: "Flexión con rodillas o completa", muscle: "Pecho", sets: 3, reps: "6–12", rest: 90, rir: "2", tracking: "reps", cue: "Elige la variante que te permita mantener el cuerpo alineado hasta la última repetición." },
+              { id: "cb-row", name: "Remo invertido", muscle: "Espalda", sets: 3, reps: "6–12", rest: 90, rir: "2", tracking: "reps", cue: "Comprueba el apoyo antes de empezar y acerca el pecho con control." },
+              { id: "cb-lunge", name: "Zancada al frente", muscle: "Piernas", sets: 3, reps: "8–12/lado", rest: 75, rir: "2–3", tracking: "reps", unilateral: true, cue: "Da un paso cómodo, mantén el tronco estable y vuelve empujando el suelo." },
+              { id: "cb-scapular", name: "Flexión escapular", muscle: "Hombros", sets: 3, reps: "10–15", rest: 75, rir: "2", tracking: "reps", cue: "Mantén los codos extendidos; separa y junta las escápulas sin hundir la espalda." },
+              { id: "cb-crunch", name: "Crunch inverso", muscle: "Core", sets: 3, reps: "8–15", rest: 60, rir: "2", tracking: "reps", cue: "Eleva la pelvis sin impulso y baja de forma lenta y controlada." }
             ]
           }
         ]
       }
     ];
 
+    function estimateSessionTiming(day) {
+      // Includes positioning/logging per set and both sides of unilateral exercises.
+      const workMin = day.exercises.reduce((sum, exercise) => sum + exercise.sets * (exercise.unilateral ? 75 : 45), 0);
+      const workMax = day.exercises.reduce((sum, exercise) => sum + exercise.sets * (exercise.unilateral ? 90 : 60), 0);
+      const rest = day.exercises.reduce((sum, exercise) => sum + (exercise.sets - 1) * exercise.rest, 0);
+      const transitions = (day.exercises.length - 1) * 60;
+      return {
+        min: Math.ceil((360 + workMin + rest + transitions) / 60),
+        max: Math.ceil((480 + workMax + rest + transitions) / 60),
+        restMinutes: Math.round(rest / 60),
+        workMin: Math.ceil(workMin / 60),
+        workMax: Math.ceil(workMax / 60),
+        transitionMinutes: transitions / 60
+      };
+    }
+
+    programs.forEach(program => program.days.forEach(day => {
+      day.timing = estimateSessionTiming(day);
+      day.duration = `${day.timing.min}–${day.timing.max} min`;
+    }));
     programs.sort((a, b) => (a.id === "solo" ? 0 : 1) - (b.id === "solo" ? 0 : 1));
 
     const LOAD_PRESETS = {
@@ -2087,6 +1996,12 @@
 
     const GIF_BASE = "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/";
     const exerciseGifs = {
+      "pa-row": ["upper-back/dumbbell-one-arm-bent-over-row.gif", "Remo a una mano con mancuerna"],
+      "pa-lateral": ["delts/dumbbell-lateral-raise.gif", "Elevación lateral con mancuernas"],
+      "pb-row": ["upper-back/cable-seated-row.gif", "Remo sentado en polea"],
+      "pb-reverse": ["delts/dumbbell-reverse-fly.gif", "Pájaros con mancuernas"],
+      "ph-row": ["upper-back/dumbbell-one-arm-bent-over-row.gif", "Remo a una mano con mancuerna"],
+      "ph-lateral": ["delts/dumbbell-lateral-raise.gif", "Elevación lateral con mancuernas"],
       "ph-floor": ["https://i.makeagif.com/media/6-22-2017/gF8Nwb.gif", "Press con mancuernas en el suelo", "https://makeagif.com/gif/how-to-dumbbell-floor-press-gF8Nwb"],
       "ph-incline": ["pectorals/incline-push-up.gif", "Flexión inclinada sobre banco rígido"],
       "ph-pushup": ["pectorals/push-up.gif", "Flexión completa"],
@@ -2206,6 +2121,7 @@
     let pwaBannerKind = "";
     let heroSeenTimer = null;
     let timerFinishTimeout = null;
+    let sessionResetPending = false;
     const expandedHeroPrograms = new Set();
     const expandedCompleteCards = new Set();
 
@@ -2226,7 +2142,7 @@
     }
 
     function referenceRatioLabel(reference, ratio) {
-      if (reference.source === "automatic") return `${ratio}% del anterior`;
+      if (reference.source === "automatic") return `${ratio}% de la referencia`;
       if (reference.source === "manual") return `${ratio}% del objetivo`;
       return "Primera sesión";
     }
@@ -2237,9 +2153,9 @@
 
     function referenceFieldLabel(reference, exercise) {
       const unit = volumeUnit(exercise);
-      if (reference.source === "automatic") return `Sesión anterior · ${unit}`;
+      if (reference.source === "automatic") return `Referencia previa · ${unit}`;
       if (reference.source === "manual") return `Objetivo manual · ${unit}`;
-      return `Referencia automática · ${unit}`;
+      return `Objetivo opcional · ${unit}`;
     }
 
     function persist() {
@@ -2319,14 +2235,6 @@
       if (changed) persist();
     }
 
-    function buildShortcutUrl() {
-      const program = activeProgram();
-      const day = activeDay();
-      const shortcutText = encodeURIComponent(`${program.short} · ${day.name}`);
-      const returnUrl = encodeURIComponent(location.href.split(/[?#]/)[0]);
-      return `shortcuts://x-callback-url/run-shortcut?name=Setline%20Fuerza&input=text&text=${shortcutText}&x-success=${returnUrl}&x-cancel=${returnUrl}&x-error=${returnUrl}`;
-    }
-
     function programButton(program) {
       const selected = program.id === state.programId;
       return `<button class="program-button" type="button" aria-pressed="${selected}" data-program="${program.id}">
@@ -2363,7 +2271,7 @@
       hero.innerHTML = `<div class="hero-copy">
         <span class="hero-program">${program.title}</span>
         <h1 id="session-title">${day.name}</h1>
-        <p id="session-description">${day.note} ${program.description}</p>
+        <p id="session-description">${day.note} ${program.description}<br><strong>Tiempo estimado:</strong> 6–8 min de calentamiento (incluye 2–3 series fáciles del primer movimiento), ${day.timing.workMin}–${day.timing.workMax} min de series y registro, unos ${day.timing.restMinutes} min de descanso entre series y ${day.timing.transitionMinutes} min para cambiar de ejercicio. Sin esperas por máquinas; puedes cortar antes.</p>
         <span class="hero-compact-meta" aria-hidden="true">Día ${day.code} · ${day.duration} · ${totalSets} series</span>
         <button class="hero-toggle" type="button" data-hero-toggle aria-expanded="${isExpanded}" aria-controls="session-description session-facts" aria-label="${isExpanded ? "Ocultar" : "Mostrar"} detalles de ${day.name}">
           <span>${isExpanded ? "Ocultar" : "Detalles"}</span>
@@ -2377,11 +2285,6 @@
           <span class="hero-fact"><span>Trabajo</span><strong>${totalSets} series</strong></span>
         </div>
       </div>`;
-      const shortcutUrl = buildShortcutUrl();
-      $$('[data-health-shortcut]').forEach(link => {
-        link.href = shortcutUrl;
-        link.setAttribute("aria-label", `Iniciar ${day.name} en Apple Watch y volver a Setline`);
-      });
       clearTimeout(heroSeenTimer);
       if (isFirstView) {
         const programId = program.id;
@@ -2477,8 +2380,8 @@
           <div class="reference-field">
             <label for="ref-${exercise.id}" data-reference-label>${referenceFieldLabel(reference, exercise)}</label>
             <div class="reference-control">
-              <input class="reference-input" id="ref-${exercise.id}" type="text" inputmode="${bodyweight ? "numeric" : "decimal"}" enterkeyhint="done" autocomplete="off" placeholder="Se crea al terminar" value="${escapeAttribute(reference.value || "")}" data-reference data-exercise="${exercise.id}">
-              <button class="reference-auto-button" type="button" data-reference-auto data-exercise="${exercise.id}" aria-label="Volver a la referencia automática de ${exercise.name}" ${reference.source === "manual" ? "" : "hidden"}>Auto</button>
+              <input class="reference-input" id="ref-${exercise.id}" type="text" inputmode="${bodyweight ? "numeric" : "decimal"}" enterkeyhint="done" autocomplete="off" placeholder="Opcional" value="${escapeAttribute(reference.value || "")}" data-reference data-exercise="${exercise.id}">
+              <button class="reference-auto-button" type="button" data-reference-auto data-exercise="${exercise.id}" aria-label="Volver a la referencia previa de ${exercise.name}" ${reference.source === "manual" && safeNumber(state.lastVolumes[referenceKey(exercise.id)]) ? "" : "hidden"}>Previa</button>
             </div>
           </div>
         </div>
@@ -2533,9 +2436,12 @@
         <ol class="guidance-list">
           <li><b>1</b><span>Completa el mínimo del rango con el RIR indicado.</span></li>
           <li><b>2</b><span>Sube repeticiones manteniendo técnica y control.</span></li>
-          <li><b>3</b><span>${bodyweight ? "Al lograr el máximo, usa menos apoyo o una variante más difícil y vuelve al mínimo del rango." : "Al lograr el máximo en todas las series, sube 2–5% la carga."}</span></li>
+          <li><b>3</b><span>${bodyweight ? "Al lograr el máximo con el RIR indicado en dos sesiones, usa una variante más difícil y vuelve al mínimo del rango." : "Al lograr el máximo en todas las series con el RIR indicado en dos sesiones, sube el menor salto disponible (aprox. 2–5%) y vuelve al mínimo del rango."}</span></li>
         </ol>
-        ${activeProgram().id === "chest" ? `<p>Deja 1–2 repeticiones en reserva (RIR). Si llegas fatigado o baja tu rendimiento, reduce una serie por ejercicio esa semana. Mantén el entrenamiento de espalda y piernas.</p><p>En casa: sube primero las reps. Después aumenta el peso de las mancuernas, la dificultad de las flexiones o la resistencia del elástico. Compara las reps con la misma variante y banda.</p><p>A+B, A+Casa o B+Casa suman 14 series de pecho: reemplazan las de Hiper, Vóley o Calis. El resumen cuenta solo este programa. Evalúa el progreso durante varias semanas.</p>` : ""}`;
+        <p>Calienta 6–8 min y respeta los descansos: 2–2:30 min en los movimientos principales y 1–1:30 min en los accesorios. Si el rendimiento cae, añade descanso antes de añadir series.</p>
+        <p>Si falta equipo, usa la alternativa indicada con las mismas series, reps, descanso y RIR. Calibra su carga desde liviano: los kg y referencias no son comparables entre máquinas o variantes. Mantén la misma variante para seguir el progreso.</p>
+        <p>Si un movimiento provoca dolor, omítelo; no lo compenses con más series. Puedes cortar la sesión antes cuando quieras.</p>
+        ${activeProgram().id === "chest" ? `<p>Deja 1–2 repeticiones en reserva (RIR). Si llegas fatigado o baja tu rendimiento, reduce una serie por ejercicio esa semana. Estas sesiones ya incluyen espalda y hombros; cuenta también ese trabajo al combinarlas con otro plan.</p><p>En casa: sube primero las reps. Después aumenta el peso de las mancuernas, la dificultad de las flexiones o la resistencia del elástico. Compara las reps con la misma variante y banda.</p><p>A+B, A+Casa o B+Casa suman 14 series de pecho: reemplazan las de Hiper, Vóley o Calis. El resumen muestra A+B (14 pecho, 6 espalda y 4 hombros); Casa sustituye una sesión con el mismo reparto. No suma otros programas. Evalúa el progreso durante varias semanas.</p>` : ""}`;
     }
 
     function renderAll() {
@@ -2592,8 +2498,8 @@
       panel.classList.toggle("is-complete", complete);
       $("#session-finish-title").textContent = complete ? "Sesión completa" : "Sesión en curso";
       $("#session-finish-note").textContent = complete
-        ? "Guarda los volúmenes como referencia y deja el día listo para la próxima."
-        : `${done} de ${total} series hechas. Puedes terminar cuando quieras; solo se guardan los ejercicios completos.`;
+        ? "Cuando quieras empezar de nuevo, pulsa RESET. Las referencias previas se conservan."
+        : `${done} de ${total} series hechas. RESET vacía el entrenamiento de este día sin crear una nueva referencia.`;
     }
 
     function updateSessionProgress() {
@@ -2618,7 +2524,7 @@
       $("[data-ratio-label]", card).textContent = referenceRatioLabel(reference, ratio);
       $("[data-collapsed-summary]", card).innerHTML = collapsedSummary(volume, volumeUnit(exercise), reference, ratio);
       $("[data-reference-label]", card).textContent = referenceFieldLabel(reference, exercise);
-      $("[data-reference-auto]", card).hidden = reference.source !== "manual";
+      $("[data-reference-auto]", card).hidden = reference.source !== "manual" || !safeNumber(state.lastVolumes[referenceKey(exerciseId)]);
       $("[data-exercise-fill]", card).style.width = `${Math.min(ratio, 100)}%`;
       const complete = isExerciseComplete(day, exercise);
       card.classList.toggle("is-complete", complete);
@@ -2819,45 +2725,56 @@
     }
 
     function hasTrainingData(day) {
-      return day.exercises.some(exercise => Array.from({ length: exercise.sets }, (_, index) => {
-        const entry = getEntry(day.id, exercise.id, index);
-        return safeNumber(entry.reps) > 0 || entry.completed || entry.weightSource === "manual";
-      }).some(Boolean));
-    }
-
-    function completedExerciseVolumes(day) {
-      return day.exercises.reduce((volumes, exercise) => {
-        const hasEverySet = Array.from({ length: exercise.sets }, (_, index) => {
-          const entry = getEntry(day.id, exercise.id, index);
-          if (exercise.tracking === "reps") return safeNumber(entry.reps) > 0;
-          return safeNumber(entry.weight) > 0 && safeNumber(entry.reps) > 0;
-        }).every(Boolean);
-        const volume = exerciseVolume(day, exercise);
-        if (hasEverySet && volume > 0) volumes[referenceKey(exercise.id)] = volume;
-        return volumes;
-      }, {});
-    }
-
-    async function startNewSession() {
-      const day = activeDay();
       const prefix = `${state.programId}:${day.id}:`;
+      return Object.entries(state.entries).some(([key, entry]) => key.startsWith(prefix)
+        && (safeNumber(entry.reps) > 0 || entry.completed || entry.weightSource === "manual"));
+    }
+
+    function clearSessionEntries(programId, dayId) {
+      const prefix = `${programId}:${dayId}:`;
+      Object.keys(state.entries).filter(key => key.startsWith(prefix)).forEach(key => delete state.entries[key]);
+    }
+
+    function clearSessionTimer() {
+      stopTimer();
+      clearTimeout(timerFinishTimeout);
+      $("#timer-dock").classList.remove("is-finished");
+      timerRemaining = 0;
+      timerInitial = 60;
+      $("#timer-label").textContent = "Descanso";
+      updateTimerUI();
+    }
+
+    async function resetCurrentSession() {
+      if (sessionResetPending) return;
+      const programId = state.programId;
+      const day = activeDay();
       if (!hasTrainingData(day)) {
+        clearSessionTimer();
         showToast("Este día ya está listo para empezar");
         return;
       }
-      const volumes = completedExerciseVolumes(day);
-      const savedCount = Object.keys(volumes).length;
-      const confirmed = await confirmSheet(savedCount
-        ? { title: `Terminar ${day.name}`, message: `Se guardar${savedCount === 1 ? "á 1 ejercicio completo" : `án ${savedCount} ejercicios completos`} como referencia automática y el día quedará listo para la próxima sesión.`, confirmLabel: "Guardar y terminar" }
-        : { title: `Reiniciar ${day.name}`, message: "Ningún ejercicio tiene todas sus series registradas, así que no se guardará ninguna referencia. Los datos de hoy se borrarán.", confirmLabel: "Reiniciar sin guardar" });
-      if (!confirmed) return;
-      Object.assign(state.lastVolumes, volumes);
-      Object.keys(state.entries).filter(key => key.startsWith(prefix)).forEach(key => delete state.entries[key]);
-      expandedCompleteCards.clear();
-      persist();
-      renderExercises();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      showToast(savedCount ? `Sesión guardada · ${savedCount} ${savedCount === 1 ? "referencia" : "referencias"}` : "Día reiniciado");
+      sessionResetPending = true;
+      try {
+        const confirmed = await confirmSheet({
+          title: `RESET · ${day.name}`,
+          message: "Se vaciarán los pesos, repeticiones y checks de este día. Las referencias previas y los demás días se conservan. No se guardará una nueva referencia.",
+          confirmLabel: "RESET"
+        });
+        if (!confirmed || state.programId !== programId || activeDay().id !== day.id) return;
+        clearSessionEntries(programId, day.id);
+        expandedCompleteCards.clear();
+        clearSessionTimer();
+        state.filter = "Todos";
+        persist();
+        renderFilters();
+        renderExercises();
+        $("#reset-session").focus({ preventScroll: true });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        showToast(`${day.name} · RESET completado`);
+      } finally {
+        sessionResetPending = false;
+      }
     }
 
     function updateTimerUI() {
@@ -3002,8 +2919,8 @@
         state.filter = filterButton.dataset.filter;
         persist(); renderFilters(); renderExercises(); return;
       }
-      const finishButton = event.target.closest("[data-finish-session]");
-      if (finishButton) return startNewSession();
+      const resetButton = event.target.closest("[data-reset-session]");
+      if (resetButton) return resetCurrentSession();
       const nextButton = event.target.closest("[data-scroll-next]");
       if (nextButton) {
         const target = $(".set-row.is-next-set") || $("#session-finish");
@@ -3030,7 +2947,7 @@
         const reference = getReference(exerciseId);
         $(`#ref-${exerciseId}`).value = reference.value || "";
         updateExerciseStats(exerciseId);
-        showToast("Referencia automática restaurada");
+        showToast("Referencia previa restaurada");
         return;
       }
       const restButton = event.target.closest("[data-rest]");
@@ -3102,6 +3019,7 @@
         const index = Number(event.target.dataset.set);
         setEntry(day.id, exerciseId, index, event.target.matches("[data-weight]") ? { weight: event.target.value, weightSource: "manual" } : { reps: event.target.value });
         updateExerciseStats(exerciseId);
+        updateSessionProgress();
       }
       if (event.target.matches("[data-reference]")) {
         const exerciseId = event.target.dataset.exercise;
@@ -3110,7 +3028,7 @@
       }
     });
 
-    $("#reset-session").addEventListener("click", startNewSession);
+    $("#reset-session").addEventListener("click", resetCurrentSession);
     $("#include-optional").addEventListener("change", event => {
       state.includeOptionalByProgram[state.programId] = event.target.checked;
       persist(); renderWeeklyVolume();
