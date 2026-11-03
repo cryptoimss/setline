@@ -9,7 +9,17 @@ const SHELL_FILES = [
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
   "./assets/icons/icon-maskable-512.png",
-  "./assets/icons/apple-touch-icon.png"
+  "./assets/icons/apple-touch-icon.png",
+  "./assets/shoulder/h-wall.gif",
+  "./assets/shoulder/h-wall.jpg",
+  "./assets/shoulder/h-band.gif",
+  "./assets/shoulder/h-band.jpg",
+  "./assets/shoulder/h-angels.gif",
+  "./assets/shoulder/h-angels.jpg",
+  "./assets/shoulder/h-stick.gif",
+  "./assets/shoulder/h-stick.jpg",
+  "./assets/shoulder/h-halo.gif",
+  "./assets/shoulder/h-halo.jpg"
 ];
 
 self.addEventListener("install", event => {

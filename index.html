@@ -72,6 +72,9 @@
 
     button:disabled { opacity: .45; cursor: not-allowed; }
 
+    [hidden] { display: none !important; }
+    a.rest-button { text-decoration: none; }
+
     .skip-link {
       position: fixed;
       z-index: 100;
@@ -842,6 +845,10 @@
       overflow-wrap: anywhere;
     }
 
+    .exercise-demo.is-video-excerpt { display: block; }
+    .is-video-excerpt .demo-frame { width: 100%; max-width: 480px; height: auto; aspect-ratio: 16 / 9; }
+    .is-video-excerpt .demo-caption { margin-top: 8px; }
+
     .demo-caption strong { color: var(--text); }
 
     .demo-caption button {
@@ -1437,6 +1444,7 @@
         border-radius: 12px;
         background: var(--surface);
       }
+      .mobile-programs .program-button:last-child:nth-child(odd) { grid-column: 1 / -1; }
       .mobile-days { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; }
       .mobile-days::-webkit-scrollbar { display: none; }
       .mobile-programs .program-button {
@@ -1644,7 +1652,7 @@
       <nav class="program-nav" id="desktop-programs" aria-label="Programas"></nav>
       <p class="nav-label">Sesiones</p>
       <nav class="day-nav" id="desktop-days" aria-label="Días"></nav>
-      <div class="sidebar-note"><strong>Regla de esfuerzo</strong><br>Termina la mayoría de series con 1–2 repeticiones posibles en reserva. Prioriza técnica limpia.</div>
+      <div class="sidebar-note" id="effort-note"><strong>Regla de esfuerzo</strong><br>Termina la mayoría de series con 1–2 repeticiones posibles en reserva. Prioriza técnica limpia.</div>
     </aside>
 
     <main class="page">
@@ -1954,6 +1962,23 @@
       }
     ];
 
+    programs.push({
+      id: "shoulder", short: "Hombro · tendinitis", mobileName: "Hombro",
+      title: "Movilidad y control de hombro", navNote: "5 ejercicios · PhysioWods", symbol: "H",
+      description: "Pauta inicial del video: 1 serie de 10 repeticiones por ejercicio, 2–3 días por semana, dejando un día de descanso entre sesiones. Confirma con tu fisioterapeuta qué movimientos son adecuados para tu lesión.",
+      days: [{
+        id: "h-a", code: "H", name: "Cuidado de hombro",
+        note: "Control escapular y movilidad, sin buscar el fallo.",
+        exercises: [
+          { id: "h-wall", name: "Retracciones con pared", muscle: "Hombros", sets: 1, reps: "10", rest: 60, tracking: "reps", loadLabel: "Pared", videoTime: 468, videoLabel: "7:48", cue: "Apoya las manos en la pared. Acerca y separa las escápulas con un movimiento lento, centrando la atención en la espalda." },
+          { id: "h-band", name: "Retracciones con goma", muscle: "Hombros", sets: 1, reps: "10/lado", rest: 60, tracking: "reps", loadLabel: "Goma", unilateral: true, videoTime: 575, videoLabel: "9:35", cue: "Fija la goma a un anclaje estable. Con la mano dentro, empuja hacia delante separando la escápula y vuelve despacio. Completa 10 por brazo; registra las reps por lado." },
+          { id: "h-angels", name: "Ángeles en pared", muscle: "Hombros", sets: 1, reps: "10", rest: 60, tracking: "reps", loadLabel: "Pared", videoTime: 783, videoLabel: "13:03", cue: "Apoya la espalda en la pared con las rodillas algo flexionadas. Desde los codos a 90°, sube las manos y extiende los brazos solo hasta donde puedas mantener el control, sin dolor." },
+          { id: "h-stick", name: "Flexión con pica", muscle: "Hombros", sets: 1, reps: "10", rest: 60, tracking: "reps", loadLabel: "Pica", videoTime: 899, videoLabel: "14:59", cue: "Con la espalda apoyada en la pared, sujeta una pica o palo de escoba y eleva los brazos con control. No hace falta tocar la pared con la pica; evita forzar el recorrido." },
+          { id: "h-halo", name: "Halo con peso", muscle: "Hombros", sets: 1, reps: "10", rest: 60, tracking: "reps", loadLabel: "Liviano", videoTime: 1019, videoLabel: "16:59", cue: "Solo si tu fisioterapeuta lo considera adecuado: sujeta un peso liviano con ambas manos y rodea la cabeza lentamente. Alterna sentidos: 5 vueltas por sentido, 10 en total. Omítelo si molesta." }
+        ]
+      }]
+    });
+
     function estimateSessionTiming(day) {
       // Includes positioning/logging per set and both sides of unilateral exercises.
       const workMin = day.exercises.reduce((sum, exercise) => sum + exercise.sets * (exercise.unilateral ? 75 : 45), 0);
@@ -1996,6 +2021,11 @@
 
     const GIF_BASE = "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/";
     const exerciseGifs = {
+      "h-wall": ["./assets/shoulder/h-wall.gif", "Retracciones con pared", "https://www.youtube.com/watch?v=coXs4giH5F4&t=518s", "PhysioWods · Ana Galeote", "./assets/shoulder/h-wall.jpg"],
+      "h-band": ["./assets/shoulder/h-band.gif", "Retracciones con goma", "https://www.youtube.com/watch?v=coXs4giH5F4&t=603s", "PhysioWods · Ana Galeote", "./assets/shoulder/h-band.jpg"],
+      "h-angels": ["./assets/shoulder/h-angels.gif", "Ángeles en pared", "https://www.youtube.com/watch?v=coXs4giH5F4&t=829s", "PhysioWods · Ana Galeote", "./assets/shoulder/h-angels.jpg"],
+      "h-stick": ["./assets/shoulder/h-stick.gif", "Flexión con pica", "https://www.youtube.com/watch?v=coXs4giH5F4&t=929s", "PhysioWods · Ana Galeote", "./assets/shoulder/h-stick.jpg"],
+      "h-halo": ["./assets/shoulder/h-halo.gif", "Halo con peso", "https://www.youtube.com/watch?v=coXs4giH5F4&t=1047s", "PhysioWods · Ana Galeote", "./assets/shoulder/h-halo.jpg"],
       "pa-row": ["upper-back/dumbbell-one-arm-bent-over-row.gif", "Remo a una mano con mancuerna"],
       "pa-lateral": ["delts/dumbbell-lateral-raise.gif", "Elevación lateral con mancuernas"],
       "pb-row": ["upper-back/cable-seated-row.gif", "Remo sentado en polea"],
@@ -2073,14 +2103,14 @@
     const defaultState = {
       schemaVersion: 3,
       programId: "solo",
-      dayByProgram: { volley: "v-a", solo: "s-1", chest: "p-a", calisthenics: "c-a" },
+      dayByProgram: { volley: "v-a", solo: "s-1", chest: "p-a", calisthenics: "c-a", shoulder: "h-a" },
       filter: "Todos",
       loadPreset: "normal",
       entries: {},
       references: {},
       lastVolumes: {},
-      heroSeenByProgram: { volley: false, solo: false, chest: false, calisthenics: false },
-      includeOptionalByProgram: { volley: false, solo: false, chest: false, calisthenics: false }
+      heroSeenByProgram: { volley: false, solo: false, chest: false, calisthenics: false, shoulder: false },
+      includeOptionalByProgram: { volley: false, solo: false, chest: false, calisthenics: false, shoulder: false }
     };
 
     function loadState() {
@@ -2271,7 +2301,7 @@
       hero.innerHTML = `<div class="hero-copy">
         <span class="hero-program">${program.title}</span>
         <h1 id="session-title">${day.name}</h1>
-        <p id="session-description">${day.note} ${program.description}<br><strong>Tiempo estimado:</strong> 6–8 min de calentamiento (incluye 2–3 series fáciles del primer movimiento), ${day.timing.workMin}–${day.timing.workMax} min de series y registro, unos ${day.timing.restMinutes} min de descanso entre series y ${day.timing.transitionMinutes} min para cambiar de ejercicio. Sin esperas por máquinas; puedes cortar antes.</p>
+        <p id="session-description">${day.note} ${program.description}<br><strong>Tiempo estimado:</strong> ${program.id === "shoulder" ? "6–8 min de actividad suave, como caminar," : "6–8 min de calentamiento (incluye 2–3 series fáciles del primer movimiento),"} ${day.timing.workMin}–${day.timing.workMax} min de series y registro, unos ${day.timing.restMinutes} min de descanso entre series y ${day.timing.transitionMinutes} min para cambiar de ejercicio. Sin esperas por máquinas; puedes cortar antes.</p>
         <span class="hero-compact-meta" aria-hidden="true">Día ${day.code} · ${day.duration} · ${totalSets} series</span>
         <button class="hero-toggle" type="button" data-hero-toggle aria-expanded="${isExpanded}" aria-controls="session-description session-facts" aria-label="${isExpanded ? "Ocultar" : "Mostrar"} detalles de ${day.name}">
           <span>${isExpanded ? "Ocultar" : "Detalles"}</span>
@@ -2297,7 +2327,7 @@
 
     function renderLoadPresets() {
       const panel = $("#load-preset-panel");
-      panel.hidden = activeProgram().id === "calisthenics";
+      panel.hidden = ["calisthenics", "shoulder"].includes(activeProgram().id);
       if (panel.hidden) return;
       const preset = LOAD_PRESETS[state.loadPreset];
       const mobileNotes = {
@@ -2338,7 +2368,7 @@
       const load = suggestedLoad(exercise.id);
       const bodyweight = exercise.tracking === "reps";
       const unit = volumeUnit(exercise);
-      const loadHint = bodyweight ? (exercise.loadLabel ? "Elástico · registra repeticiones" : "Peso corporal · ajusta la variante") : (load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`);
+      const loadHint = activeProgram().id === "shoulder" ? "Registra repeticiones · sin objetivo de volumen" : bodyweight ? (exercise.loadLabel ? "Elástico · registra repeticiones" : "Peso corporal · ajusta la variante") : (load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`);
       const demo = exerciseGifs[exercise.id];
       const demoUrl = demo ? exerciseGifUrl(demo) : "";
       const collapsed = complete && !expandedCompleteCards.has(exercise.id);
@@ -2347,10 +2377,11 @@
           <span class="exercise-order">${String(visibleIndex + 1).padStart(2, "0")}</span>
           <div class="exercise-title-wrap">
             <div class="exercise-title-line"><h2>${exercise.name}</h2><span class="muscle-badge">${exercise.muscle}</span><span class="next-badge">Siguiente</span></div>
-            <div class="exercise-meta"><span><strong>${exercise.sets}</strong> series</span><span><strong>${exercise.reps}</strong> reps</span><span>RIR <strong>${exercise.rir}</strong></span><span class="preset-load-hint"><strong>${loadHint}</strong></span></div>
+            <div class="exercise-meta"><span><strong>${exercise.sets}</strong> ${exercise.sets === 1 ? "serie" : "series"}</span><span><strong>${exercise.reps}</strong> reps</span>${exercise.rir ? `<span>RIR <strong>${exercise.rir}</strong></span>` : `<span>Control · sin dolor</span>`}<span class="preset-load-hint"><strong>${loadHint}</strong></span></div>
             <p class="exercise-cue">${exercise.cue}</p>
             <p class="exercise-collapsed-summary" data-collapsed-summary>${collapsedSummary(volume, unit, reference, ratio)}</p>
             <div class="exercise-actions">
+              ${Number.isFinite(exercise.videoTime) ? `<a class="rest-button" href="https://www.youtube.com/watch?v=coXs4giH5F4&amp;t=${exercise.videoTime}s" target="_blank" rel="noopener noreferrer">Ver ejercicio · ${exercise.videoLabel} ↗</a>` : ""}
               <button class="rest-button" type="button" data-rest="${exercise.rest}" data-exercise-name="${escapeAttribute(exercise.name)}" aria-label="Iniciar descanso de ${formatRest(exercise.rest)}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6"/></svg>Descanso ${formatRest(exercise.rest)}
               </button>
@@ -2360,19 +2391,19 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
           </button>
         </div>
-        ${demo ? `<div class="exercise-demo" id="demo-${exercise.id}">
+        ${demo ? `<div class="exercise-demo ${demo[4] ? "is-video-excerpt" : ""}" id="demo-${exercise.id}">
           <button class="demo-frame" type="button" data-expand-gif="${exercise.id}" aria-label="Ampliar demostración de ${escapeAttribute(demo[1])}" aria-haspopup="dialog">
             <img data-demo-image data-src="${demoUrl}" alt="Demostración animada: ${demo[1]}" width="112" height="112" loading="lazy" decoding="async">
             <span class="demo-status">Cargando GIF…</span>
           </button>
-          <div class="demo-caption"><span>Variante mostrada: <strong>${demo[1]}</strong></span><button type="button" data-expand-gif="${exercise.id}" aria-label="Ampliar demostración de ${escapeAttribute(demo[1])}" aria-haspopup="dialog">Ver en grande</button>${demo[2] ? `<a href="${demo[2]}" target="_blank" rel="noreferrer">Fuente: Make a GIF</a>` : ""}</div>
+          <div class="demo-caption">${demo[4] ? `<button type="button" data-demo-toggle="${exercise.id}" aria-pressed="${!window.matchMedia("(prefers-reduced-motion: reduce)").matches}">${window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "Reproducir" : "Pausar"} demostración</button>` : ""}<span>${demo[4] ? "Extracto del video" : "Variante mostrada"}: <strong>${demo[1]}</strong></span><button type="button" data-expand-gif="${exercise.id}" aria-label="Ampliar demostración de ${escapeAttribute(demo[1])}" aria-haspopup="dialog">Ver en grande</button>${demo[2] ? `<a href="${demo[2]}" target="_blank" rel="noreferrer">Fuente: ${demo[3] || "Make a GIF"}</a>` : ""}</div>
         </div>` : ""}
         <div class="exercise-body">
         <div class="sets-wrap">
           <div class="set-grid-head" aria-hidden="true"><span>#</span><span>${bodyweight ? "Carga" : "Peso"}</span><span></span><span>Reps</span><span>Hecha</span></div>
           ${Array.from({ length: exercise.sets }, (_, index) => setRow(day, exercise, index)).join("")}
         </div>
-        <div class="exercise-foot">
+        <div class="exercise-foot" ${activeProgram().id === "shoulder" ? "hidden" : ""}>
           <div class="volume-readout">
             <div class="volume-topline"><span><strong class="volume-value" data-volume-value>${volumeText(volume, unit)}</strong></span><span data-ratio-label>${referenceRatioLabel(reference, ratio)}</span></div>
             <div class="exercise-progress-track"><div class="exercise-progress-fill" data-exercise-fill style="width:${Math.min(ratio, 100)}%"></div></div>
@@ -2411,6 +2442,13 @@
 
     function renderWeeklyVolume() {
       const program = activeProgram();
+      if (program.id === "shoulder") {
+        $("#weekly-title").textContent = "Pauta de hombro";
+        $("#weekly-caption").textContent = "Inicio: 5 ejercicios, 1 serie cada uno. Los checks registran lo realizado; no indican recuperación clínica.";
+        $("#weekly-volume").innerHTML = `<p>2–3 días por semana, con un día de descanso entre sesiones.</p><p>Pared, goma, pica y un peso liviano para el halo, si está indicado.</p><a class="rest-button" href="https://www.youtube.com/watch?v=coXs4giH5F4" target="_blank" rel="noopener noreferrer">Video completo · PhysioWods ↗</a>`;
+        $("#optional-toggle-wrap").hidden = true;
+        return;
+      }
       const bodyweight = program.id === "calisthenics";
       $("#weekly-title").textContent = bodyweight ? "Volumen base A+B" : "Volumen semanal";
       $("#weekly-caption").textContent = bodyweight ? "Series directas al completar una vez cada sesión." : program.id === "chest" ? "Plan de 2 sesiones: A+B, o Casa en lugar de una de ellas. Casa no suma un tercer día." : "Series directas por grupo muscular.";
@@ -2430,6 +2468,19 @@
     }
 
     function renderProgressGuidance() {
+      if (activeProgram().id === "shoulder") {
+        $("#progress-guidance").innerHTML = `<h2>Cómo usar esta pauta</h2>
+          <p>Ejercicios educativos para tendinitis o tendinopatía de hombro. La selección y la carga dependen de tu valoración; no sustituyen el tratamiento.</p>
+          <ol class="guidance-list">
+            <li><b>1</b><span>Empieza con una serie de 10, según la explicación final del video (19:42). La goma se realiza por brazo; el halo suma 5 vueltas por sentido.</span></li>
+            <li><b>2</b><span>Si la primera semana va bien, consulta con tu fisio antes de añadir la segunda serie que propone el video. El registro inicial mantiene una serie.</span></li>
+            <li><b>3</b><span>Si aparece dolor, detén ese movimiento y consulta. No fuerces el recorrido ni aumentes el peso para completar las repeticiones.</span></li>
+          </ol>
+          <p>El descanso de 1 min es orientativo de esta app. Ajusta la sesión y la combinación con gym o vóley con tu fisioterapeuta.</p>
+          <p><a href="https://www.youtube.com/watch?v=coXs4giH5F4&amp;t=1182s" target="_blank" rel="noopener noreferrer">Ver pauta y progresión · 19:42 ↗</a></p>
+          <p><a href="https://www.orthoinfo.org/recovery/rotator-cuff-and-shoulder-conditioning-program" target="_blank" rel="noopener noreferrer">AAOS · ejercicio de hombro y dolor ↗</a></p>`;
+        return;
+      }
       const bodyweight = activeProgram().id === "calisthenics";
       $("#progress-guidance").innerHTML = `<h2>Cómo progresar</h2>
         <p>${bodyweight ? "Más repeticiones y después una variante más difícil." : "Doble progresión, sin perseguir el fallo."}</p>
@@ -2446,6 +2497,9 @@
 
     function renderAll() {
       renderNavigation();
+      $("#effort-note").innerHTML = activeProgram().id === "shoulder"
+        ? "<strong>Control y recuperación</strong><br>Trabaja sin dolor y deja un día de descanso entre sesiones. Sigue la pauta de tu fisioterapeuta."
+        : "<strong>Regla de esfuerzo</strong><br>Termina la mayoría de series con 1–2 repeticiones posibles en reserva. Prioriza técnica limpia.";
       renderHero();
       renderLoadPresets();
       renderFilters();
@@ -2688,8 +2742,19 @@
       gifViewer.showModal();
     });
 
+    document.addEventListener("click", event => {
+      const button = event.target.closest("[data-demo-toggle]");
+      if (!button) return;
+      const demo = exerciseGifs[button.dataset.demoToggle];
+      const image = $("[data-demo-image]", button.closest(".exercise-demo"));
+      const playing = button.getAttribute("aria-pressed") !== "true";
+      image.src = playing ? exerciseGifUrl(demo) : demo[4];
+      button.setAttribute("aria-pressed", String(playing));
+      button.textContent = `${playing ? "Pausar" : "Reproducir"} demostración`;
+    });
+
     function exerciseGifUrl(demo) {
-      return demo[0].startsWith("https://") ? demo[0] : GIF_BASE + demo[0];
+      return (demo[0].startsWith("https://") || demo[0].startsWith("./")) ? demo[0] : GIF_BASE + demo[0];
     }
 
     function loadExerciseDemo(panel) {
@@ -2700,7 +2765,8 @@
         panel.classList.add("is-error");
         $(".demo-status", panel).textContent = "GIF no disponible. Usa «Ver en grande».";
       }, { once: true });
-      image.src = image.dataset.src;
+      const demo = exerciseGifs[panel.id.replace("demo-", "")];
+      image.src = demo?.[4] && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? demo[4] : image.dataset.src;
     }
 
     function switchProgram(programId) {

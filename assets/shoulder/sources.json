@@ -1,0 +1,32 @@
+{
+  "source": "https://www.youtube.com/watch?v=coXs4giH5F4",
+  "creator": "PhysioWods - Ana Galeote",
+  "clips": [
+    {
+      "exercise": "h-wall",
+      "start": 518,
+      "duration": 10
+    },
+    {
+      "exercise": "h-band",
+      "start": 603,
+      "duration": 10
+    },
+    {
+      "exercise": "h-angels",
+      "start": 829,
+      "duration": 10
+    },
+    {
+      "exercise": "h-stick",
+      "start": 929,
+      "duration": 12
+    },
+    {
+      "exercise": "h-halo",
+      "start": 1047,
+      "duration": 16
+    }
+  ],
+  "encoding": "GIF 480px, 10 fps; velocidad original, sin audio"
+}

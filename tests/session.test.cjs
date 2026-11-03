@@ -82,16 +82,16 @@ test('A stale confirmation cannot reset a different program or day',async()=>{
 test('A rest started before any set can also be reset without a destructive confirmation',async()=>{
  const h=harness({...fixture(),entries:{}});await h.reset(); assert.equal(h.confirmations(),0); assert.equal(h.timer(),0);
 });
-test('Every routine has a derived 30–45 minute plan and chest volume stays at seven direct sets',()=>{
+test('Strength routines retain 30–45 minute estimates and chest volume stays at seven direct sets',()=>{
  const h=harness(fixture()); const programs=JSON.parse(vm.runInContext('JSON.stringify(programs)',h.context));
  const ids=new Set();
- for(const p of programs)for(const d of p.days){
+ for(const p of programs.filter(p=>p.id!=='shoulder'))for(const d of p.days){
   assert.ok(d.timing.min>=30 && d.timing.max<=45,`${p.id}/${d.id}: ${d.duration}`);
   assert.ok(d.timing.min<d.timing.max);assert.equal(d.duration,`${d.timing.min}–${d.timing.max} min`);
   for(const e of d.exercises){assert.ok(e.sets>=1 && e.rest>=60);assert.ok(!ids.has(e.id));ids.add(e.id);}
   if(p.id==='chest')assert.equal(d.exercises.filter(e=>e.muscle==='Pecho').reduce((sum,e)=>sum+e.sets,0),7);
  }
- assert.equal(programs.flatMap(p=>p.days).length,12);
+ assert.equal(programs.filter(p=>p.id!=='shoulder').flatMap(p=>p.days).length,12);
  const home=programs.find(p=>p.id==='chest').days.find(d=>d.id==='p-home');
  assert.ok(!home.exercises.some(e=>/máquina|polea|banco/i.test(e.name)));
 });
@@ -102,4 +102,25 @@ test('Increasing sets or rest changes the estimate; no fixed 45-minute label or 
   const after=estimateSessionTiming(changed);return {min:after.min-before.min,max:after.max-before.max};
  })()`,h.context);
  assert.ok(delta.min>=4 && delta.max>=4);
+});
+
+test('Shoulder plan follows the five video chapters and spoken starting dose without preset loads',()=>{
+ const h=harness(fixture());
+ const plan=JSON.parse(vm.runInContext('JSON.stringify(programs.find(p=>p.id==="shoulder"))',h.context));
+ assert.equal(h.state().dayByProgram.shoulder,'h-a');
+ assert.deepEqual(plan.days[0].exercises.map(e=>e.videoTime),[468,575,783,899,1019]);
+ for(const e of plan.days[0].exercises){
+  assert.equal(e.sets,1); assert.equal(e.tracking,'reps'); assert.equal(e.rir,undefined);
+  assert.equal(vm.runInContext(`NORMAL_LOADS[${JSON.stringify(e.id)}]`,h.context),undefined);
+ }
+ assert.equal(plan.days[0].exercises[1].reps,'10/lado');
+ assert.equal(plan.days[0].exercises[4].reps,'10');
+ assert.ok(plan.days[0].timing.min<30);
+});
+test('RESET of shoulder session preserves gym entries and references',async()=>{
+ const saved=fixture(); saved.programId='shoulder'; saved.dayByProgram.shoulder='h-a';
+ saved.entries['shoulder:h-a:h-wall:0']={reps:'10',completed:true};
+ const h=harness(saved), pending=h.reset(); h.confirm(true); await pending;
+ assert.deepEqual(h.state().entries,fixture().entries);
+ assert.deepEqual(h.state().references,saved.references);
 });
