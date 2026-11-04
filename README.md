@@ -26,7 +26,7 @@ Solo el ejercicio actual está desplegado; los demás se abren con un toque, y *
 
 La progresión conserva el RIR prescrito: sube reps, y tras alcanzar el máximo con buena técnica en dos sesiones, aumenta el menor salto de carga disponible o la dificultad de la variante. Las alternativas sustituyen ejercicios, no añaden series. No compares cargas o referencias entre máquinas/variantes distintas.
 
-La app abre primero Hipertrofia. Light / Normal / Heavy son sugerencias orientativas; las cargas manuales prevalecen y el RIR calibra el peso. No existe una carga universal por talla o peso.
+La app abre primero Hipertrofia. Light / Normal / Heavy son sugerencias orientativas; las cargas manuales prevalecen y el RIR calibra el peso. No existe una carga universal por talla o peso. Todos los movimientos con carga definida, incluido Pecho · extra, tienen una sugerencia inicial acorde a ejercicios equivalentes del plan: no es un promedio poblacional. En mancuernas se registra kg por mancuerna y en poleas bilaterales kg por lado; barra y Smith usan el total según Técnica. El ejercicio mixto de dominada asistida/lastrada o jalón mantiene la carga manual porque asistencia, lastre y jalón no comparten el mismo significado de kg.
 
 ## Hombro · tendinitis
 

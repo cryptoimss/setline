@@ -1993,7 +1993,15 @@
     };
 
     const NORMAL_LOADS = {
-      "ph-floor": null,
+      // Starting suggestions, aligned with equivalent movements in the existing plans.
+      "ph-floor": 14, "ph-row": 15, "ph-lateral": 5,
+      "pa-row": 15, "pa-lateral": 5, "pb-row": 40, "pb-reverse": 4,
+      "px-bar-flat": 30, "px-bar-incline": 25, "px-bar-decline": 30,
+      "px-db-flat": 18, "px-db-incline": 18, "px-db-decline": 18, "px-db-neutral": 14,
+      "px-machine-flat": 40, "px-machine-incline": 40, "px-machine-decline": 40,
+      "px-smith-flat": 25, "px-smith-incline": 25, "px-smith-decline": 25,
+      "px-cable-press": 10, "px-db-fly": 6, "px-db-fly-incline": 6, "px-db-fly-decline": 6,
+      "px-cable-fly": 10, "px-cable-low": 7.5, "px-cable-high": 10, "px-pec-deck": 25, "px-floor": 14,
       "pa-incline": 18, "pa-flat": 45, "pa-fly": 10, "pb-flat": 40, "pb-incline": 14, "pb-fly": 25,
       "va-press": 18, "va-row-db": 15, "va-pulldown-chinup": null, "va-lateral": 5, "va-curl": 15, "va-pushdown": 25,
       "vb-chest": 45, "vb-highrow-db": 12.5, "vb-shoulder-db": 10, "vb-reverse-db": 4, "vb-inclinecurl": 10, "vb-overheadtri": 20,
@@ -2186,7 +2194,7 @@
     let sessionResetPending = false;
     let lastTimerSnapshot = null;
     let lastDoneSet = null;
-    let tapGuardUntil = 0;
+    const tapGuardsUntil = { console: 0, dialog: 0 };
     let renderedOn = dateKey();
     let wakeLock = null;
     let wakeLockPending = false;
@@ -2877,14 +2885,17 @@
       if (dock.dataset.mode === mode) return;
       const hadFocus = dock.contains(document.activeElement);
       dock.dataset.mode = mode;
-      guardTaps(mode === "done" ? 900 : 350);
+      guardTaps(mode === "done" ? 900 : 350, "console");
       if (hadFocus) $({ work: "#console-done", rest: "#timer-skip", done: $("#console-next-day").hidden ? "#console-reset" : "#console-next-day" }[mode]).focus({ preventScroll: true });
     }
 
     // Each console state replaces the last in the same spot, so the second half of a double tap
     // would land on whatever just appeared under the finger.
-    function guardTaps(milliseconds) {
-      tapGuardUntil = Math.max(tapGuardUntil, performance.now() + milliseconds);
+    function guardTaps(milliseconds, surface = "all") {
+      const targets = surface === "all" ? ["console", "dialog"] : [surface];
+      targets.forEach(target => {
+        tapGuardsUntil[target] = Math.max(tapGuardsUntil[target], performance.now() + milliseconds);
+      });
     }
 
     function setConsoleValue(selector, value) {
@@ -3368,7 +3379,7 @@
       dock.classList.add("is-finished");
       updateConsole();
       // Nothing the user did changed the screen, and a tap aimed at Saltar may already be on its way.
-      guardTaps(800);
+      guardTaps(800, "console");
       clearTimeout(timerFinishTimeout);
       timerFinishTimeout = setTimeout(() => {
         dock.classList.remove("is-finished");
@@ -3556,7 +3567,8 @@
       if (event.repeat && (event.key === "Enter" || event.key === " ") && event.target.closest?.("#timer-dock button:not([data-stepper])")) event.preventDefault();
     }, true);
     document.addEventListener("click", event => {
-      if (performance.now() >= tapGuardUntil || !event.target.closest("#timer-dock, dialog")) return;
+      const surface = event.target.closest("dialog") ? "dialog" : event.target.closest("#timer-dock") ? "console" : null;
+      if (!surface || performance.now() >= tapGuardsUntil[surface]) return;
       event.preventDefault();
       event.stopPropagation();
     }, true);
@@ -3618,14 +3630,32 @@
       }
       const viewport = window.visualViewport;
       if (!viewport) return;
-      // Lifts the fixed console above the on-screen keyboard while its own fields are being typed in.
+      // Safari also resizes/pans the visual viewport for its toolbar and pinch zoom.
+      // Only a substantial occlusion while editing a console field counts as a keyboard.
+      let keyboardFrame = null;
       const syncKeyboard = () => {
+        keyboardFrame = null;
         const typing = document.activeElement?.matches?.(".stepper-input");
-        root.style.setProperty("--keyboard-inset", `${typing ? Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop) : 0}px`);
+        const compressed = window.innerHeight - viewport.height;
+        const occluded = Math.max(0, compressed - viewport.offsetTop);
+        const inset = typing && viewport.scale === 1 && compressed > 150 ? occluded : 0;
+        const value = `${inset}px`;
+        if (root.style.getPropertyValue("--keyboard-inset") !== value) root.style.setProperty("--keyboard-inset", value);
       };
-      viewport.addEventListener("resize", syncKeyboard);
-      viewport.addEventListener("scroll", syncKeyboard);
-      document.addEventListener("focusout", syncKeyboard);
+      const scheduleKeyboard = () => {
+        if (keyboardFrame === null) keyboardFrame = requestAnimationFrame(syncKeyboard);
+      };
+      viewport.addEventListener("resize", scheduleKeyboard);
+      viewport.addEventListener("scroll", scheduleKeyboard);
+      window.addEventListener("resize", scheduleKeyboard);
+      window.addEventListener("pageshow", scheduleKeyboard);
+      document.addEventListener("focusin", scheduleKeyboard);
+      document.addEventListener("focusout", () => {
+        // Drop the old offset immediately; measure the new focused element next frame.
+        root.style.setProperty("--keyboard-inset", "0px");
+        scheduleKeyboard();
+      });
+      syncKeyboard();
     }
 
     seedSetLog();

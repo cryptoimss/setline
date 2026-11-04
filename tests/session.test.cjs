@@ -285,3 +285,30 @@ test('Chest extra contains thirty distinct variants with demos and stays outside
  vm.runInContext('state.dayByProgram.chest="p-b"',h.context);
  assert.equal(vm.runInContext('nextDayInRotation().id',h.context),'p-a');
 });
+
+test('Every unambiguous loaded movement has a starting load; bodyweight and rehabilitation stay reps-only',()=>{
+ const h=logHarness({...fixture(),entries:{}});
+ const plans=h.run('programs');
+ for(const p of plans)for(const day of p.days)for(const e of day.exercises){
+  const load=h.run(`NORMAL_LOADS[${JSON.stringify(e.id)}] ?? null`);
+  if(e.tracking==='reps') { assert.equal(load,null,e.id); continue; }
+  // This existing slot mixes assistance, added load and a pulldown: no shared kg meaning.
+  if(e.id==='s2-pullup') { assert.equal(load,null); continue; }
+  assert.ok(load>0,e.id);
+ }
+});
+test('New chest suggestions fill untouched sets, respect presets and retain manual blanks and last time',()=>{
+ const key=i=>`chest:p-extra:px-bar-flat:${i}`;
+ const saved={...fixture(),dayByProgram:{chest:'p-extra'},entries:{
+  [key(0)]:{weight:'',weightSource:'manual',completed:false},
+ },setLog:{'chest:p-extra:px-db-flat:0':[earlier('22.5','10')]}};
+ const h=logHarness(saved);
+ h.run('(ensurePresetWeights(activeDay()),null)');
+ assert.equal(h.run(`state.entries[${JSON.stringify(key(0))}].weight`),'');
+ assert.equal(h.run(`state.entries[${JSON.stringify(key(1))}].weight`),'30');
+ assert.equal(h.run('state.entries["chest:p-extra:px-db-flat:0"].weight'),'22.5');
+ h.run('(state.loadPreset="light",ensurePresetWeights(activeDay()),null)');
+ assert.equal(h.run(`state.entries[${JSON.stringify(key(1))}].weight`),'22.5');
+ assert.equal(h.run('state.entries["chest:p-extra:px-db-flat:0"].weight'),'22.5');
+ assert.equal(h.reload().entries[key(1)].weight,'22.5');
+});

@@ -840,6 +840,79 @@ scenario('Regression: damaged saved data never leaves a blank app', async page =
   }
 });
 
+scenario('Session menu: returning to a completed program never blocks the next session choice', async page => {
+  const entries = await page.evaluate(() => Object.fromEntries(
+    programs.find(p=>p.id==='solo').days[0].exercises.flatMap(e=>Array.from({length:e.sets},(_,i)=>
+      [`solo:s-1:${e.id}:${i}`,{weight:'18',reps:'8',completed:true,weightSource:'manual'}]))));
+  await seed(page,{schemaVersion:3,programId:'chest',dayByProgram:{chest:'p-a',solo:'s-1'},entries});
+  await press(page,'#session-switch');
+  await press(page,'#sheet-programs [data-program="solo"]');
+  assert.equal(await mode(page),'done');
+  await press(page,'#sheet-days [data-day="s-2"]');
+  assert.equal(await page.locator('#session-sheet').isVisible(),false);
+  assert.equal(await page.locator('#switch-title').textContent(),'Espalda y bíceps');
+});
+
+scenario('Floating console: toolbar movement, keyboard dismissal and zoom never leave a stale offset', async page => {
+  await page.evaluate(() => {
+    window.mockViewport = {height:innerHeight,offsetTop:0,scale:1};
+    for(const property of ['height','offsetTop','scale'])Object.defineProperty(visualViewport,property,{configurable:true,get:()=>window.mockViewport[property]});
+  });
+  const viewport = async (occluded, scale = 1, offsetTop = 0) => {
+    await page.evaluate(({occluded,scale,offsetTop}) => {
+      Object.assign(window.mockViewport,{height:innerHeight-occluded-offsetTop,offsetTop,scale});
+      visualViewport.dispatchEvent(new Event('resize'));
+      visualViewport.dispatchEvent(new Event('scroll'));
+    }, {occluded,scale,offsetTop});
+    await page.waitForTimeout(50);
+  };
+  const inset = () => page.evaluate(() => document.documentElement.style.getPropertyValue('--keyboard-inset'));
+  await page.locator('#console-weight').focus();
+  await viewport(70);
+  assert.equal(await inset(),'0px','Safari toolbar changes are not a keyboard');
+  await viewport(300);
+  assert.equal(await inset(),'300px','console clears the keyboard');
+  await viewport(70,1,230);
+  assert.equal(await inset(),'70px','keyboard panning accounts for the visual viewport offset');
+  await viewport(300);
+  await page.locator('#console-weight').blur();
+  assert.equal(await inset(),'0px','blur immediately drops the old keyboard offset');
+  await page.locator('#console-reps').focus();
+  await page.waitForTimeout(50);
+  assert.equal(await inset(),'300px','refocusing with the keyboard already open also measures it');
+  await viewport(300,2);
+  assert.equal(await inset(),'0px','pinch zoom is not a keyboard');
+  await viewport(0);
+  await page.locator('#console-reps').blur();
+  for(const top of [300,700,0]) {
+    await page.evaluate(top=>scrollTo({top,behavior:'instant'}),top);
+    await page.waitForTimeout(80);
+    const geometry=await page.evaluate(()=>{
+      const dock=document.querySelector('#timer-dock').getBoundingClientRect();
+      const header=document.querySelector('.mobile-topbar').getBoundingClientRect();
+      return {bottom:dock.bottom,top:header.top,height:innerHeight};
+    });
+    assert.ok(Math.abs(geometry.bottom-(geometry.height-8))<2,JSON.stringify(geometry));
+    assert.ok(Math.abs(geometry.top)<2,JSON.stringify(geometry));
+  }
+  await press(page,'#session-switch');
+  await press(page,'#session-sheet-close');
+  assert.equal(await page.evaluate(()=>getComputedStyle(document.body).overflow),'visible');
+  assert.equal(await inset(),'0px');
+});
+
+scenario('Chest suggestions: new loads appear in the console and survive reload without changing manual values', async page => {
+  await seed(page,{schemaVersion:3,programId:'chest',dayByProgram:{chest:'p-extra'},entries:{
+    'chest:p-extra:px-db-flat:0':{weight:'21',reps:'10',weightSource:'manual',completed:false}
+  }});
+  assert.equal(await page.locator('#console-weight').inputValue(),'30');
+  assert.equal((await entry(page,'chest:p-extra:px-db-flat:0')).weight,'21');
+  assert.equal((await entry(page,'chest:p-extra:px-db-incline:0')).weight,'18');
+  await page.reload();
+  assert.equal(await page.locator('#console-weight').inputValue(),'30');
+  assert.equal((await entry(page,'chest:p-extra:px-db-flat:0')).weight,'21');
+});
+
 (async () => {
   const browser = await webkit.launch({headless:true, ...(process.env.SETLINE_WEBKIT_EXECUTABLE ? {executablePath:process.env.SETLINE_WEBKIT_EXECUTABLE} : {})});
   const only = process.env.SETLINE_ONLY;
