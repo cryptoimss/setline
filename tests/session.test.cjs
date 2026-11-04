@@ -85,13 +85,13 @@ test('A rest started before any set can also be reset without a destructive conf
 test('Strength routines retain 30–45 minute estimates and chest volume stays at seven direct sets',()=>{
  const h=harness(fixture()); const programs=JSON.parse(vm.runInContext('JSON.stringify(programs)',h.context));
  const ids=new Set();
- for(const p of programs.filter(p=>p.id!=='shoulder'))for(const d of p.days){
+ for(const p of programs.filter(p=>p.id!=='shoulder'))for(const d of p.days.filter(d=>d.id!=='p-extra')){
   assert.ok(d.timing.min>=30 && d.timing.max<=45,`${p.id}/${d.id}: ${d.duration}`);
   assert.ok(d.timing.min<d.timing.max);assert.equal(d.duration,`${d.timing.min}–${d.timing.max} min`);
   for(const e of d.exercises){assert.ok(e.sets>=1 && e.rest>=60);assert.ok(!ids.has(e.id));ids.add(e.id);}
   if(p.id==='chest')assert.equal(d.exercises.filter(e=>e.muscle==='Pecho').reduce((sum,e)=>sum+e.sets,0),7);
  }
- assert.equal(programs.filter(p=>p.id!=='shoulder').flatMap(p=>p.days).length,12);
+ assert.equal(programs.filter(p=>p.id!=='shoulder').flatMap(p=>p.days.filter(d=>d.id!=='p-extra')).length,12);
  const home=programs.find(p=>p.id==='chest').days.find(d=>d.id==='p-home');
  assert.ok(!home.exercises.some(e=>/máquina|polea|banco/i.test(e.name)));
 });
@@ -263,4 +263,25 @@ test('A weight known for the set above is proposed, unless the user cleared this
  assert.equal(h.run(`defaultWeight(activeDay(),${exercise},1)`),'15');
  assert.equal(h.run(`defaultWeight(activeDay(),${exercise},2)`),'');
  assert.equal(h.run(`defaultWeight(activeDay(),${exercise},0)`),'15');
+});
+
+// The extra day is a selectable repertoire, separate from the programmed sessions.
+test('Chest extra contains thirty distinct variants with demos and stays outside the A/B rotation',()=>{
+ const h=harness(fixture());
+ const chest=JSON.parse(vm.runInContext('JSON.stringify(programs.find(p=>p.id==="chest"))',h.context));
+ const extra=chest.days.find(d=>d.id==='p-extra');
+ assert.ok(extra.optional && extra.alternative);
+ assert.equal(extra.exercises.length,30);
+ assert.ok(extra.exercises.every(e=>e.muscle==='Pecho' && e.sets===2));
+ const ids=JSON.parse(vm.runInContext('JSON.stringify(programs.flatMap(p=>p.days.flatMap(d=>d.exercises.map(e=>e.id))))',h.context));
+ assert.equal(new Set(ids).size,ids.length);
+ for(const e of extra.exercises){
+  const demo=vm.runInContext(`exerciseGifs[${JSON.stringify(e.id)}]`,h.context);
+  assert.ok(demo?.[0] && demo?.[1],e.id);
+  if(/Flexiones|Fondos|elástico/.test(e.name)) assert.equal(e.tracking,'reps');
+ }
+ vm.runInContext(functionSource('nextDayInRotation'),h.context);
+ assert.equal(vm.runInContext('nextDayInRotation().id',h.context),'p-b');
+ vm.runInContext('state.dayByProgram.chest="p-b"',h.context);
+ assert.equal(vm.runInContext('nextDayInRotation().id',h.context),'p-a');
 });

@@ -1930,6 +1930,44 @@
       }]
     });
 
+    // Optional repertoire: choose variants with Hacer ahora; excluded from the A/B rotation.
+    const chestExtraExercises = [
+      {"id": "px-bar-flat", "name": "Press plano con barra", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Pies firmes y escápulas estables. Baja con control, sin rebote. Registra el peso total de la barra y los discos. Usa topes de seguridad o ayuda."},
+      {"id": "px-bar-incline", "name": "Press inclinado con barra", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Banco a 15–30°. Pies firmes y escápulas estables. Baja con control, sin rebote. Registra el peso total de la barra y los discos. Usa topes de seguridad o ayuda."},
+      {"id": "px-bar-decline", "name": "Press declinado con barra", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Usa un banco declinado con las piernas sujetas. Pies firmes y escápulas estables. Baja con control, sin rebote. Registra el peso total de la barra y los discos. Usa topes de seguridad o ayuda."},
+      {"id": "px-db-flat", "name": "Press plano con mancuernas", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Escápulas estables y codos en diagonal al torso. Baja con control y empuja sin impulso. Registra kg por mancuerna."},
+      {"id": "px-db-incline", "name": "Press inclinado con mancuernas", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Banco a 15–30°. Escápulas estables y codos en diagonal al torso. Baja con control y empuja sin impulso. Registra kg por mancuerna."},
+      {"id": "px-db-decline", "name": "Press declinado con mancuernas", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Usa un banco declinado estable con sujeción de piernas. Escápulas estables y codos en diagonal al torso. Baja con control y empuja sin impulso. Registra kg por mancuerna."},
+      {"id": "px-db-neutral", "name": "Press con mancuernas en agarre neutro", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Palmas enfrentadas durante todo el movimiento. Escápulas estables y codos en diagonal al torso. Baja con control y empuja sin impulso. Registra kg por mancuerna."},
+      {"id": "px-machine-flat", "name": "Press de pecho en máquina", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Ajusta el asiento para alinear las asas con el pecho. Mantén la espalda apoyada y controla la vuelta. Registra la carga de esta máquina."},
+      {"id": "px-machine-incline", "name": "Press inclinado en máquina", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Ajusta el asiento para alinear las asas con el pecho. Mantén la espalda apoyada y controla la vuelta. Registra la carga de esta máquina."},
+      {"id": "px-machine-decline", "name": "Press declinado en máquina", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Ajusta el asiento para alinear las asas con el pecho. Mantén la espalda apoyada y controla la vuelta. Registra la carga de esta máquina."},
+      {"id": "px-smith-flat", "name": "Press plano en Smith", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Ajusta el banco a la trayectoria de la barra y coloca los topes. Pies firmes y escápulas estables. Baja con control, sin rebote. Registra el peso total de la barra y los discos. Usa topes de seguridad o ayuda."},
+      {"id": "px-smith-incline", "name": "Press inclinado en Smith", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Banco a 15–30°, alineado con la barra; coloca los topes. Pies firmes y escápulas estables. Baja con control, sin rebote. Registra el peso total de la barra y los discos. Usa topes de seguridad o ayuda."},
+      {"id": "px-smith-decline", "name": "Press declinado en Smith", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Banco declinado con piernas sujetas; coloca los topes. Pies firmes y escápulas estables. Baja con control, sin rebote. Registra el peso total de la barra y los discos. Usa topes de seguridad o ayuda."},
+      {"id": "px-cable-press", "name": "Press sentado en polea", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Espalda apoyada y asas a la altura del pecho. Empuja al frente y vuelve con control. Registra kg por lado."},
+      {"id": "px-db-fly", "name": "Aperturas planas con mancuernas", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Codos ligeramente flexionados y torso estable. Acerca los brazos sin impulso; abre solo hasta donde controles el recorrido. Registra kg por mancuerna."},
+      {"id": "px-db-fly-incline", "name": "Aperturas inclinadas con mancuernas", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Banco con inclinación suave. Codos ligeramente flexionados y torso estable. Acerca los brazos sin impulso; abre solo hasta donde controles el recorrido. Registra kg por mancuerna."},
+      {"id": "px-db-fly-decline", "name": "Aperturas declinadas con mancuernas", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Banco declinado estable con piernas sujetas. Codos ligeramente flexionados y torso estable. Acerca los brazos sin impulso; abre solo hasta donde controles el recorrido. Registra kg por mancuerna."},
+      {"id": "px-cable-fly", "name": "Aperturas de pie en polea", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Torso estable y codos ligeramente flexionados. Junta los brazos delante del pecho sin impulso y vuelve con control. Registra kg por lado."},
+      {"id": "px-cable-low", "name": "Aperturas en polea de abajo hacia arriba", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Poleas bajas; acerca las manos hacia delante y arriba sin encoger los hombros. Torso estable y codos ligeramente flexionados. Junta los brazos delante del pecho sin impulso y vuelve con control. Registra kg por lado."},
+      {"id": "px-cable-high", "name": "Aperturas en polea de arriba hacia abajo", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Poleas altas; acerca las manos hacia delante y abajo. Torso estable y codos ligeramente flexionados. Junta los brazos delante del pecho sin impulso y vuelve con control. Registra kg por lado."},
+      {"id": "px-pec-deck", "name": "Aperturas en peck deck", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Espalda apoyada, asiento ajustado y hombros estables. Acerca los brazos y controla la apertura sin forzar el estiramiento."},
+      {"id": "px-floor", "name": "Press con mancuernas en el suelo", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Rodillas flexionadas y pies apoyados. Baja hasta apoyar suavemente los brazos en el suelo, sin rebote. Escápulas estables y codos en diagonal al torso. Baja con control y empuja sin impulso. Registra kg por mancuerna."},
+      {"id": "px-band", "name": "Press de pecho sentado con elástico", "muscle": "Pecho", "sets": 2, "reps": "6–20", "rest": 90, "rir": "2", "cue": "Banda larga detrás de la espalda, bajo las axilas. Empuja al frente y vuelve lento. Usa la misma banda y agarre para comparar repeticiones.", "tracking": "reps"},
+      {"id": "px-pushup", "name": "Flexiones", "muscle": "Pecho", "sets": 2, "reps": "6–20", "rest": 90, "rir": "2", "cue": "Cuerpo alineado, abdomen firme y codos en diagonal. Baja el pecho entre las manos y empuja manteniendo la cadera estable. Registra repeticiones.", "tracking": "reps"},
+      {"id": "px-pushup-knees", "name": "Flexiones con rodillas apoyadas", "muscle": "Pecho", "sets": 2, "reps": "6–20", "rest": 90, "rir": "2", "cue": "Mantén alineados hombros, cadera y rodillas. Cuerpo alineado, abdomen firme y codos en diagonal. Baja el pecho entre las manos y empuja manteniendo la cadera estable. Registra repeticiones.", "tracking": "reps"},
+      {"id": "px-pushup-incline", "name": "Flexiones con manos elevadas", "muscle": "Pecho", "sets": 2, "reps": "6–20", "rest": 90, "rir": "2", "cue": "Apoya las manos en un banco firme que no deslice ni vuelque. Cuerpo alineado, abdomen firme y codos en diagonal. Baja el pecho entre las manos y empuja manteniendo la cadera estable. Registra repeticiones.", "tracking": "reps"},
+      {"id": "px-pushup-decline", "name": "Flexiones con pies elevados", "muscle": "Pecho", "sets": 2, "reps": "6–20", "rest": 90, "rir": "2", "cue": "Apoya los pies en un banco firme y las manos en el suelo. Cuerpo alineado, abdomen firme y codos en diagonal. Baja el pecho entre las manos y empuja manteniendo la cadera estable. Registra repeticiones.", "tracking": "reps"},
+      {"id": "px-pushup-wall", "name": "Flexiones contra la pared", "muscle": "Pecho", "sets": 2, "reps": "6–20", "rest": 90, "rir": "2", "cue": "Manos a la altura del pecho contra una pared; aleja los pies lo necesario para ajustar la dificultad. Cuerpo alineado, abdomen firme y codos en diagonal. Baja el pecho entre las manos y empuja manteniendo la cadera estable. Registra repeticiones.", "tracking": "reps"},
+      {"id": "px-dip", "name": "Fondos en paralelas para pecho", "muscle": "Pecho", "sets": 2, "reps": "6–20", "rest": 90, "rir": "2", "cue": "Usa barras firmes, inclina ligeramente el torso y baja solo hasta donde controles sin molestias. Empuja sin balanceo. Registra repeticiones.", "tracking": "reps"},
+      {"id": "px-dip-assisted", "name": "Fondos asistidos para pecho", "muscle": "Pecho", "sets": 2, "reps": "6–20", "rest": 90, "rir": "2", "cue": "Ajusta la asistencia para controlar todo el recorrido. Mantén los hombros estables y evita el balanceo. Registra repeticiones; anota la asistencia por separado.", "tracking": "reps"}
+    ];
+    programs.find(program => program.id === "chest").days.push({
+      id: "p-extra", code: "EX", name: "Pecho · extra", optional: true, alternative: true,
+      exercises: chestExtraExercises
+    });
+
     function estimateSessionTiming(day) {
       // Includes positioning/logging per set and both sides of unilateral exercises.
       const workMin = day.exercises.reduce((sum, exercise) => sum + exercise.sets * (exercise.unilateral ? 75 : 45), 0);
@@ -2045,6 +2083,39 @@
       "cb-scapular": ["serratus-anterior/scapula-push-up.gif", "Flexión escapular"],
       "cb-crunch": ["abs/reverse-crunch.gif", "Crunch inverso"]
     };
+
+    Object.assign(exerciseGifs, {
+      "px-bar-flat": ["pectorals/barbell-bench-press.gif", "Press plano con barra"],
+      "px-bar-incline": ["pectorals/barbell-incline-bench-press.gif", "Press inclinado con barra"],
+      "px-bar-decline": ["pectorals/barbell-decline-bench-press.gif", "Press declinado con barra"],
+      "px-db-flat": ["pectorals/dumbbell-bench-press.gif", "Press plano con mancuernas"],
+      "px-db-incline": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
+      "px-db-decline": ["pectorals/dumbbell-decline-bench-press.gif", "Press declinado con mancuernas"],
+      "px-db-neutral": ["pectorals/dumbbell-lying-hammer-press.gif", "Press con mancuernas en agarre neutro"],
+      "px-machine-flat": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
+      "px-machine-incline": ["pectorals/lever-incline-chest-press.gif", "Press inclinado en máquina"],
+      "px-machine-decline": ["pectorals/lever-decline-chest-press.gif", "Press declinado en máquina"],
+      "px-smith-flat": ["pectorals/smith-bench-press.gif", "Press plano en Smith"],
+      "px-smith-incline": ["pectorals/smith-incline-bench-press.gif", "Press inclinado en Smith"],
+      "px-smith-decline": ["pectorals/smith-decline-bench-press.gif", "Press declinado en Smith"],
+      "px-cable-press": ["pectorals/cable-seated-chest-press.gif", "Press sentado en polea"],
+      "px-db-fly": ["pectorals/dumbbell-fly.gif", "Aperturas planas con mancuernas"],
+      "px-db-fly-incline": ["pectorals/dumbbell-incline-fly.gif", "Aperturas inclinadas con mancuernas"],
+      "px-db-fly-decline": ["pectorals/dumbbell-decline-fly.gif", "Aperturas declinadas con mancuernas"],
+      "px-cable-fly": ["pectorals/cable-standing-fly.gif", "Aperturas de pie en polea"],
+      "px-cable-low": ["pectorals/cable-low-fly.gif", "Aperturas en polea de abajo hacia arriba"],
+      "px-cable-high": ["pectorals/cable-cross-over-variation.gif", "Aperturas en polea de arriba hacia abajo"],
+      "px-pec-deck": ["pectorals/lever-seated-fly.gif", "Aperturas en peck deck"],
+      "px-floor": ["https://i.makeagif.com/media/6-22-2017/gF8Nwb.gif", "Press con mancuernas en el suelo"],
+      "px-band": ["pectorals/resistance-band-seated-chest-press.gif", "Press de pecho sentado con elástico"],
+      "px-pushup": ["pectorals/push-up.gif", "Flexiones"],
+      "px-pushup-knees": ["pectorals/kneeling-push-up-male.gif", "Flexiones con rodillas apoyadas"],
+      "px-pushup-incline": ["pectorals/incline-push-up.gif", "Flexiones con manos elevadas"],
+      "px-pushup-decline": ["pectorals/decline-push-up.gif", "Flexiones con pies elevados"],
+      "px-pushup-wall": ["pectorals/push-up-wall.gif", "Flexiones contra la pared"],
+      "px-dip": ["pectorals/chest-dip.gif", "Fondos en paralelas para pecho"],
+      "px-dip-assisted": ["pectorals/assisted-chest-dip-kneeling.gif", "Fondos asistidos para pecho"]
+    });
 
     const storageKey = "setline-hypertrophy-v1";
     const timerStorageKey = "setline-rest-timer";

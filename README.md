@@ -21,6 +21,7 @@ Solo el ejercicio actual está desplegado; los demás se abren con un toque, y *
 - **Vóley + gym:** A/B de torso, C opcional según recuperación. 14–15 series por sesión. El press disponible puede reemplazar el inclinado siguiendo la pauta y ajustando su carga.
 - **Hipertrofia 3–4 días:** 14–15 series por sesión, con cuarto día complementario opcional. Para semanas sin vóley; no se acumula encima del plan Vóley.
 - **Pecho · prioridad:** A/B de gimnasio o Casa como sustitución. Cada sesión tiene 7 series de pecho, 3 de espalda y 2 de hombros. Dos por semana suman 14 series directas de pecho; no se duplican con otros planes.
+  - **Pecho · extra (EX):** sesión opcional con 30 variantes de presses, aperturas, flexiones y fondos, cada una con GIF y registro independiente. Usa **Hacer ahora** para elegir movimientos; es un repertorio de alternativas, no una indicación de hacerlos todos juntos ni de sumar sus 60 series a A/B. La duración muestra el cálculo del repertorio completo y queda fuera del objetivo de 30–45 minutos y de la rotación automática A/B. No pretende enumerar todas las variantes posibles.
 - **Calistenia:** A/B de 15 series, movimientos de cuerpo completo y descansos de 60–90 segundos. Se registran reps, sin kilos ficticios.
 
 La progresión conserva el RIR prescrito: sube reps, y tras alcanzar el máximo con buena técnica en dos sesiones, aumenta el menor salto de carga disponible o la dificultad de la variante. Las alternativas sustituyen ejercicios, no añaden series. No compares cargas o referencias entre máquinas/variantes distintas.
