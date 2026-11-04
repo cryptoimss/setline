@@ -302,13 +302,17 @@ scenario('A filter never hides where the session is', async page => {
   assert.equal(await page.locator('.set-row.is-next-set').count(), 1);
 });
 
-scenario('Ticking a row with no known reps asks for them; the console does not cover the row being typed', async page => {
+scenario('Ticking a row with no known reps never opens an editor; explicit editing remains available', async page => {
   const reps = page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-reps]');
   await page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-check]').check();
-  assert.equal(await reps.evaluate(input => input === document.activeElement), true);
-  assert.equal(await page.locator('#timer-dock').isVisible(), false);
-  await reps.fill('9');
-  await reps.blur();
+  assert.equal(await reps.evaluate(input => input === document.activeElement), false);
+  assert.equal(await page.locator('#timer-dock').isVisible(), true);
+  await reps.tap();
+  assert.equal(await page.locator('#numeric-editor').isVisible(), true);
+  assert.equal(await page.locator('#numeric-value').evaluate(input => input.readOnly), true);
+  await press(page, '#numeric-type');
+  await page.locator('#numeric-value').fill('9');
+  await press(page, '#numeric-save');
   assert.equal(await page.locator('#timer-dock').isVisible(), true);
   const saved = await state(page);
   assert.equal(saved.entries['solo:s-1:s1-incline:0'].reps, '9');
@@ -319,15 +323,17 @@ scenario('Ticking a row with no known reps asks for them; the console does not c
   await page.locator('[data-exercise-card="ph-pushup"] [data-check]').check();
   await page.waitForTimeout(600);
   assert.equal(await page.locator('[data-exercise-card="ph-pushup"]').evaluate(card => card.classList.contains('is-collapsed')), false);
-  assert.equal(await page.locator('[data-exercise-card="ph-pushup"] [data-reps]').evaluate(input => input === document.activeElement), true);
+  assert.equal(await page.locator('[data-exercise-card="ph-pushup"] [data-reps]').evaluate(input => input === document.activeElement), false);
 });
 
 scenario('Typing in the console keeps it visible and stays in sync with the row', async page => {
   const input = page.locator('#console-reps');
   await input.tap();
-  assert.equal(await page.locator('#timer-dock').isVisible(), true);
-  await input.fill('');
+  assert.equal(await page.locator('#numeric-editor').isVisible(), true);
+  await press(page, '#numeric-type');
+  await page.locator('#numeric-value').fill('');
   await page.keyboard.type('12');
+  await press(page, '#numeric-save');
   assert.equal(await page.locator('[data-exercise-card="s1-incline"] [data-reps]').first().inputValue(), '12');
   assert.equal(await input.inputValue(), '12');
   await input.fill('');
@@ -348,6 +354,8 @@ scenario('Session sheet: full names, program keeps it open, day closes it, Escap
   assert.equal(await sheet.isVisible(), true);
   assert.equal(await page.locator('#session-sheet-title').evaluate(title => title === document.activeElement), true, 'no focus ring on a button for touch users');
   assert.equal(await page.locator('#sheet-programs [data-program]').count(), 5);
+  assert.match(await sheet.textContent(), /Fotos de consulta/);
+  assert.equal(await sheet.locator('a[href="./catalog.html"]').count(), 1);
   await press(page, '#sheet-programs [data-program="calisthenics"]');
   assert.equal(await sheet.isVisible(), true);
   assert.equal(await page.locator('#sheet-days [data-day]').count(), 2);
@@ -570,6 +578,8 @@ scenario('Desktop: the console stays in view without covering a row', async page
   await page.keyboard.press('Enter');
   assert.equal(await page.locator('#console-done').evaluate(button => button === document.activeElement), true, 'and back to the next set');
   assert.equal(await page.locator('[data-day="s-1"] small').first().textContent(), '1/14');
+  assert.equal(await page.locator('.mobile-reference').isVisible(), false, 'the rail already links the catalog');
+  assert.equal(await page.locator('.sidebar a[href="./catalog.html"]').isVisible(), true);
 }, desktop);
 
 // Regressions from an independent review of this flow.
@@ -911,6 +921,154 @@ scenario('Chest suggestions: new loads appear in the console and survive reload 
   await page.reload();
   assert.equal(await page.locator('#console-weight').inputValue(),'30');
   assert.equal((await entry(page,'chest:p-extra:px-db-flat:0')).weight,'21');
+});
+
+scenario('Mobile exercise choice: every pending collapsed card can start directly without editing', async (page, context, shots) => {
+  for (const id of ['s1-row-db','s1-fly','s1-pulldown-chinup','s1-lateral','s1-tri']) {
+    const button=page.locator(`[data-exercise-card="${id}"] [data-focus-exercise]`);
+    assert.equal(await button.isVisible(),true,`${id} can be selected without opening its card`);
+  }
+  await shots('mobile-choice-before-tap');
+  await page.locator('[data-exercise-card="s1-fly"] [data-focus-exercise]').tap();
+  assert.equal(await page.locator('#console-name').textContent(),'Apertura en polea');
+  assert.equal((await state(page)).focusExerciseId,'s1-fly');
+  assert.equal(await page.locator('[data-exercise-card="s1-fly"]').evaluate(card=>card.classList.contains('is-collapsed')),false);
+  assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+  await shots('mobile-choice-selected');
+  await press(page,'#console-done');
+  assert.equal((await entry(page,'solo:s-1:s1-fly:0')).completed,true);
+  assert.equal(await doneCount(page),1);
+  await page.locator('[data-exercise-card="s1-row-db"] [data-focus-exercise]').tap();
+  assert.equal(await mode(page),'work','starting another exercise ends the previous rest');
+  assert.equal(await page.locator('#console-name').textContent(),'Remo a una mano con mancuerna');
+  assert.equal((await entry(page,'solo:s-1:s1-fly:0')).completed,true);
+  await page.locator('[data-exercise-card="s1-fly"] [data-focus-exercise]').tap();
+  assert.match(await page.locator('#console-set').textContent(),/Serie 2\/2/);
+  await page.reload();
+  assert.equal(await page.locator('#console-name').textContent(),'Apertura en polea');
+  assert.match(await page.locator('#console-set').textContent(),/Serie 2\/2/);
+  assert.equal((await entry(page,'solo:s-1:s1-fly:0')).completed,true);
+});
+
+scenario('Mobile completion: rows and console dismiss an existing editor without reopening the keyboard', async (page, context, shots) => {
+  const reps=page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-reps]');
+  // A directly focused editor can still exist for hardware-keyboard/accessibility users.
+  await reps.focus();
+  await page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-check]').tap();
+  assert.equal((await entry(page,'solo:s-1:s1-incline:0')).completed,true);
+  assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+  assert.equal(await page.locator('#timer-dock').isVisible(),true);
+  await shots('mobile-completed-no-keyboard');
+  await press(page,'#timer-skip');
+  await page.locator('#console-reps').focus();
+  await page.locator('#console-reps').fill('9');
+  await press(page,'#console-done');
+  assert.equal((await entry(page,'solo:s-1:s1-incline:1')).reps,'9');
+  assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+  await page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-check]').uncheck();
+  assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+  assert.equal((await entry(page,'solo:s-1:s1-incline:0')).completed,false);
+});
+
+scenario('Mobile editor: touching a row or console value opens steppers, never the native keyboard', async (page, context, shots) => {
+  await page.evaluate(() => {
+    window.numericFocus=[];
+    document.addEventListener('focusin',event=>{if(event.target.matches('input'))window.numericFocus.push({id:event.target.id,readOnly:event.target.readOnly,mode:event.target.inputMode});});
+  });
+  const row=page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-weight]');
+  await row.tap();
+  assert.equal(await page.locator('#numeric-editor').isVisible(),true);
+  assert.equal(await page.locator('#numeric-value').inputValue(),'18');
+  assert.equal(await page.locator('#numeric-value').evaluate(input=>input.readOnly && input.inputMode==='none'),true);
+  assert.deepEqual(await page.evaluate(()=>window.numericFocus),[]);
+  assert.equal(await page.locator('#numeric-less').evaluate(button=>button===document.activeElement),true);
+  await shots('mobile-native-free-editor');
+  await press(page,'#numeric-more');
+  assert.equal(await page.locator('#numeric-value').inputValue(),'20');
+  assert.equal((await entry(page,'solo:s-1:s1-incline:0')).weight,'18','draft does not change a set');
+  await press(page,'#numeric-save');
+  assert.equal((await entry(page,'solo:s-1:s1-incline:0')).weight,'20');
+  assert.equal(await page.locator('#numeric-editor').isVisible(),false);
+  assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+  await page.locator('#console-reps').tap();
+  assert.equal(await page.locator('#numeric-value').inputValue(),'6');
+  await press(page,'#numeric-more');
+  await press(page,'#numeric-save');
+  assert.equal(await page.locator('#console-reps').inputValue(),'7');
+  assert.equal(await doneCount(page),0,'editing alone does not complete a set');
+  await press(page,'#console-done');
+  assert.equal(await page.locator('#numeric-editor').isVisible(),false);
+  assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+});
+
+scenario('Mobile editor: keyboard requires Escribir, cancel discards and finished-set corrections preserve progress', async page => {
+  await press(page,'#console-done');
+  const first=page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-reps]');
+  await first.tap();
+  await press(page,'#numeric-more');
+  await page.keyboard.press('Escape');
+  assert.equal((await entry(page,'solo:s-1:s1-incline:0')).reps,'6');
+  await first.tap();
+  await press(page,'#numeric-type');
+  assert.equal(await page.locator('#numeric-value').evaluate(input=>!input.readOnly && input.inputMode==='numeric' && input===document.activeElement),true);
+  await page.locator('#numeric-value').fill('9');
+  await page.keyboard.press('Enter');
+  await page.locator('#numeric-editor').waitFor({state:'hidden'});
+  const saved=await entry(page,'solo:s-1:s1-incline:0');
+  assert.equal(saved.reps,'9');
+  assert.equal(saved.completed,true);
+  assert.equal((await state(page)).setLog['solo:s-1:s1-incline:0'][0].reps,'9');
+  assert.equal(await doneCount(page),1);
+  assert.match(await page.locator('#console-set').textContent(),/Serie 2\/3/);
+  assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+});
+
+scenario('Mobile editor: fits small phones, clears a value and exposes a keyboard-operable dialog', async (page,context,shots) => {
+  for(const width of [320,430]) {
+    await page.setViewportSize({width,height:844});
+    await page.locator('#console-weight').tap();
+    const dialog=page.locator('#numeric-editor');
+    const box=await dialog.boundingBox();
+    assert.ok(box.x>=0 && box.x+box.width<=width);
+    assert.equal(await dialog.evaluate(element=>element.scrollWidth<=element.clientWidth),true);
+    for(const selector of ['#numeric-less','#numeric-more','#numeric-type','#numeric-clear','#numeric-save']) {
+      const target=await page.locator(selector).boundingBox();
+      assert.ok(target.width>=44 && target.height>=44,`${selector}: ${JSON.stringify(target)}`);
+    }
+    await shots(`mobile-editor-${width}`);
+    await press(page,'#numeric-clear');
+    await press(page,'#numeric-save');
+    assert.equal((await entry(page,'solo:s-1:s1-incline:0')).weight,'');
+    await page.locator('#console-weight').focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await dialog.isVisible(),true);
+    await page.keyboard.press('Escape');
+    assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+  }
+});
+
+scenario('Mobile exercise choice: narrow and wide phones keep actions reachable and inputs editable', async (page, context, shots) => {
+  for (const width of [320,430]) {
+    await page.setViewportSize({width,height:844});
+    const id=width===320?'s1-tri':'s1-row-db';
+    const button=page.locator(`[data-exercise-card="${id}"] [data-focus-exercise]`);
+    await button.scrollIntoViewIfNeeded();
+    const box=await button.boundingBox();
+    assert.ok(box.height>=44 && box.x>=0 && box.x+box.width<=width);
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+    await shots(`mobile-choice-${width}`);
+    await button.tap();
+    await page.locator('#console-weight').fill('17,5');
+    await page.locator('#console-weight').blur();
+    const key=`solo:s-1:${id}:0`;
+    assert.equal(Number((await entry(page,key)).weight.replace(',','.')),17.5);
+    await press(page,'#console-done');
+    const completed=await entry(page,key);
+    await page.locator('[data-exercise-card="s1-fly"] [data-focus-exercise]').tap();
+    assert.deepEqual(await entry(page,key),completed);
+    await page.locator(`[data-exercise-card="${id}"] [data-focus-exercise]`).tap();
+    assert.deepEqual(await entry(page,key),completed);
+  }
 });
 
 (async () => {

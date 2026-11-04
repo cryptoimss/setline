@@ -1,0 +1,209 @@
+{
+  "title": "Hombro · fotos de consulta",
+  "source": "Tres fotos aportadas por el usuario, recibidas de su deportólogo en consulta. Capítulo 9: Shoulder pain: management; páginas 159, 174 y 179. Título y edición del libro sin identificar.",
+  "reviewedAt": "2026-11-04",
+  "prescription": null,
+  "sources": [
+    {
+      "id": "p159",
+      "label": "Página 159",
+      "file": "./assets/consultation/IMG_5502.jpeg",
+      "figure": "9.3"
+    },
+    {
+      "id": "p174",
+      "label": "Página 174",
+      "file": "./assets/consultation/IMG_5505.jpeg",
+      "figure": "9.25–9.28"
+    },
+    {
+      "id": "p179",
+      "label": "Página 179",
+      "file": "./assets/consultation/IMG_5508.jpeg",
+      "figure": "9.36–9.39"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ref-ball-seated",
+      "name": "Apoyo sentado sobre pelota con banda",
+      "source": "p159",
+      "figure": "9.3a",
+      "description": "Apoyo del brazo sobre una pelota en la camilla, sentado, con resistencia externa.",
+      "related": "ref-serratus-seated",
+      "relation": "Comparte el apoyo sentado con el empuje de serrato de la figura 9.26b; el foco y la resistencia no se consideran equivalentes."
+    },
+    {
+      "id": "ref-ball-wall-band",
+      "name": "Elevación contra pared con pelota y banda",
+      "source": "p159",
+      "figure": "9.3b",
+      "description": "De pie frente a la pared, brazo elevado sobre la pelota y resistencia de banda.",
+      "related": "ref-ball-wall-slide",
+      "relation": "Variante relacionada con el deslizamiento de la figura 9.28; aquí se muestra una banda adicional."
+    },
+    {
+      "id": "ref-ball-reclined",
+      "name": "Equilibrio con pelota reclinado",
+      "source": "p159",
+      "figure": "9.3c",
+      "description": "Reclinado en la camilla con el brazo elevado y una pelota en la mano."
+    },
+    {
+      "id": "ref-side-er",
+      "name": "Rotación externa en decúbito lateral",
+      "source": "p174",
+      "figure": "9.25a",
+      "description": "Acostado de lado, con el codo junto al tronco y una mancuerna en la mano.",
+      "demo": {
+        "url": "https://www.csp.org.uk/conditions/shoulder-pain/video-exercises-shoulder-pain",
+        "label": "Vídeo · CSP / Physiotec",
+        "match": "Rotación externa acostado de lado; sección Side lying external rotation.",
+        "verification": "Página de Chartered Society of Physiotherapy, vídeo de Physiotec y descripción de decúbito lateral con codo a 90° y peso en la mano. Consultado 2026-11-04."
+      }
+    },
+    {
+      "id": "ref-side-flexion",
+      "name": "Flexión anterior en decúbito lateral",
+      "source": "p174",
+      "figure": "9.25b",
+      "description": "Acostado de lado, con el brazo superior desplazándose hacia delante.",
+      "demo": {
+        "url": "https://pubmed.ncbi.nlm.nih.gov/30797676/",
+        "label": "Ilustración · estudio, figura 12",
+        "match": "Ilustración de flexión anterior acostado de lado; no es un vídeo.",
+        "verification": "Pie de figura 12: Side-lying forward flexion. Consultado 2026-11-04."
+      }
+    },
+    {
+      "id": "ref-prone-abduction",
+      "name": "Abducción horizontal prono con rotación externa",
+      "source": "p174",
+      "figure": "9.25c",
+      "description": "Boca abajo en la camilla, con el brazo hacia el lado y rotación externa."
+    },
+    {
+      "id": "ref-prone-extension",
+      "name": "Extensión de hombro prono",
+      "source": "p174",
+      "figure": "9.25d",
+      "description": "Boca abajo en la camilla, con el brazo extendido junto al tronco.",
+      "demo": {
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4827371/#fig9",
+        "label": "Ilustración · estudio, figura 9",
+        "match": "Extensión del hombro boca abajo; no es un vídeo.",
+        "verification": "El artículo identifica la figura 9 como Prone shoulder extension. Consultado 2026-11-04."
+      }
+    },
+    {
+      "id": "ref-elbow-pushup",
+      "name": "Empuje escapular sobre antebrazos",
+      "source": "p174",
+      "figure": "9.26a",
+      "description": "Apoyo en antebrazos y pies. La foto lo denomina elbow push-up; no se interpreta como un curl o una flexión convencional de codos."
+    },
+    {
+      "id": "ref-serratus-seated",
+      "name": "Empuje de serrato sentado sobre pelota",
+      "source": "p174",
+      "figure": "9.26b",
+      "description": "Sentado con el brazo apoyado en una pelota sobre la camilla; serratus push-in en cadena cerrada.",
+      "related": "ref-ball-seated",
+      "relation": "Comparte postura con la figura 9.3a. Se conserva como referencia diferenciada por el trabajo escapular indicado en su pie de figura."
+    },
+    {
+      "id": "ref-band-elevation-er",
+      "name": "Elevación con rotación externa y banda",
+      "source": "p174",
+      "figure": "9.27",
+      "description": "Banda entre las manos durante la elevación, con tensión hacia fuera."
+    },
+    {
+      "id": "ref-ball-wall-slide",
+      "name": "Deslizamiento en pared con pelota",
+      "source": "p174",
+      "figure": "9.28",
+      "description": "De pie frente a la pared, elevación con apoyo de la mano sobre una pelota.",
+      "related": "ref-ball-wall-band",
+      "relation": "Relacionado con la figura 9.3b; esta imagen no muestra la misma banda adicional. Tampoco equivale al ejercicio actual Retracciones con pared."
+    },
+    {
+      "id": "ref-diagonal-ir",
+      "name": "Rotación interna diagonal",
+      "source": "p179",
+      "figure": "9.36a",
+      "description": "Movimiento diagonal con resistencia de banda, identificado como rotación interna en la foto."
+    },
+    {
+      "id": "ref-diagonal-er",
+      "name": "Rotación externa diagonal",
+      "source": "p179",
+      "figure": "9.36b",
+      "description": "Movimiento diagonal con resistencia de banda, identificado como rotación externa en la foto."
+    },
+    {
+      "id": "ref-side-catch",
+      "name": "Recepción de pelota en flexión, acostado de lado",
+      "source": "p179",
+      "figure": "9.37",
+      "description": "Acostado de lado, con el brazo hacia delante y una pelota para recepción.",
+      "tag": "Recepción · confirmar variante"
+    },
+    {
+      "id": "ref-elevated-er",
+      "name": "Rotación externa elevada con banda",
+      "source": "p179",
+      "figure": "9.38a",
+      "description": "De pie frente al anclaje, con el brazo elevado y resistencia de banda.",
+      "demo": {
+        "url": "https://www.orthoinfo.org/recovery/rotator-cuff-and-shoulder-conditioning-program/",
+        "label": "Ilustración · AAOS, ejercicio 7",
+        "match": "Rotación externa con brazo abducido 90° y banda. Confirmar el ángulo de la variante de la foto.",
+        "verification": "Ejercicio 7: External Rotation with Arm Abducted 90°. Consultado 2026-11-04."
+      }
+    },
+    {
+      "id": "ref-elevated-ir",
+      "name": "Rotación interna elevada con banda",
+      "source": "p179",
+      "figure": "9.38b",
+      "description": "De pie de espaldas al anclaje, con el brazo elevado y resistencia de banda.",
+      "demo": {
+        "url": "https://nismat.org/patient-care/patient-education/injury-prevention/exercise-programs/nismat-arm-care-program/",
+        "label": "Vídeo · NISMAT, IR 90/90",
+        "match": "Rotación interna con banda y brazo a 90°. Confirmar el ángulo de la variante elevada de la foto.",
+        "verification": "Sección Shoulder IR at 90/90 Position, vídeo y descripción con anclaje detrás de la persona. Copyright NISMAT, todos los derechos reservados; solo enlace. Consultado 2026-11-04."
+      }
+    },
+    {
+      "id": "ref-drop-catch",
+      "name": "Captura de pelota con brazo abducido a 90°",
+      "source": "p179",
+      "figure": "9.39a",
+      "description": "Captura y suelta de pelota con el brazo separado del tronco a la altura del hombro.",
+      "advanced": true,
+      "tag": "Avanzado · confirmar con deportólogo"
+    },
+    {
+      "id": "ref-drop-catch-lean",
+      "name": "Captura de pelota con tronco inclinado",
+      "source": "p179",
+      "figure": "9.39b",
+      "description": "Variante de captura con el tronco inclinado hacia delante.",
+      "advanced": true,
+      "tag": "Avanzado · confirmar con deportólogo"
+    },
+    {
+      "id": "ref-kneeling-throw",
+      "name": "Lanzamiento y recepción explosivos, medio arrodillado",
+      "source": "p179",
+      "figure": "9.39c",
+      "description": "En posición de media rodilla, recepción y devolución de pelota por encima del hombro.",
+      "advanced": true,
+      "tag": "Explosivo avanzado · confirmar con deportólogo"
+    }
+  ],
+  "mediaPolicy": "No se incorporan GIFs externos: no se verificó una combinación de correspondencia exacta y permiso de reutilización. Las demostraciones se enlazan a sus autores, sin descargar ni convertir sus medios. Las tres fotos del usuario se conservan sin editar para revisión local; no se ha verificado permiso para redistribuir las páginas del libro.",
+  "duplicateReview": "No se identificaron equivalencias exactas verificadas con los cinco ejercicios activos de PhysioWods. Las parejas 9.3a/9.26b y 9.3b/9.28 son referencias relacionadas, no equivalencias confirmadas. No se fusionan ni reemplazan ejercicios activos.",
+  "excluded": "Figuras incompletas 9.29 y otras páginas adyacentes; no se reconstruyen. Las tres fotos no contienen ejercicios de pantorrilla."
+}

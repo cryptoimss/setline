@@ -76,6 +76,8 @@
 
     [hidden] { display: none !important; }
     a.rest-button { text-decoration: none; }
+    a.reference-link { text-decoration: none; }
+    a.mobile-reference { display: none; }
 
     .sr-only {
       position: absolute;
@@ -665,7 +667,7 @@
       gap: 6px;
     }
 
-    .focus-exercise { display: none; }
+    .focus-exercise { display: none; margin-top: 8px; }
     .exercise-card:not(.is-next):not(.is-complete) .focus-exercise { display: inline-flex; }
 
     .exercise-demo {
@@ -1178,6 +1180,12 @@
       text-transform: uppercase;
     }
 
+    .numeric-editor-context { margin: 8px 0 16px; color: var(--muted); }
+    .numeric-editor-stepper { height: 72px; grid-template-columns: 64px minmax(0, 1fr) 64px; }
+    .numeric-editor-value { width: 100%; min-width: 0; border: 0; background: transparent; color: var(--text); font: inherit; font-size: 28px; font-weight: 850; text-align: center; }
+    .numeric-editor-options { display: flex; gap: 8px; margin-top: 12px; }
+    .numeric-editor-options button { flex: 1; min-height: 44px; }
+
     .timer-dock.is-finished .stepper { background: rgba(26, 12, 9, .14); }
     .timer-dock.is-finished .stepper-unit { color: inherit; }
     .timer-dock.is-finished .stepper-button:hover,
@@ -1468,6 +1476,7 @@
       .session-hero:not(.is-open) + .load-preset-panel,
       .session-hero:not(.is-open) ~ .session-tools:not(.has-active-filter) { display: none; }
       .summary-column { margin-top: 12px; }
+      a.mobile-reference { display: inline-flex; border-radius: 12px; }
       .session-progress { display: none; }
       .exercise-list { gap: 8px; }
       .exercise-card.is-next .next-badge { display: none; }
@@ -1604,6 +1613,8 @@
       <nav class="program-nav" id="desktop-programs" aria-label="Programas"></nav>
       <p class="nav-label">Sesiones</p>
       <nav class="day-nav" id="desktop-days" aria-label="Días"></nav>
+      <p class="nav-label">Referencias</p>
+      <a class="program-button reference-link" href="./catalog.html"><span class="program-symbol">R</span><span class="program-copy"><strong>Fotos de consulta</strong></span></a>
     </aside>
 
     <main class="page">
@@ -1703,6 +1714,7 @@
               </div>
             </div>
           </section>
+          <a class="quiet-button reference-link mobile-reference" href="./catalog.html">Fotos de consulta ↗</a>
         </aside>
       </div>
     </main>
@@ -1721,6 +1733,7 @@
     <nav class="program-nav" id="sheet-programs" aria-label="Programas"></nav>
     <p class="nav-label">Más</p>
     <div class="program-nav">
+      <a class="program-button reference-link" href="./catalog.html"><span class="program-symbol">R</span><span class="program-copy"><strong>Fotos de consulta</strong></span></a>
       <button class="program-button" id="sheet-install" type="button" hidden><span class="program-symbol" aria-hidden="true">↓</span><span class="program-copy"><strong>Instalar Setline</strong></span></button>
       <button class="program-button" type="button" data-reset-session><span class="program-symbol" aria-hidden="true">↺</span><span class="program-copy"><strong>RESET</strong></span></button>
     </div>
@@ -1732,6 +1745,25 @@
     </div>
     <img id="gif-viewer-image" alt="">
     <p class="gif-viewer-error" id="gif-viewer-error" role="status" hidden>No se pudo cargar el GIF. Cierra y vuelve a intentarlo cuando tengas conexión.</p>
+  </dialog>
+  <dialog class="sheet" id="numeric-editor" aria-labelledby="numeric-editor-title" aria-describedby="numeric-editor-context">
+    <form method="dialog" class="sheet-body">
+      <h2 id="numeric-editor-title">Editar repeticiones</h2>
+      <p class="numeric-editor-context" id="numeric-editor-context"></p>
+      <div class="stepper numeric-editor-stepper">
+        <button class="stepper-button" id="numeric-less" type="button" aria-label="Disminuir valor" autofocus>−</button>
+        <input class="numeric-editor-value" id="numeric-value" type="text" inputmode="none" readonly autocomplete="off" enterkeyhint="done" aria-label="Valor">
+        <button class="stepper-button" id="numeric-more" type="button" aria-label="Aumentar valor">+</button>
+      </div>
+      <div class="numeric-editor-options">
+        <button class="quiet-button" id="numeric-type" type="button">Escribir con teclado</button>
+        <button class="quiet-button" id="numeric-clear" type="button">Vaciar</button>
+      </div>
+      <div class="sheet-actions">
+        <button class="sheet-cancel" type="submit" value="cancel">Cancelar</button>
+        <button class="sheet-confirm" id="numeric-save" type="submit" value="save">Guardar</button>
+      </div>
+    </form>
   </dialog>
   <dialog class="sheet" id="confirm-sheet" aria-labelledby="sheet-title">
     <form method="dialog" class="sheet-body">
@@ -2558,6 +2590,7 @@
             <div class="exercise-meta"><span class="muscle-badge">${exercise.muscle}</span><span><strong>${exercise.sets}</strong> × <strong>${exercise.reps}</strong></span>${exercise.rir ? `<span>RIR <strong>${exercise.rir}</strong></span>` : ""}</div>
             ${lastLine ? `<p class="exercise-last">${escapeAttribute(lastLine)}</p>` : ""}
             <p class="exercise-collapsed-summary" data-collapsed-summary>${collapsedSummary(volume, unit, reference, ratio, reps)}</p>
+            <button class="rest-button focus-exercise" type="button" data-focus-exercise="${exercise.id}" aria-label="Hacer ahora: ${escapeAttribute(exercise.name)}">Hacer ahora</button>
           </div>
           <button class="collapse-toggle" type="button" data-collapse-toggle aria-expanded="false" aria-label="Mostrar ${escapeAttribute(exercise.name)}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
@@ -2590,7 +2623,6 @@
             </div>
           </details>
           <div class="exercise-actions">
-            <button class="rest-button focus-exercise" type="button" data-focus-exercise="${exercise.id}" aria-label="Hacer ahora: ${escapeAttribute(exercise.name)}">Hacer ahora</button>
             <button class="rest-button" type="button" data-rest="${exercise.rest}" data-exercise-name="${escapeAttribute(exercise.name)}" aria-label="Iniciar descanso ${formatRest(exercise.rest)}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6"/></svg><span class="rest-word">Descanso</span> ${formatRest(exercise.rest)}
             </button>
@@ -2622,6 +2654,7 @@
         ? filtered.map((exercise) => exerciseCard(day, exercise, day.exercises.indexOf(exercise))).join("")
         : `<div class="empty-state"><strong>No hay ejercicios con este filtro.</strong>Elige otro grupo muscular para volver a la sesión.</div>`;
       $$(".exercise-demo").forEach(loadExerciseDemo);
+      configureNumericTriggers();
       updateSessionProgress();
     }
 
@@ -2787,6 +2820,7 @@
     }
 
     function setSetDone(day, exercise, index, done) {
+      dismissSetEditor();
       const key = entryKey(day.id, exercise.id, index);
       state.focusExerciseId = exercise.id;
       keepScreenAwake();
@@ -2829,11 +2863,11 @@
         releaseScreen();
       }
       if (!reps) {
-        // Nothing to log yet: keep the row open and ask for the one number only the user knows.
+        // Keep missing reps editable without making a completion tap open the keyboard.
         heldCards.delete(exercise.id);
         if (exerciseDone) toggledCards.add(exercise.id);
         syncCardStates(day, next);
-        $(`[data-exercise-card="${exercise.id}"] [data-set-row="${index}"] [data-reps]`)?.focus();
+        announce("Serie marcada como hecha sin repeticiones registradas. Puedes editarlas tocando el campo.");
         return;
       }
       if (!exerciseDone) {
@@ -2847,6 +2881,95 @@
         else window.scrollTo({ top: 0 });
       }, 480);
     }
+
+    function dismissSetEditor() {
+      const editor = document.activeElement;
+      if (editor?.matches("[data-reps], [data-weight], [data-console-field], [data-reference]")) editor.blur();
+    }
+
+    let numericTarget = null;
+
+    function openNumericEditor(input) {
+      const day = activeDay();
+      const next = input.matches("[data-console-field]") ? findNextSet(day) : null;
+      const exercise = next?.exercise || day.exercises.find(item => item.id === input.dataset.exercise);
+      const index = next?.index ?? Number(input.dataset.set);
+      if (!exercise || !Number.isInteger(index)) return;
+      dismissSetEditor();
+      const field = input.dataset.consoleField || (input.matches("[data-weight]") ? "weight" : "reps");
+      numericTarget = { programId: state.programId, dayId: day.id, exerciseId: exercise.id, index, field,
+        restore: input.closest(".exercise-card")?.querySelector("[data-collapse-toggle]") || $(`[data-stepper="${field}"][data-direction="1"]`) };
+      $("#numeric-editor-title").textContent = field === "weight" ? "Editar peso · kg" : "Editar repeticiones";
+      $("#numeric-editor-context").textContent = `${exercise.name} · serie ${index + 1}/${exercise.sets}`;
+      const value = $("#numeric-value");
+      value.value = input.value;
+      value.readOnly = true;
+      value.inputMode = "none";
+      value.setAttribute("aria-label", field === "weight" ? "Peso en kilogramos" : "Repeticiones");
+      $("#numeric-type").hidden = false;
+      $("#numeric-editor").returnValue = "cancel";
+      guardTaps(350, "dialog");
+      $("#numeric-editor").showModal();
+    }
+
+    function stepNumericEditor(direction) {
+      const input = $("#numeric-value");
+      const current = safeNumber(input.value);
+      input.value = displayDecimal(numericTarget.field === "weight" ? stepWeight(current, direction) : Math.max(0, current + direction));
+    }
+
+    function interceptNumericEditor(event) {
+      if (!window.matchMedia("(max-width: 880px)").matches) return;
+      const input = event.target.closest?.("[data-reps], [data-weight], [data-console-field]");
+      if (!input || $("#numeric-editor").open) return;
+      if (input.closest("#timer-dock") && performance.now() < tapGuardsUntil.console) return;
+      event.preventDefault();
+      event.stopPropagation();
+      openNumericEditor(input);
+    }
+
+    function configureNumericTriggers() {
+      const mobile = window.matchMedia("(max-width: 880px)").matches;
+      $$("[data-reps], [data-weight], [data-console-field]").forEach(input => {
+        input.inputMode = mobile ? "none" : input.matches("[data-reps], [data-console-field='reps']") ? "numeric" : "decimal";
+        if (mobile) input.setAttribute("aria-haspopup", "dialog");
+        else input.removeAttribute("aria-haspopup");
+      });
+    }
+
+    // Cancel the native focus action before a touch can summon the OS keyboard.
+    document.addEventListener("pointerdown", interceptNumericEditor, true);
+    document.addEventListener("click", interceptNumericEditor, true);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Enter" && event.target === $("#numeric-value")) {
+        event.preventDefault();
+        $("#numeric-editor").close("save");
+      } else if (event.key === "Enter") interceptNumericEditor(event);
+    }, true);
+    window.addEventListener("resize", configureNumericTriggers);
+    $("#numeric-less").addEventListener("click", () => stepNumericEditor(-1));
+    $("#numeric-more").addEventListener("click", () => stepNumericEditor(1));
+    $("#numeric-clear").addEventListener("click", () => { $("#numeric-value").value = ""; });
+    $("#numeric-type").addEventListener("click", () => {
+      const input = $("#numeric-value");
+      input.readOnly = false;
+      input.inputMode = numericTarget.field === "weight" ? "decimal" : "numeric";
+      input.focus();
+      input.select();
+      $("#numeric-type").hidden = true;
+    });
+    $("#numeric-editor").addEventListener("close", () => {
+      const target = numericTarget;
+      numericTarget = null;
+      $("#numeric-value").blur();
+      if (!target) return;
+      const day = activeDay();
+      if ($("#numeric-editor").returnValue === "save" && state.programId === target.programId && day.id === target.dayId) {
+        const exercise = day.exercises.find(item => item.id === target.exerciseId);
+        if (exercise) applySetValue(day, exercise, target.index, target.field, $("#numeric-value").value.trim());
+      }
+      target.restore?.focus({ preventScroll: true });
+    });
 
     function completeFromConsole() {
       const day = activeDay();
@@ -3474,6 +3597,9 @@
       }
       const focusButton = event.target.closest("[data-focus-exercise]");
       if (focusButton) {
+        dismissSetEditor();
+        clearSessionTimer();
+        lastDoneSet = null;
         state.focusExerciseId = focusButton.dataset.focusExercise;
         persist();
         updateSessionProgress();

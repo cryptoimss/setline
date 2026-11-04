@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0c1013">
+  <title>Setline — Referencias de hombro</title>
+  <link rel="icon" href="./assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <style>
+    :root { color-scheme: dark; --bg:#0c1013; --surface:#13191d; --raised:#192126; --soft:#20292f; --line:#2b353b; --text:#f5f1e9; --muted:#a8b1b5; --accent:#ff735c; --mint:#8ed7ca; --amber:#f2c979; }
+    * { box-sizing:border-box; } [hidden] { display:none !important; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    button,input,a { font:inherit; touch-action:manipulation; } button { cursor:pointer; } a { color:var(--mint); } button,input { color:inherit; }
+    :focus-visible { outline:3px solid var(--mint); outline-offset:3px; }
+    .skip { position:fixed; top:-100px; left:8px; z-index:5; padding:12px; background:var(--text); color:var(--bg); } .skip:focus { top:8px; }
+    .shell { max-width:1100px; margin:auto; padding:24px 28px max(40px,env(safe-area-inset-bottom)); }
+    .top { display:flex; align-items:center; justify-content:space-between; gap:16px; border-bottom:1px solid var(--line); padding-bottom:20px; }
+    .brand { color:var(--text); text-decoration:none; font-family:"DIN Condensed","Arial Narrow",sans-serif; font-size:28px; font-weight:900; letter-spacing:.03em; }
+    .button { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:10px 16px; border:1px solid var(--line); border-radius:8px; background:var(--soft); color:var(--text); text-decoration:none; }
+    .button:hover { border-color:var(--mint); } .eyebrow { color:var(--accent); font-size:11px; letter-spacing:.1em; font-weight:800; text-transform:uppercase; }
+    .intro { padding:32px 0 24px; max-width:760px; } h1 { margin:8px 0 12px; font:950 clamp(34px,6vw,56px)/1 "DIN Condensed","Avenir Next Condensed","Arial Narrow",sans-serif; text-transform:uppercase; letter-spacing:-.02em; } p { margin:8px 0; }
+    .intro p,.note { color:var(--muted); } .callout { border-left:3px solid var(--accent); background:var(--raised); padding:16px 20px; border-radius:0 10px 10px 0; } .callout p { color:var(--muted); }
+    .sources { display:flex; gap:12px; flex-wrap:wrap; margin:24px 0; } .source { flex:1; display:flex; align-items:center; gap:12px; padding:12px; background:var(--surface); border:1px solid var(--line); border-radius:10px; text-align:left; min-width:210px; min-height:88px; }
+    .source img { width:44px; height:60px; object-fit:cover; border-radius:4px; } .source strong,.source small { display:block; } .source small { color:var(--muted); } .source:hover { border-color:var(--mint); }
+    .tools { padding:20px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); } label { display:block; font-size:12px; color:var(--muted); font-weight:700; margin-bottom:8px; } input { width:100%; min-height:48px; padding:12px 16px; background:var(--surface); border:1px solid var(--line); border-radius:8px; }
+    .filters { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; } .filter { min-height:44px; padding:8px 14px; border-radius:24px; border:1px solid var(--line); background:var(--surface); } .filter[aria-pressed="true"] { background:var(--mint); border-color:var(--mint); color:var(--bg); }
+    .count { color:var(--muted); font-size:13px; margin:16px 0; } .list { list-style:none; padding:0; margin:0; display:grid; gap:12px; }
+    .card { display:grid; grid-template-columns:44px minmax(0,1fr); gap:16px; padding:20px; background:var(--surface); border:1px solid var(--line); border-radius:14px; } .number { display:grid; place-items:center; width:44px; height:44px; background:var(--soft); color:var(--accent); border-radius:10px; font-size:20px; font-weight:900; font-variant-numeric:tabular-nums; }
+    h2 { margin:4px 0 8px; font-size:19px; line-height:1.3; } .meta { font-size:12px; color:var(--muted); } .description { color:var(--muted); margin-bottom:12px; } .tag { display:inline-block; margin:4px 0 8px; padding:4px 8px; border:1px solid var(--amber); border-radius:6px; color:var(--amber); font-size:12px; font-weight:700; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; } .media-note,.related { color:var(--muted); font-size:13px; margin-top:12px; } .related { padding-top:12px; border-top:1px solid var(--line); }
+    .empty { padding:24px; background:var(--surface); border:1px solid var(--line); border-radius:10px; } .empty h2 { margin-top:0; }
+    .separate { margin-top:28px; padding:20px; background:var(--raised); border-radius:14px; border:1px solid var(--line); } .separate p { color:var(--muted); } footer { padding-top:24px; color:var(--muted); font-size:12px; }
+    dialog { width:min(920px,calc(100vw - 24px)); max-height:calc(100dvh - 24px); padding:16px; background:var(--surface); color:var(--text); border:1px solid var(--line); border-radius:14px; overflow:auto; } dialog::backdrop { background:rgba(0,0,0,.85); } body:has(dialog[open]) { overflow:hidden; } .dialog-head { display:flex; align-items:center; justify-content:space-between; gap:16px; } dialog img { display:block; max-width:100%; height:auto; margin:16px auto; } .dialog-note { color:var(--muted); font-size:13px; }
+    @media(max-width:620px) { .shell { padding:16px 12px 32px; } .intro { padding-top:24px; } .card { padding:16px 12px; gap:12px; grid-template-columns:36px minmax(0,1fr); } .number { width:36px; height:36px; font-size:17px; } h2 { font-size:17px; } .source { min-width:100%; } .button { padding:10px 12px; } .top { gap:8px; } }
+    @media(prefers-reduced-motion:reduce) { * { scroll-behavior:auto !important; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#catalog-list">Saltar al catálogo</a>
+  <div class="shell">
+    <header class="top"><a class="brand" href="./index.html">SETLINE</a><a class="button" href="./index.html">← Volver a mis rutinas</a></header>
+    <main>
+      <div class="intro"><span class="eyebrow">Biblioteca de consulta · hombro</span><h1>Las fotos de tu deportólogo</h1><p>19 referencias de las tres fotos que recibiste en consulta. Cada entrada conserva su página y figura para que puedas reconocerla.</p></div>
+      <div class="callout"><strong>Selección y pauta: con tu deportólogo</strong><p>Este catálogo no inicia una sesión ni asigna series, repeticiones, cargas o frecuencia. Las recepciones y progresiones explosivas requieren confirmar la variante y cuándo incorporarla.</p></div>
+      <div class="sources" id="source-photos" aria-label="Fotos originales de consulta"></div>
+      <section class="tools" aria-label="Buscar y filtrar referencias">
+        <label for="catalog-search">Buscar por nombre, postura o figura</label><input id="catalog-search" type="search" placeholder="Ej.: pelota, rotación, 9.25…" autocomplete="off">
+        <div class="filters" aria-label="Filtrar referencias"><button class="filter" data-filter="all" aria-pressed="true">Todas</button><button class="filter" data-filter="p159" aria-pressed="false">Pág. 159</button><button class="filter" data-filter="p174" aria-pressed="false">Pág. 174</button><button class="filter" data-filter="p179" aria-pressed="false">Pág. 179</button><button class="filter" data-filter="advanced" aria-pressed="false">Avanzadas</button></div>
+      </section>
+      <p class="count" id="catalog-count" role="status">Cargando referencias…</p>
+      <ol class="list" id="catalog-list" tabindex="-1" aria-label="Ejercicios de referencia"></ol>
+      <div class="empty" id="catalog-empty" hidden><h2>Sin coincidencias</h2><p>Prueba otra palabra o muestra todas las referencias.</p><button class="button" id="clear-filters">Mostrar todas</button></div>
+      <div class="empty" id="catalog-error" role="alert" hidden><h2>No se pudo cargar el catálogo</h2><p>Vuelve a intentarlo con conexión. Tus rutinas y registros siguen disponibles.</p><button class="button" id="retry-catalog">Reintentar</button></div>
+      <section class="separate" aria-labelledby="calf-title"><span class="eyebrow">Referencia pendiente</span><h2 id="calf-title">Pantorrilla</h2><p>Estas tres fotos muestran ejercicios de hombro. La pantorrilla queda separada, pendiente de sus ejercicios y pauta de consulta.</p></section>
+      <footer><p>Las fotos originales son la referencia de cada variante. No se encontró un GIF con correspondencia y permiso de reutilización verificados. Los enlaces externos abren material de sus autores; su pauta no se incorpora a Setline.</p><p>Las variantes parecidas se señalan en sus fichas. No se reemplazaron los ejercicios actuales de Hombro · PhysioWods.</p></footer>
+    </main>
+  </div>
+  <dialog id="photo-viewer" aria-labelledby="photo-title"><div class="dialog-head"><h2 id="photo-title">Foto de consulta</h2><button class="button" id="photo-close" autofocus>Cerrar</button></div><p class="dialog-note">Página original aportada en consulta. Usa la figura indicada en la ficha para localizar el movimiento.</p><img id="photo-image" alt=""><p id="photo-error" role="status" hidden>No se pudo cargar la foto.</p><a id="photo-original" target="_blank" rel="noopener noreferrer">Abrir foto a tamaño completo ↗</a></dialog>
+  <script src="./assets/consultation/catalog.js"></script>
+</body>
+</html>

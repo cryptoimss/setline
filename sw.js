@@ -4,6 +4,12 @@ const GIF_CACHE = "setline-gifs-v1";
 const SHELL_FILES = [
   "./",
   "./index.html",
+  "./catalog.html",
+  "./assets/consultation/catalog.json",
+  "./assets/consultation/catalog.js",
+  "./assets/consultation/IMG_5502.jpeg",
+  "./assets/consultation/IMG_5505.jpeg",
+  "./assets/consultation/IMG_5508.jpeg",
   "./manifest.webmanifest",
   "./assets/icons/icon.svg",
   "./assets/icons/icon-192.png",
@@ -42,12 +48,14 @@ self.addEventListener("message", event => {
 
 async function networkFirst(request) {
   const cache = await caches.open(SHELL_CACHE);
+  // Keep the reference page separate from the training shell in offline storage.
+  const page = new URL(request.url).pathname.endsWith("/catalog.html") ? "./catalog.html" : "./index.html";
   try {
     const response = await fetch(request);
-    if (response.ok) await cache.put("./index.html", response.clone());
+    if (response.ok) await cache.put(page, response.clone());
     return response;
   } catch (_) {
-    return (await cache.match(request)) || (await cache.match("./index.html")) || Response.error();
+    return (await cache.match(request)) || (await cache.match(page)) || Response.error();
   }
 }
 
