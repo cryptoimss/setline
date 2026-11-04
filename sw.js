@@ -55,9 +55,13 @@ async function cacheFirstGif(request) {
   const cache = await caches.open(GIF_CACHE);
   const cached = await cache.match(request);
   if (cached) return cached;
-  const response = await fetch(request);
-  if (response.ok || response.type === "opaque") await cache.put(request, response.clone());
-  return response;
+  try {
+    const response = await fetch(request);
+    if (response.ok || response.type === "opaque") await cache.put(request, response.clone());
+    return response;
+  } catch (_) {
+    return Response.error();
+  }
 }
 
 async function staleWhileRevalidate(request) {

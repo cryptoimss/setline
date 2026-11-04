@@ -6,11 +6,15 @@ La duración se calcula con las series reales, los descansos entre series, 6–8
 
 ## Sesión actual y RESET
 
-Pesos, repeticiones y checks se conservan automáticamente en `localStorage`, junto con programa/día seleccionado, filtro, preset, objetivos manuales y referencias previas. No hay IndexedDB, backend, historial cronológico ni sincronización entre dispositivos. El service worker almacena la interfaz y GIFs en Cache Storage; no registra entrenamientos.
+Pesos, repeticiones y checks se conservan automáticamente en `localStorage`, junto con programa/día seleccionado, filtro, preset, objetivos manuales, referencias previas, el descanso en curso y **Última vez**. No hay IndexedDB, backend, historial cronológico ni sincronización entre dispositivos. El service worker almacena la interfaz y GIFs en Cache Storage; no registra entrenamientos.
 
-**RESET**, visible arriba y al pie de una sesión iniciada, vacía solo los pesos, reps y checks del día actual y detiene el temporizador. Pide confirmación, permite cancelar y conserva los demás días, los objetivos manuales y las referencias de volumen previas. No crea ni reemplaza referencias al resetear. Las cargas sugeridas vuelven a aparecer como valores iniciales; no son datos de una sesión completada.
+**RESET** vacía solo los pesos, reps y checks del día actual y detiene el temporizador. En escritorio está junto a los filtros; en el móvil, en la hoja de **Cambiar sesión** y en **Ajustes**; y en ambos, en la consola al terminar. Pide confirmación, permite cancelar y conserva los demás días, los objetivos manuales y las referencias de volumen previas. No crea ni reemplaza referencias al resetear. Los pesos de **Última vez** o, si no los hay, las cargas sugeridas vuelven a aparecer como valores iniciales.
 
-La app marca la siguiente serie, pliega los ejercicios completos y permite desplegarlos. El panel final indica **Sesión completa** con la misma acción **RESET**. Los accesos para iniciar Apple Watch fueron retirados.
+**Última vez** recuerda el peso y las reps de cada serie marcada, al marcarla y no al resetear: guarda la última y la anterior; mientras una serie está marcada hoy, muestra la anterior, y al resetear pasa a mostrar la de hoy. Desmarcar o **Deshacer** la deja como estaba antes de marcar. Con ella, la app propone el punto de partida de la sesión y calcula la referencia de volumen solo si el ejercicio se completó entero. Las series marcadas antes de esta función se incorporan al abrir la app. Lo que se marcó y después se resetea sigue contando como última vez.
+
+La sesión se puede registrar entera desde la **consola**, sin teclado ni desplazarse: al pie en el móvil, fija en la columna derecha en escritorio. Muestra la serie actual con pasos de peso (1 kg hasta 10 kg, 2,5 kg después) y reps, y **Hecha** la registra y arranca el descanso. Lo que se ve es lo que se guarda; un toque en el número permite escribirlo. El descanso ofrece −15/+15, pausa, **Saltar** y **Deshacer**; sobrevive a recargas y no se inicia tras la última serie. Al acabar, la consola se vuelve coral y vuelve a la siguiente serie. Mientras dura la sesión la pantalla se mantiene encendida si el navegador lo permite (hasta 10 minutos desde la última acción).
+
+Solo el ejercicio actual está desplegado; los demás se abren con un toque, y **Hacer ahora** adelanta otro si la máquina está ocupada. Cambiar el peso de una serie lo traslada a las siguientes sin terminar, salvo las que tengan un peso propio; corregir una serie ya hecha no traslada nada. Marcar directamente una fila usa los mismos datos que muestra; si es un rango sin dato previo, pide las reps. Cada ejercicio muestra siempre su GIF: grande en el ejercicio abierto y en miniatura en los demás, y un toque lo amplía. La explicación, el enlace al video y el objetivo opcional quedan en **Técnica**, cerrada de entrada. La interfaz no incluye textos explicativos: es una herramienta personal, y las pautas viven en este documento y en `docs/`. Al terminar, la consola indica **Sesión completa**, el resumen, **Próxima** sesión y **RESET**. Una sesión registrada otro día se avisa arriba. Los accesos para iniciar Apple Watch fueron retirados.
 
 ## Programas
 
@@ -29,25 +33,27 @@ Quinta pestaña con los cinco ejercicios de [PhysioWods — 5 ejercicios para te
 
 La transcripción del cierre (19:42–20:27) indica comenzar con **una serie de 10** y considerar una segunda si la primera semana va bien; la descripción propone dos series. La app usa el inicio más gradual del cierre: goma por brazo, halo con 5 vueltas por sentido. Frecuencia indicada: 2–3 días semanales con un día de descanso entre sesiones. El minuto de descanso es una propuesta de la app. La duración se estima con el mismo cálculo y no se fuerza a 30–45 minutos.
 
-La selección debe acordarse con el fisioterapeuta. No hay RIR, presets de kilos ni objetivos de volumen en esta pestaña; el halo requiere especial valoración si hay molestias. El panel explica detener los movimientos dolorosos y enlaza también la [guía general de AAOS](https://www.orthoinfo.org/recovery/rotator-cuff-and-shoulder-conditioning-program). El registro no mide recuperación clínica.
+La selección debe acordarse con el fisioterapeuta. No hay RIR, presets de kilos ni objetivos de volumen en esta pestaña; el halo requiere especial valoración si hay molestias, y su nota está en **Técnica**. Ante un movimiento doloroso, detenerlo. Referencia general: [guía de AAOS](https://www.orthoinfo.org/recovery/rotator-cuff-and-shoulder-conditioning-program). El registro no mide recuperación clínica.
 
 ## Instalar en iPhone
 
-Abre la web en Safari → Compartir → Añadir a pantalla de inicio. La PWA ofrece **Actualizar** cuando detecta una nueva versión y conserva los registros locales.
+Abre la web en Safari → Compartir → Añadir a pantalla de inicio. La opción **Instalar Setline** está en **Cambiar sesión**, y nunca aparece un aviso sin pedirlo. La PWA ofrece **Actualizar** cuando detecta una nueva versión y conserva los registros locales y el descanso en curso.
 
 ## Desarrollo y pruebas
 
 ```bash
 python3 -m http.server 8080
-node --test tests/session.test.cjs
+node --test tests/*.test.cjs
+SETLINE_URL=http://localhost:8080 node tests/session.browser.cjs
 ```
 
-Abre `http://localhost:8080`. Las pruebas usan datos sintéticos y no acceden al almacenamiento del usuario. El flujo de publicación existente despliega GitHub Pages al enviar cambios a `main`; no publiques sin autorización.
+Abre `http://localhost:8080`. `tests/session.browser.cjs` requiere Playwright con WebKit y admite `SETLINE_QA_DIR`, `SETLINE_WEBKIT_EXECUTABLE` y `SETLINE_ONLY`. Las pruebas usan datos sintéticos y no acceden al almacenamiento del usuario. El flujo de publicación existente despliega GitHub Pages al enviar cambios a `main`; no publiques sin autorización.
 
 ## Estructura
 
 - `index.html`: aplicación completa, programación y cálculo de duración.
-- `tests/session.test.cjs`: aislamiento de RESET, cancelar, recarga, repetición, navegación y límites de duración.
+- `tests/session.test.cjs`: aislamiento de RESET, cancelar, recarga, repetición, navegación, límites de duración, Última vez y pasos de la consola.
+- `tests/session.browser.cjs`: flujos de gimnasio en WebKit con tamaño de iPhone (sesión completa desde la consola, descanso, RESET y Última vez, datos anteriores, máquina ocupada, anchos y objetivos táctiles).
 - `manifest.webmanifest`, `sw.js`, `assets/icons/`: instalación y modo offline.
 - `.github/workflows/pages.yml`: publicación automática.
 - `docs/`: producto, diseño y justificación de programación.

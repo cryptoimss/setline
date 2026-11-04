@@ -49,7 +49,6 @@
       font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 15px;
       line-height: 1.45;
-      padding-bottom: 104px;
     }
 
     button, input { font: inherit; touch-action: manipulation; }
@@ -70,10 +69,22 @@
       outline-offset: 2px;
     }
 
+    /* Focus moved by script after a tap (dialogs, returning focus) shouldn't draw a ring on a phone. */
+    html[data-input="touch"] :focus-visible { outline: 0; }
+
     button:disabled { opacity: .45; cursor: not-allowed; }
 
     [hidden] { display: none !important; }
     a.rest-button { text-decoration: none; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
 
     .skip-link {
       position: fixed;
@@ -153,6 +164,7 @@
     .program-nav,
     .day-nav {
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: 7px;
     }
 
@@ -204,23 +216,12 @@
 
     .program-copy { min-width: 0; }
 
-    .program-copy strong,
-    .program-copy span { display: block; }
+    .program-copy strong{ display: block; }
 
     .program-copy strong { color: inherit; font-size: 13px; }
 
-    .program-copy span {
-      margin-top: 2px;
-      color: var(--faint);
-      font-size: 11px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .program-mobile-name { display: none; }
-
     .day-button { min-height: 44px; padding: 7px 10px; }
+    .sidebar .day-button { gap: 8px; }
 
     .day-button[aria-pressed="true"] { background: var(--accent); color: #1a0c09; }
 
@@ -236,18 +237,8 @@
       font-weight: 900;
     }
 
-    .day-button small { margin-left: auto; opacity: .72; font-size: 10px; }
-
-    .sidebar-note {
-      margin-top: 28px;
-      padding: 14px;
-      color: var(--muted);
-      background: var(--surface);
-      border-radius: 12px;
-      font-size: 12px;
-    }
-
-    .sidebar-note strong { color: var(--mint); }
+    .day-button small { flex: 0 0 auto; margin-left: auto; opacity: .72; font-size: 10px; font-variant-numeric: tabular-nums; }
+    .day-button small:empty { display: none; }
 
     .page {
       min-width: 0;
@@ -268,145 +259,7 @@
     .session-main { min-width: 0; }
 
     .session-hero {
-      position: relative;
-      overflow: hidden;
-      min-height: 246px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 190px;
-      background: var(--surface-raised);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .hero-copy {
-      position: relative;
-      align-self: end;
-      padding: clamp(24px, 4vw, 42px);
-    }
-
-    .hero-compact-meta { display: none; }
-
-    .hero-toggle {
-      position: absolute;
-      z-index: 2;
-      top: 18px;
-      right: 18px;
-      min-width: 44px;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      padding: 0 12px;
-      border: 0;
-      border-radius: 10px;
-      background: var(--surface-soft);
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 850;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      transition: background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease);
-    }
-
-    .hero-toggle:hover { background: var(--line); color: var(--text); }
-    .hero-toggle:active { transform: scale(.97); }
-    .hero-toggle svg { width: 16px; height: 16px; transition: transform .24s var(--ease); }
-    .hero-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
-
-    .hero-program {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--mint);
-      font-size: 12px;
-      font-weight: 850;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-    }
-
-    .hero-program::before {
-      content: "";
-      width: 18px;
-      height: 2px;
-      background: currentColor;
-    }
-
-    .session-hero h1 {
-      max-width: 720px;
-      margin: 18px 0 10px;
-      font-size: clamp(34px, 5vw, 60px);
-      line-height: .96;
-      letter-spacing: -.035em;
-      text-wrap: balance;
-      font-family: "DIN Condensed", "Avenir Next Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
-      text-transform: uppercase;
-    }
-
-    .session-hero p {
-      max-width: 64ch;
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .hero-slate {
-      position: relative;
-      display: grid;
-      align-content: space-between;
-      padding: 24px;
-      background: var(--accent);
-      color: #1a0c09;
-      animation: slate-reveal .46s var(--ease) both;
-    }
-
-    .hero-slate::after {
-      content: "";
-      position: absolute;
-      inset: 15px;
-      border: 1px solid rgba(26, 12, 9, .28);
-      border-radius: 10px;
-      pointer-events: none;
-    }
-
-    .hero-day-code {
-      position: relative;
-      z-index: 1;
-      font-size: 84px;
-      line-height: .85;
-      font-weight: 950;
-      letter-spacing: -.06em;
-      font-family: "DIN Condensed", "Avenir Next Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
-    }
-
-    .hero-facts {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      gap: 10px;
-    }
-
-    .hero-fact {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(26, 12, 9, .32);
-      font-size: 11px;
-      font-weight: 850;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-    }
-
-    .session-hero.is-compact {
       min-height: 76px;
-      display: block;
-      border: 1px solid var(--line);
-      box-shadow: none;
-    }
-
-    .session-hero.is-compact .hero-copy {
-      min-height: 74px;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       grid-template-areas:
@@ -415,27 +268,27 @@
       align-content: center;
       align-items: center;
       gap: 3px 16px;
-      padding: 11px 12px 11px 16px;
+      padding: 11px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-raised);
     }
 
-    .session-hero.is-compact .hero-program,
-    .session-hero.is-compact .hero-copy > p,
-    .session-hero.is-compact .hero-slate { display: none; }
-
-    .session-hero.is-compact h1 {
+    .session-hero h1 {
       grid-area: title;
       margin: 0;
       overflow: hidden;
-      color: var(--text);
+      font-family: "DIN Condensed", "Avenir Next Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
       font-size: clamp(25px, 3vw, 32px);
       line-height: 1;
+      letter-spacing: -.035em;
       text-overflow: ellipsis;
+      text-transform: uppercase;
       white-space: nowrap;
     }
 
-    .session-hero.is-compact .hero-compact-meta {
+    .hero-meta {
       grid-area: meta;
-      display: block;
       overflow: hidden;
       color: var(--muted);
       font-size: 11px;
@@ -446,11 +299,27 @@
       white-space: nowrap;
     }
 
-    .session-hero.is-compact .hero-toggle {
-      position: static;
+    .hero-toggle {
       grid-area: toggle;
-      align-self: center;
+      display: none;
+      min-width: 44px;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 2px 0 12px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .04em;
+      text-transform: uppercase;
     }
+
+    .hero-toggle svg { width: 16px; height: 16px; transition: transform .24s var(--ease); }
+    .hero-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
 
     .load-preset-panel {
       margin-top: 12px;
@@ -466,26 +335,7 @@
 
     .load-preset-panel[hidden] { display: none; }
 
-    .load-preset-copy { min-width: 0; }
-
-    .load-preset-copy strong,
-    .load-preset-copy span { display: block; }
-
-    .load-preset-copy strong {
-      color: var(--text);
-      font-size: 13px;
-      letter-spacing: -.01em;
-    }
-
-    .load-preset-copy span {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .load-preset-copy .load-note-mobile { display: none; }
-
-    .session-hero.is-compact + .load-preset-panel .load-preset-copy span { display: none; }
+    .load-preset-title { color: var(--text); font-size: 13px; letter-spacing: -.01em; }
 
     .load-preset-controls {
       min-width: 0;
@@ -604,8 +454,7 @@
     .session-next.is-done { color: var(--mint); }
 
     .session-progress-track,
-    .exercise-progress-track,
-    .weekly-track {
+    .exercise-progress-track{
       overflow: hidden;
       height: 5px;
       border-radius: 999px;
@@ -613,8 +462,7 @@
     }
 
     .session-progress-fill,
-    .exercise-progress-fill,
-    .weekly-fill {
+    .exercise-progress-fill{
       width: 0;
       height: 100%;
       border-radius: inherit;
@@ -662,7 +510,7 @@
     .exercise-card.is-next .next-badge { display: inline-flex; }
 
     .collapse-toggle {
-      display: none;
+      display: grid;
       width: 44px;
       height: 44px;
       border: 0;
@@ -675,13 +523,11 @@
 
     .collapse-toggle:hover { background: var(--line); color: var(--text); }
     .collapse-toggle svg { width: 18px; height: 18px; transition: transform .24s var(--ease); }
-    .exercise-card.is-complete .collapse-toggle { display: grid; }
-    .exercise-card.is-complete .exercise-head { cursor: pointer; }
     .exercise-card.is-collapsed .collapse-toggle svg { transform: rotate(180deg); }
 
     .exercise-collapsed-summary {
       display: none;
-      margin: 7px 0 0;
+      margin: 5px 0 0;
       color: var(--muted);
       font-size: 12px;
       font-variant-numeric: tabular-nums;
@@ -690,19 +536,21 @@
     .exercise-collapsed-summary strong { color: var(--mint); }
 
     .exercise-card.is-collapsed .exercise-body,
-    .exercise-card.is-collapsed .exercise-meta,
-    .exercise-card.is-collapsed .exercise-cue,
-    .exercise-card.is-collapsed .exercise-actions { display: none; }
+    .exercise-card.is-collapsed .exercise-last,
+    .exercise-card.is-complete.is-collapsed .exercise-meta { display: none; }
 
-    .exercise-card.is-collapsed .exercise-collapsed-summary { display: block; }
+    .exercise-card.is-complete.is-collapsed .exercise-collapsed-summary { display: block; }
 
     .exercise-head {
       display: grid;
-      grid-template-columns: 48px minmax(0, 1fr) auto;
+      grid-template-columns: auto minmax(0, 1fr) auto;
       gap: 16px;
       align-items: start;
-      padding: 20px 20px 16px;
+      padding: 20px 20px 14px;
+      cursor: pointer;
     }
+
+    .exercise-card.is-collapsed .exercise-head { align-items: center; padding-block: 12px; }
 
     .exercise-order {
       width: 48px;
@@ -759,13 +607,19 @@
 
     .exercise-meta strong { color: var(--text); }
 
-    .preset-load-hint { color: var(--amber); }
-    .preset-load-hint strong { color: inherit; }
+    .exercise-last {
+      margin: 7px 0 0;
+      color: var(--amber);
+      font-size: 12px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
 
     .exercise-cue {
-      margin: 9px 0 0;
-      color: var(--faint);
-      font-size: 12px;
+      margin: 0 0 14px;
+      max-width: 64ch;
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .rest-button {
@@ -779,34 +633,89 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .exercise-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
+    .exercise-tools {
+      position: relative;
+      padding: 8px 20px 10px;
     }
 
-    .exercise-demo {
-      margin: 0 20px 18px 84px;
-      display: flex;
+    .exercise-howto > summary {
+      width: max-content;
+      min-height: 44px;
+      display: inline-flex;
       align-items: center;
-      gap: 14px;
+      gap: 7px;
+      color: var(--mint);
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .exercise-howto > summary::-webkit-details-marker { display: none; }
+    .exercise-howto > summary svg { width: 15px; height: 15px; transition: transform .24s var(--ease); }
+    .exercise-howto[open] > summary svg { transform: rotate(180deg); }
+    .exercise-howto-body { padding: 6px 0 8px; }
+    .exercise-video-link { margin-bottom: 14px; }
+
+    .exercise-actions {
+      position: absolute;
+      top: 8px;
+      right: 20px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .focus-exercise { display: none; }
+    .exercise-card:not(.is-next):not(.is-complete) .focus-exercise { display: inline-flex; }
+
+    .exercise-demo {
+      position: relative;
+      min-width: 0;
     }
 
     .demo-frame {
       position: relative;
-      flex: 0 0 112px;
-      width: 112px;
-      height: 112px;
+      display: block;
+      width: 148px;
+      height: 148px;
+      padding: 0;
       overflow: hidden;
+      border: 0;
       border-radius: 12px;
       background: var(--surface-soft);
+      cursor: zoom-in;
     }
 
-    .demo-frame { padding: 0; border: 0; cursor: zoom-in; }
+    .exercise-card.is-collapsed .demo-frame { width: 56px; height: 56px; border-radius: 10px; }
+
+    .exercise-demo .exercise-order {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      width: auto;
+      height: auto;
+      padding: 2px 6px;
+      border-radius: 7px;
+      background: rgba(12, 16, 19, .88);
+      font-size: 12px;
+      line-height: 1.2;
+      pointer-events: none;
+    }
+
+    .exercise-card.is-collapsed .exercise-demo .exercise-order {
+      top: 3px;
+      left: 3px;
+      width: auto;
+      height: auto;
+      padding: 1px 4px;
+      border-radius: 5px;
+      font-size: 10px;
+    }
+
+    .exercise-card.is-complete .exercise-demo .exercise-order { background: var(--mint); }
     .gif-viewer { width: min(680px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--text); overflow: auto; }
     .gif-viewer::backdrop { background: rgba(0, 0, 0, .82); }
-    body:has(.gif-viewer[open]) { overflow: hidden; }
+    body:has(dialog[open]) { overflow: hidden; }
     .gif-viewer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
     .gif-viewer h2 { margin: 0; font-size: 18px; }
     .gif-viewer-close { min-width: 72px; min-height: 44px; border: 0; border-radius: 8px; background: var(--surface-soft); color: var(--text); cursor: pointer; }
@@ -828,43 +737,33 @@
       padding: 8px;
       color: var(--muted);
       text-align: center;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .exercise-demo.is-ready .demo-status { display: none; }
     .exercise-demo.is-error .demo-frame img { visibility: hidden; }
 
-    .demo-caption {
-      min-width: 0;
-      display: flex;
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 4px;
-      color: var(--muted);
-      font-size: 11px;
-      overflow-wrap: anywhere;
-    }
-
-    .exercise-demo.is-video-excerpt { display: block; }
     .is-video-excerpt .demo-frame { width: 100%; max-width: 480px; height: auto; aspect-ratio: 16 / 9; }
-    .is-video-excerpt .demo-caption { margin-top: 8px; }
+    .exercise-card.is-collapsed .is-video-excerpt .demo-frame { width: 56px; height: 56px; aspect-ratio: auto; }
+    .exercise-card.is-collapsed .is-video-excerpt img { object-fit: cover; }
+    .exercise-card.has-video:not(.is-collapsed) .exercise-demo { grid-column: 1 / -1; grid-row: 2; }
+    .exercise-card.has-video:not(.is-collapsed) .exercise-title-wrap { grid-column: 1 / 3; grid-row: 1; }
+    .exercise-card.has-video:not(.is-collapsed) .collapse-toggle { grid-column: 3; grid-row: 1; }
 
-    .demo-caption strong { color: var(--text); }
-
-    .demo-caption button {
-      padding: 0; border: 0; background: transparent; font: inherit; cursor: pointer; min-height: 44px;
+    .demo-toggle {
       min-height: 44px;
-      display: inline-flex;
-      align-items: center;
+      padding: 0;
+      border: 0;
+      background: transparent;
       color: var(--mint);
+      font-size: 12px;
       font-weight: 800;
-      text-decoration: none;
     }
 
-    .demo-caption button:hover { text-decoration: underline; }
+    .exercise-card.is-collapsed .demo-toggle { display: none; }
 
     .sets-wrap {
-      padding: 0 20px 16px 84px;
+      padding: 0 20px 16px;
     }
 
     .set-grid-head,
@@ -977,13 +876,12 @@
     .times { color: var(--faint); text-align: center; }
 
     .exercise-foot {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(190px, .55fr);
-      gap: 20px;
-      align-items: end;
-      padding: 14px 20px 18px 84px;
-      border-top: 1px solid var(--line);
+      display: none;
+      padding: 2px 20px 10px;
     }
+
+    .exercise-card.has-readout .exercise-foot { display: block; }
+    .exercise-card:not(.has-reference) .exercise-progress-track { display: none; }
 
     .volume-readout { min-width: 0; }
 
@@ -992,14 +890,17 @@
       align-items: baseline;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 8px;
       font-size: 11px;
       color: var(--muted);
     }
 
-    .volume-value { color: var(--text); font-size: 15px; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .exercise-card.has-reference .volume-topline { margin-bottom: 8px; }
+
+    .volume-value { color: var(--text); font-size: 13px; font-weight: 850; font-variant-numeric: tabular-nums; }
 
     .exercise-progress-fill { background: var(--mint); }
+
+    .reference-field { max-width: 320px; }
 
     .reference-field label {
       display: block;
@@ -1047,40 +948,21 @@
     .reference-auto-button:hover { border-color: var(--mint); }
     .reference-auto-button[hidden] { display: none; }
 
-    .session-finish {
-      margin-top: 14px;
-      padding: 16px 18px;
+    .session-stale {
+      margin-bottom: 12px;
+      padding: 6px 6px 6px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 12px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--surface-raised);
+      color: var(--muted);
+      font-size: 12px;
     }
 
-    .session-finish[hidden] { display: none; }
-    .session-finish strong { display: block; font-size: 15px; letter-spacing: -.01em; }
-    .session-finish span { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; }
-    .session-finish.is-complete { border-color: rgba(142, 215, 202, .45); background: #13201f; }
-
-    .finish-button {
-      min-height: 48px;
-      padding: 0 18px;
-      flex: 0 0 auto;
-      border: 0;
-      border-radius: 12px;
-      background: var(--accent);
-      color: #1a0c09;
-      font-size: 13px;
-      font-weight: 900;
-      white-space: nowrap;
-      transition: filter .2s var(--ease), transform .2s var(--ease);
-    }
-
-    .finish-button:hover { filter: brightness(1.06); }
-    .finish-button:active { transform: scale(.98); }
-    .session-finish.is-complete .finish-button { background: var(--mint); color: #0d1b19; }
+    .session-stale .quiet-button { border-radius: 10px; background: var(--surface-soft); color: var(--text); }
 
     .sheet {
       border: 0;
@@ -1095,7 +977,6 @@
     .sheet::backdrop { background: rgba(6, 9, 11, .66); backdrop-filter: blur(4px); }
     .sheet-body { margin: 0; padding: 22px 20px 18px; display: grid; gap: 8px; }
     .sheet-body h2 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
-    .sheet-body p { margin: 0; color: var(--muted); font-size: 14px; }
     .sheet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
 
     .sheet-cancel,
@@ -1110,6 +991,29 @@
     .sheet-cancel { background: var(--surface-soft); color: var(--text); }
     .sheet-confirm { background: var(--accent); color: #1a0c09; }
 
+    .session-sheet {
+      max-height: calc(100dvh - 24px);
+      padding: 14px 12px 12px;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+
+    .session-sheet[open] { animation: sheet-rise .24s var(--ease); }
+    .session-sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-left: 8px; }
+    .session-sheet-head h2 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
+    .session-sheet-head h2:focus { outline: 0; }
+    .session-sheet-close { min-width: 72px; min-height: 44px; border: 0; border-radius: 10px; background: var(--surface-soft); color: var(--text); font-size: 13px; font-weight: 800; }
+    .session-sheet .nav-label { margin: 18px 8px 8px; }
+    .session-sheet .program-button:hover,
+    .session-sheet .day-button:hover { background: var(--surface-soft); }
+    .session-sheet .program-button[aria-pressed="true"] { background: var(--surface-soft); }
+    .session-sheet .day-button[aria-pressed="true"] { background: var(--accent); }
+
+    @keyframes sheet-rise {
+      from { transform: translateY(18px); opacity: .6; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
     .empty-state {
       padding: 34px 24px;
       border-radius: var(--radius);
@@ -1121,198 +1025,254 @@
     .empty-state strong { display: block; margin-bottom: 6px; color: var(--text); }
 
     .summary-column {
-      position: sticky;
-      top: 22px;
+      align-self: stretch;
       display: grid;
+      align-content: start;
       gap: 14px;
     }
 
-    .summary-panel {
-      background: var(--surface);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, .16);
+    .timer-dock {
+      position: sticky;
+      z-index: 5;
+      top: 22px;
+      overflow: hidden;
+      padding: 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 16px;
+      background: var(--surface-raised);
+      color: var(--text);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .42);
+      transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
     }
 
-    .summary-panel h2 {
-      margin: 0 0 5px;
-      font-size: 17px;
-      letter-spacing: -.015em;
-    }
+    .timer-dock[data-mode="rest"] { border-color: transparent; background: #edf0e9; color: #11181a; }
+    .timer-dock.is-running { background: var(--mint); }
+    .timer-dock[data-mode="done"] { border-color: rgba(142, 215, 202, .45); background: #13201f; }
+    .timer-dock.is-finished { border-color: transparent; background: var(--accent); color: #1a0c09; }
 
-    .summary-panel > p {
-      margin: 0 0 20px;
-      color: var(--muted);
-      font-size: 12px;
-    }
+    .console-panel { display: none; gap: 8px; }
 
-    .weekly-list { display: grid; gap: 14px; }
+    .timer-dock[data-mode="work"] .console-work,
+    .timer-dock[data-mode="rest"] .console-rest,
+    .timer-dock[data-mode="done"] .console-complete { display: grid; }
 
-    .weekly-item { display: grid; gap: 7px; }
-
-    .weekly-label {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .weekly-label strong { color: var(--text); font-size: 13px; }
-
-    .weekly-fill { background: var(--amber); }
-
-    .optional-toggle {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      min-height: 48px;
-      margin: 18px -4px -4px;
-      padding: 8px 4px 0;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .optional-toggle[hidden] { display: none; }
-
-    .switch {
-      position: relative;
-      width: 44px;
-      height: 44px;
-      flex: 0 0 auto;
-    }
-
-    .switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-
-    .switch-track {
-      position: absolute;
-      inset: 9px 0;
-      border-radius: 999px;
-      background: var(--line-strong);
-      transition: background .2s var(--ease);
-    }
-
-    .switch-track::after {
-      content: "";
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      top: 3px;
-      left: 3px;
-      border-radius: 50%;
-      background: var(--text);
-      transition: transform .25s var(--ease);
-    }
-
-    .switch input:checked + .switch-track { background: var(--accent); }
-
-    .switch input:checked + .switch-track::after { transform: translateX(18px); }
-
-    .switch input:focus-visible + .switch-track { outline: 3px solid rgba(142, 215, 202, .55); outline-offset: 2px; }
-
-    .guidance-list {
-      list-style: none;
+    .console-heading {
+      min-width: 0;
+      min-height: 44px;
+      display: grid;
+      align-content: center;
+      gap: 2px;
       padding: 0;
-      margin: 0;
-      display: grid;
-      gap: 13px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      text-align: left;
     }
 
-    .guidance-list li {
-      display: grid;
-      grid-template-columns: 28px 1fr;
+    .console-title {
+      min-width: 0;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
       gap: 10px;
+    }
+
+    .console-title strong {
+      min-width: 0;
+      overflow: hidden;
+      font-size: 14px;
+      letter-spacing: -.012em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .console-set {
+      flex: 0 0 auto;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .console-hint {
       color: var(--muted);
       font-size: 12px;
+      font-variant-numeric: tabular-nums;
     }
 
-    .guidance-list b {
-      width: 28px;
-      height: 28px;
+    @media (min-width: 881px) {
+      .console-title { flex-direction: column-reverse; gap: 1px; }
+      .console-title strong { white-space: normal; }
+    }
+
+    @media (max-width: 880px) {
+      .console-hint {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .timer-dock.is-finished .console-set,
+    .timer-dock.is-finished .console-hint { color: inherit; }
+
+    .stepper {
+      min-width: 0;
+      height: 56px;
       display: grid;
-      place-items: center;
-      border-radius: 8px;
-      background: var(--surface-soft);
-      color: var(--mint);
-      font-size: 11px;
+      grid-template-columns: 44px minmax(0, 1fr) 44px;
+      border-radius: 12px;
+      background: var(--surface);
     }
 
-    .footer-note {
-      margin: 30px 0 0;
-      color: var(--faint);
-      font-size: 11px;
+    .stepper:has(.stepper-input:focus) { box-shadow: inset 0 0 0 2px var(--mint); }
+
+    .stepper-button {
+      padding: 0;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: inherit;
+      font-size: 22px;
+      font-weight: 650;
+      line-height: 1;
+      transition: background .15s var(--ease), transform .15s var(--ease);
+    }
+
+    .stepper-button:hover,
+    .stepper-button:active { background: var(--surface-soft); }
+    .stepper-button:active { transform: scale(.93); }
+
+    .stepper-field {
+      min-width: 0;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      cursor: text;
+    }
+
+    .stepper-input {
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-size: 20px;
+      font-weight: 850;
+      line-height: 1.15;
+      letter-spacing: -.025em;
+      font-variant-numeric: tabular-nums;
       text-align: center;
     }
 
-    .footer-note a { color: var(--mint); text-decoration: none; }
-    .footer-note a:hover { text-decoration: underline; }
+    .stepper-input:focus-visible { outline: 0; }
+    .stepper-input::placeholder { color: var(--faint); }
 
-    .timer-dock {
-      position: fixed;
-      z-index: 40;
-      overflow: hidden;
-      right: calc(var(--summary) + 60px);
-      bottom: max(18px, env(safe-area-inset-bottom));
-      width: min(372px, calc(100vw - 36px));
-      min-height: 70px;
-      display: grid;
-      grid-template-columns: 1fr auto;
+    .stepper-unit {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .timer-dock.is-finished .stepper { background: rgba(26, 12, 9, .14); }
+    .timer-dock.is-finished .stepper-unit { color: inherit; }
+    .timer-dock.is-finished .stepper-button:hover,
+    .timer-dock.is-finished .stepper-button:active { background: rgba(26, 12, 9, .14); }
+
+    .console-done {
+      min-height: 56px;
+      display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 11px 12px 11px 18px;
-      border-radius: 16px;
-      background: #edf0e9;
-      color: #11181a;
-      box-shadow: 0 18px 50px rgba(0, 0, 0, .42);
-      transform: translateY(0);
-      transition: transform .35s var(--ease), background .2s var(--ease);
+      justify-content: center;
+      gap: 8px;
+      padding: 0 6px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #1a0c09;
+      font-size: 14px;
+      font-weight: 900;
+      transition: filter .2s var(--ease), transform .15s var(--ease), background .2s var(--ease), color .2s var(--ease);
     }
 
-    .timer-dock.is-running { background: var(--mint); }
-    .timer-dock.is-finished { background: var(--accent); }
-    .timer-dock.is-finished .timer-label { color: #4a1a12; }
+    .console-done svg { width: 22px; height: 22px; flex: 0 0 auto; }
+    .console-done:hover { filter: brightness(1.06); }
+    .console-done:active { transform: scale(.96); }
+    .timer-dock.is-finished .console-done { background: #1a0c09; color: var(--accent); }
 
-    .timer-progress {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 3px;
-      background: rgba(17, 24, 26, .12);
+    .console-rest-top {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
     }
-
-    .timer-progress-fill { width: 0; height: 100%; background: #11181a; transition: width .25s linear; }
-    .timer-dock:not(.is-running):not(.has-time):not(.is-finished) .timer-progress { display: none; }
-
-    .timer-copy { min-width: 0; }
 
     .timer-label {
-      display: block;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: #536064;
-      font-size: 10px;
+      min-width: 0;
+      color: #33403f;
+      font-size: 11px;
       font-weight: 850;
-      letter-spacing: .07em;
+      letter-spacing: .05em;
       text-transform: uppercase;
+    }
+
+    @media (max-width: 880px) {
+      .timer-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .console-undo {
+      flex: 0 0 auto;
+      min-height: 44px;
+      margin-block: -13px;
+      padding: 0 2px 0 8px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-size: 12px;
+      font-weight: 850;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .console-rest-main {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px 10px;
+      padding-bottom: 2px;
     }
 
     .timer-time {
       display: block;
-      margin-top: 1px;
-      font-size: 28px;
+      font-size: 34px;
       line-height: 1;
       font-weight: 950;
       letter-spacing: -.035em;
       font-variant-numeric: tabular-nums;
     }
 
-    .timer-actions { display: flex; gap: 6px; }
+    .timer-progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: rgba(17, 24, 26, .12);
+    }
+
+    .timer-progress-fill { width: 0; height: 100%; background: #11181a; transition: width .25s linear; }
+
+    .timer-actions { display: flex; gap: 5px; }
 
     .timer-control {
       width: 46px;
@@ -1327,13 +1287,45 @@
 
     .timer-control:hover { background: rgba(17, 24, 26, .17); color: #11181a; }
 
-    .timer-control.wide { width: auto; padding: 0 12px; font-size: 11px; font-weight: 900; }
+    .timer-control.wide { width: auto; padding: 0 11px; font-size: 12px; font-weight: 900; }
+
+    .console-complete-copy strong { display: block; color: var(--mint); font-size: 15px; letter-spacing: -.01em; }
+    .console-complete-copy span { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+    .console-complete-actions { display: flex; gap: 6px; }
+
+    .console-next-day,
+    .console-reset {
+      min-height: 48px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 850;
+      transition: filter .2s var(--ease), transform .15s var(--ease), background .2s var(--ease);
+    }
+
+    .console-next-day {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      background: var(--accent);
+      color: #1a0c09;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .console-next-day:hover { filter: brightness(1.06); }
+    .console-next-day:active,
+    .console-reset:active { transform: scale(.97); }
+    .console-reset { flex: 0 0 auto; background: var(--surface-soft); color: var(--text); }
+    .console-reset:hover { background: var(--line); }
+    .console-complete-actions:has(.console-next-day[hidden]) .console-reset { flex: 1 1 auto; }
 
     .toast {
       position: fixed;
       z-index: 60;
       left: 50%;
-      bottom: 110px;
+      bottom: 24px;
       transform: translate(-50%, 16px);
       padding: 10px 14px;
       border-radius: 10px;
@@ -1352,7 +1344,7 @@
       position: fixed;
       z-index: 70;
       left: 50%;
-      bottom: 106px;
+      bottom: 24px;
       width: min(520px, calc(100vw - 32px));
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto auto;
@@ -1374,6 +1366,7 @@
     .pwa-banner-copy { min-width: 0; }
     .pwa-banner-copy strong { display: block; font-size: 13px; }
     .pwa-banner-copy span { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .pwa-banner-copy span:empty { display: none; }
     .pwa-banner-action, .pwa-banner-close {
       min-height: 44px;
       border: 0;
@@ -1385,17 +1378,13 @@
     .pwa-banner-action { padding: 0 14px; background: var(--mint); color: #0f2520; }
     .pwa-banner-close { width: 44px; padding: 0; background: var(--surface-soft); color: var(--text); font-size: 20px; }
 
-    @keyframes slate-reveal {
-      from { clip-path: inset(0 0 28% 0); opacity: .72; }
-      to { clip-path: inset(0 0 0 0); opacity: 1; }
-    }
-
     @media (max-width: 1100px) {
       :root { --sidebar: 228px; --summary: 252px; }
       .page { padding-inline: 22px; }
       .session-layout { gap: 18px; }
-      .session-hero { grid-template-columns: minmax(0, 1fr) 155px; }
-      .sets-wrap, .exercise-foot { padding-left: 20px; }
+      .sidebar .day-button { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 0 12px; }
+      .sidebar .day-code { grid-row: 1 / span 2; }
+      .sidebar .day-button small { grid-column: 2; margin-left: 0; }
     }
 
     @media (max-width: 880px) {
@@ -1403,71 +1392,104 @@
         --mobile-safe-left: max(16px, env(safe-area-inset-left));
         --mobile-safe-right: max(16px, env(safe-area-inset-right));
       }
+      html {
+        scroll-padding-top: calc(var(--topbar-height, 60px) + 10px);
+        scroll-padding-bottom: calc(var(--dock-height, 128px) + 18px);
+      }
+      body { padding-bottom: calc(var(--dock-height, 128px) + max(8px, env(safe-area-inset-bottom)) + 16px); }
+      body:has(.exercise-list input:focus) .timer-dock { visibility: hidden; }
       .app-shell { display: block; }
       .sidebar { display: none; }
-      .page { padding: 0 var(--mobile-safe-right) 44px var(--mobile-safe-left); }
+      .page { padding: 0 var(--mobile-safe-right) 8px var(--mobile-safe-left); }
       .mobile-topbar {
         position: sticky;
         z-index: 30;
         top: 0;
-        display: grid;
-        gap: 8px;
-        margin: 0 calc(0px - var(--mobile-safe-right)) 16px calc(0px - var(--mobile-safe-left));
-        padding: calc(10px + env(safe-area-inset-top)) var(--mobile-safe-right) 11px var(--mobile-safe-left);
-        border-bottom: 1px solid var(--line);
-        background: rgba(12, 16, 19, .96);
-        backdrop-filter: blur(14px);
+        display: block;
+        margin: 0 calc(0px - var(--mobile-safe-right)) 8px calc(0px - var(--mobile-safe-left));
+        padding-top: env(safe-area-inset-top);
+        background: var(--bg);
       }
-      .mobile-command-row {
-        min-width: 0;
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
-        gap: 8px;
-        align-items: center;
-      }
-      .mobile-brand-lockup {
-        min-height: 48px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--text);
-      }
-      .mobile-brand-lockup .brand-mark { width: 30px; height: 30px; }
-      .mobile-brand-lockup .brand-name { font-size: 15px; }
-      .mobile-programs {
-        min-width: 0;
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 4px;
-        padding: 4px;
-        overflow: hidden;
-        border-radius: 12px;
-        background: var(--surface);
-      }
-      .mobile-programs .program-button:last-child:nth-child(odd) { grid-column: 1 / -1; }
-      .mobile-days { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; }
-      .mobile-days::-webkit-scrollbar { display: none; }
-      .mobile-programs .program-button {
+      .session-switch {
         width: 100%;
-        min-width: 0;
-        min-height: 40px;
-        justify-content: center;
-        padding: 0 8px;
-        border-radius: 8px;
-        text-align: center;
+        min-height: 56px;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: 10px;
+        padding: 6px var(--mobile-safe-right) 6px var(--mobile-safe-left);
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        text-align: left;
+        transition: background .2s var(--ease);
       }
-      .mobile-programs .program-button[aria-pressed="true"] { background: var(--accent); color: #1a0c09; box-shadow: none; }
-      .mobile-programs .program-symbol,
-      .mobile-programs .program-copy { display: none; }
-      .mobile-programs .program-mobile-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 850; }
-      .mobile-days .day-button { width: auto; min-width: max-content; min-height: 44px; padding: 5px 10px; }
-      .mobile-days .day-button small { display: none; }
+      .session-switch:active { background: var(--surface); }
+      .session-switch:focus-visible { outline-offset: -3px; }
+      .session-switch .brand-mark { width: 30px; height: 30px; }
+      .session-switch-copy { min-width: 0; }
+      .session-switch-copy strong,
+      .session-switch-copy span {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .session-switch-copy strong {
+        font-family: "DIN Condensed", "Avenir Next Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+        font-size: 23px;
+        font-weight: 900;
+        line-height: 1.05;
+        letter-spacing: -.01em;
+        text-transform: uppercase;
+      }
+      .session-switch-copy span { margin-top: 1px; color: var(--muted); font-size: 12px; line-height: 1.2; }
+      .session-switch-count { color: var(--text); font-size: 14px; font-weight: 850; font-variant-numeric: tabular-nums; }
+      .session-switch-chevron { width: 18px; height: 18px; color: var(--muted); }
+      .topbar-progress { height: 3px; background: var(--line); }
+      .topbar-progress-fill { width: 0; height: 100%; background: var(--accent); transition: width .3s var(--ease); }
       .session-layout { display: block; }
-      .summary-column { position: static; margin-top: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .session-hero { min-height: 218px; }
-      .hero-copy { padding: 28px; }
-      .session-hero h1 { font-size: clamp(32px, 8vw, 48px); }
-      .timer-dock { right: var(--mobile-safe-right); }
+      .session-hero {
+        min-height: 44px;
+        grid-template-areas: "meta toggle";
+        gap: 8px;
+        padding: 0 0 0 2px;
+        border: 0;
+        background: transparent;
+      }
+      .session-hero h1 {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+      }
+      .hero-toggle { display: inline-flex; }
+      .session-hero:not(.is-open) + .load-preset-panel,
+      .session-hero:not(.is-open) ~ .session-tools:not(.has-active-filter) { display: none; }
+      .summary-column { margin-top: 12px; }
+      .session-progress { display: none; }
+      .exercise-list { gap: 8px; }
+      .exercise-card.is-next .next-badge { display: none; }
+      .timer-dock {
+        position: fixed;
+        z-index: 40;
+        top: auto;
+        left: var(--mobile-safe-left);
+        right: var(--mobile-safe-right);
+        bottom: calc(max(8px, env(safe-area-inset-bottom)) + var(--keyboard-inset, 0px));
+        max-width: 560px;
+        margin-inline: auto;
+        padding: 8px 10px 10px;
+      }
+      .console-panel { gap: 6px; }
+      .console-work { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 62px; }
+      .console-heading { grid-column: 1 / -1; }
+      .timer-dock.is-reps-only .stepper-reps { grid-column: 1 / 3; }
+      .console-done { flex-direction: column; gap: 0; padding: 0; font-size: 11px; }
+      .console-rest-main { flex-wrap: nowrap; }
+      .toast { bottom: calc(var(--dock-height, 128px) + max(8px, env(safe-area-inset-bottom)) + 12px); }
+      .pwa-banner { bottom: calc(var(--dock-height, 128px) + max(8px, env(safe-area-inset-bottom)) + 10px); }
     }
 
     @media (max-width: 620px) {
@@ -1475,85 +1497,36 @@
         --mobile-safe-left: max(12px, env(safe-area-inset-left));
         --mobile-safe-right: max(12px, env(safe-area-inset-right));
       }
-      body { font-size: 16px; padding-bottom: 96px; }
+      body { font-size: 16px; }
       .page { padding-left: var(--mobile-safe-left); padding-right: var(--mobile-safe-right); }
       .mobile-topbar {
-        gap: 6px;
         margin-left: calc(0px - var(--mobile-safe-left));
         margin-right: calc(0px - var(--mobile-safe-right));
-        padding: max(7px, env(safe-area-inset-top)) var(--mobile-safe-right) 8px var(--mobile-safe-left);
       }
-      .mobile-brand-lockup .brand-name { display: none; }
-      .mobile-brand-lockup .brand-mark { width: 32px; height: 32px; }
-      .mobile-programs { gap: 3px; padding: 3px; }
-      .mobile-programs .program-button { min-height: 44px; padding-inline: 6px; }
-      .mobile-programs .program-mobile-name { font-size: 11px; }
-      .mobile-days { scroll-snap-type: x proximity; overscroll-behavior-inline: contain; }
-      .mobile-days .day-button { scroll-snap-align: center; }
-      .session-hero { display: block; min-height: 0; }
-      .hero-copy { padding: 18px 18px 16px; }
-      .hero-program { display: none; }
-      .session-hero h1 { margin: 0 0 7px; font-size: clamp(30px, 9vw, 36px); line-height: 1; }
-      .session-hero p {
-        display: -webkit-box;
-        overflow: hidden;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        font-size: 13px;
-        line-height: 1.45;
-      }
-      .session-hero:not(.is-compact) .hero-copy { padding-right: 82px; }
-      .hero-toggle { top: 12px; right: 12px; }
-      .session-hero.is-compact { min-height: 64px; }
-      .session-hero.is-compact .hero-copy { min-height: 62px; gap: 2px 10px; padding: 9px 9px 9px 13px; }
-      .session-hero.is-compact h1 { font-size: 24px; }
-      .session-hero.is-compact .hero-compact-meta { font-size: 10px; }
-      .hero-slate { min-height: 68px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 18px; padding: 13px 18px; }
-      .hero-slate::after { inset: 8px; }
-      .hero-day-code { font-size: 44px; }
-      .hero-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-      .hero-fact { display: grid; gap: 1px; padding-top: 4px; font-size: 11px; line-height: 1.15; }
       .load-preset-panel { margin-top: 10px; gap: 8px; padding: 6px 6px 6px 12px; }
-      .load-preset-panel:not(.is-noted) { grid-template-columns: minmax(0, 1fr) auto; }
-      .load-preset-panel.is-noted { grid-template-columns: 1fr; padding: 11px 10px; }
-      .load-preset-copy { padding-inline: 2px; }
-      .load-preset-copy strong { font-size: 13px; }
-      .load-preset-copy #load-preset-note {
-        display: block;
-        font-size: 11px;
-        line-height: 1.35;
-      }
-      .load-preset-copy .load-note-long { display: none; }
-      .load-preset-copy .load-note-mobile {
-        display: -webkit-box;
-        overflow: hidden;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-      }
       .load-preset-controls { min-width: 0; }
       .load-preset-button { min-height: 44px; padding-inline: 10px; font-size: 11px; }
-      .session-tools { margin: 16px 0 12px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+      .session-tools { margin: 12px 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
       .filter-row { min-width: 0; margin: 0; padding: 0; }
       .filter-button { min-height: 48px; padding-inline: 14px; }
       .quiet-button { width: auto; padding: 0 12px; border-radius: 12px; }
       .quiet-button span { display: inline; }
-      .session-progress { margin-bottom: 12px; gap: 9px; }
-      .session-progress-output { font-size: 11px; }
-      .exercise-head { gap: 12px; padding: 16px 14px 12px; }
-      .exercise-order { width: 42px; height: 42px; }
-      .exercise-title-line h2 { font-size: 17px; }
-      .exercise-meta { gap: 5px 12px; font-size: 13px; }
-      .exercise-cue { font-size: 13px; line-height: 1.45; }
-      .exercise-head { grid-template-columns: 42px minmax(0, 1fr) auto; }
-      .exercise-actions { margin-top: 10px; flex-wrap: nowrap; }
-      .rest-button { flex: 1 1 0; min-width: 0; padding-inline: 8px; font-size: 12px; white-space: nowrap; }
+      .session-stale { margin-block: 4px 8px; }
+      .exercise-head { gap: 10px; padding: 12px 10px 10px 12px; }
+      .exercise-order { width: 42px; height: 42px; font-size: 16px; }
+      .exercise-card.is-collapsed .exercise-order { width: 36px; height: 36px; border-radius: 10px; font-size: 14px; }
+      .exercise-title-line { gap: 7px; }
+      .exercise-title-line h2 { font-size: 16px; }
+      .exercise-meta { gap: 3px 10px; margin-top: 5px; font-size: 13px; }
+      .exercise-card.is-collapsed .exercise-head { padding-block: 9px; }
+      .exercise-tools { padding: 6px 10px 8px 12px; }
+      .exercise-actions { top: 6px; right: 10px; }
+      .rest-button { padding-inline: 10px; font-size: 12px; white-space: nowrap; }
       .rest-button svg { flex: 0 0 auto; }
-      .exercise-card.is-collapsed .exercise-head { padding-bottom: 14px; }
-      .exercise-demo { margin: 0 10px 14px; }
-      .demo-frame { flex-basis: 96px; width: 96px; height: 96px; }
-      .demo-caption { align-items: flex-start; flex-direction: column; gap: 4px; font-size: 12px; }
-      .demo-caption button {
-      padding: 0; border: 0; background: transparent; font: inherit; cursor: pointer; min-height: 44px; min-height: 44px; }
+      .rest-word { display: none; }
+      .demo-frame { width: 112px; height: 112px; }
+      .exercise-card.is-collapsed .demo-frame { width: 52px; height: 52px; }
+      .exercise-card.is-collapsed .is-video-excerpt .demo-frame { width: 52px; height: 52px; }
       .sets-wrap { padding: 0 10px 12px; }
       .set-grid-head, .set-row { grid-template-columns: 24px minmax(56px, 1fr) 12px minmax(56px, 1fr) 48px; gap: 6px; }
       .set-check { width: 48px; height: 48px; }
@@ -1561,45 +1534,20 @@
       .set-row { padding-inline: 6px; }
       .set-input, .reference-input, .bodyweight-load { height: 46px; font-size: 16px; }
       .bodyweight-load { font-size: 10px; }
-      .exercise-foot { grid-template-columns: 1fr; gap: 13px; padding: 13px 14px 16px; }
-      .summary-column { grid-template-columns: 1fr; }
-      .summary-panel { padding: 18px; }
-      .timer-dock {
-        left: var(--mobile-safe-left);
-        right: var(--mobile-safe-right);
-        bottom: max(8px, env(safe-area-inset-bottom));
-        width: auto;
-        min-height: 60px;
-        gap: 8px;
-        padding: 7px 8px 7px 12px;
-        border-radius: 14px;
-      }
-      .timer-label { font-size: 11px; }
-      .session-finish { flex-direction: column; align-items: stretch; padding: 14px; }
-      .finish-button { width: 100%; }
+      .exercise-foot { padding: 2px 12px 8px; }
       .sheet { margin: auto 12px max(12px, env(safe-area-inset-bottom)); width: calc(100vw - 24px); }
-      .timer-time { font-size: 23px; }
+      /* The harmless answer sits where the thumb already is. */
+      .sheet-actions { grid-template-columns: 1fr; }
+      .sheet-confirm { order: -1; }
+      .timer-time { font-size: 32px; }
       .timer-actions { gap: 4px; }
       .timer-control { width: 44px; min-width: 44px; min-height: 44px; }
-      .timer-control.wide { min-width: 44px; padding-inline: 8px; font-size: 10px; }
-      .timer-dock:not(.is-running):not(.has-time):not(.is-finished) {
-        left: auto;
-        width: auto;
-        grid-template-columns: auto auto;
-      }
-      .timer-dock:not(.is-running):not(.has-time):not(.is-finished) .timer-label,
-      .timer-dock:not(.is-running):not(.has-time):not(.is-finished) #timer-minus,
-      .timer-dock:not(.is-running):not(.has-time):not(.is-finished) #timer-plus { display: none; }
-      .timer-dock:not(.is-running):not(.has-time):not(.is-finished) .timer-time { margin: 0; font-size: 20px; }
+      .timer-control.wide { min-width: 44px; padding-inline: 9px; }
       .pwa-banner {
-        bottom: calc(82px + env(safe-area-inset-bottom));
         width: calc(100vw - var(--mobile-safe-left) - var(--mobile-safe-right));
-        grid-template-columns: minmax(0, 1fr) auto;
         gap: 8px;
-        padding: 13px;
+        padding: 10px 10px 10px 14px;
       }
-      .pwa-banner-action { grid-column: 1 / -1; width: 100%; }
-      .pwa-banner-close { grid-column: 2; grid-row: 1; }
     }
 
     @media (pointer: coarse) {
@@ -1609,16 +1557,20 @@
     }
 
     @media (max-width: 350px) {
-      .mobile-command-row { gap: 6px; }
-      .mobile-programs .program-mobile-name { font-size: 10px; }
-      .session-hero.is-compact .hero-toggle { width: 44px; min-width: 44px; padding: 0; }
-      .session-hero.is-compact .hero-toggle span { display: none; }
+      .demo-frame { width: 84px; height: 84px; }
+      .console-work { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+      .timer-dock.is-reps-only .stepper-reps { grid-column: 1 / -1; }
+      .console-done { grid-column: 1 / -1; flex-direction: row; gap: 8px; min-height: 48px; font-size: 14px; }
+      .timer-time { font-size: 28px; }
+      #timer-toggle { display: none; }
     }
 
     @media (max-height: 520px) and (orientation: landscape) and (max-width: 880px) {
       .mobile-topbar { position: relative; }
-      .hero-copy { padding-block: 20px; }
-      .session-hero h1 { font-size: 34px; }
+      .timer-dock { max-width: none; }
+      .console-work { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) 62px; align-items: center; }
+      .console-heading { grid-column: auto; }
+      .timer-dock.is-reps-only .stepper-reps { grid-column: 2 / 4; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1630,8 +1582,8 @@
   <!--
   THESIS: Setline turns hypertrophy work into a courtside technical sheet; it refuses the generic neon fitness dashboard.
   OWN-WORLD: Ink-black slate, warm coral signal plates, mint completion marks, ruled rows, and equipment-label controls.
-  STORY: Choose a program and day, execute sets in order, log the work, time rest, and read weekly direct-set volume.
-  FIRST VIEWPORT: Persistent program rail, a large session sheet, coral day plate, exercise sequence, and sticky weekly summary.
+  STORY: Choose a program and day, execute sets in order, log the work and time rest.
+  FIRST VIEWPORT: Persistent program rail, the current set in a work sheet, and the session console.
   FORM: Courtside rotation board / equipment plate, grounded direction 7, seed 1b494f19.
   FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
   -->
@@ -1652,38 +1604,34 @@
       <nav class="program-nav" id="desktop-programs" aria-label="Programas"></nav>
       <p class="nav-label">Sesiones</p>
       <nav class="day-nav" id="desktop-days" aria-label="Días"></nav>
-      <div class="sidebar-note" id="effort-note"><strong>Regla de esfuerzo</strong><br>Termina la mayoría de series con 1–2 repeticiones posibles en reserva. Prioriza técnica limpia.</div>
     </aside>
 
     <main class="page">
       <header class="mobile-topbar">
-        <div class="mobile-command-row">
-          <div class="mobile-brand-lockup" aria-label="Setline">
-            <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-              <rect x="2" y="9" width="6" height="18" rx="2" fill="currentColor"/>
-              <rect x="8" y="12" width="5" height="12" rx="1.5" fill="currentColor"/>
-              <rect x="23" y="12" width="5" height="12" rx="1.5" fill="currentColor"/>
-              <rect x="28" y="9" width="6" height="18" rx="2" fill="currentColor"/>
-              <rect x="12" y="16" width="12" height="4" rx="2" fill="#8ed7ca"/>
-            </svg>
-            <span class="brand-name">Setline</span>
-          </div>
-          <nav class="mobile-programs" id="mobile-programs" aria-label="Programas"></nav>
-        </div>
-        <nav class="mobile-days" id="mobile-days" aria-label="Días"></nav>
+        <button class="session-switch" id="session-switch" type="button" aria-haspopup="dialog">
+          <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect x="2" y="9" width="6" height="18" rx="2" fill="currentColor"/>
+            <rect x="8" y="12" width="5" height="12" rx="1.5" fill="currentColor"/>
+            <rect x="23" y="12" width="5" height="12" rx="1.5" fill="currentColor"/>
+            <rect x="28" y="9" width="6" height="18" rx="2" fill="currentColor"/>
+            <rect x="12" y="16" width="12" height="4" rx="2" fill="#8ed7ca"/>
+          </svg>
+          <span class="sr-only">Cambiar sesión:</span>
+          <span class="session-switch-copy"><strong id="switch-title"></strong><span id="switch-meta"></span></span>
+          <span class="session-switch-count" id="switch-count"></span>
+          <svg class="session-switch-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="topbar-progress" aria-hidden="true"><div class="topbar-progress-fill" id="topbar-progress-fill"></div></div>
       </header>
 
       <div class="session-layout">
         <section class="session-main" aria-labelledby="session-title">
           <div class="session-hero" id="session-hero"></div>
           <section class="load-preset-panel" id="load-preset-panel" aria-labelledby="load-preset-title">
-            <div class="load-preset-copy">
-              <strong id="load-preset-title">Carga inicial</strong>
-              <span id="load-preset-note">Valores orientativos; ajusta siempre para cumplir el RIR indicado.</span>
-            </div>
+            <strong class="load-preset-title" id="load-preset-title">Carga inicial</strong>
             <div class="load-preset-controls" id="load-presets" aria-label="Preset de carga"></div>
           </section>
-          <div class="session-tools">
+          <div class="session-tools" id="session-tools">
             <div class="filter-row" id="filters" aria-label="Filtrar por grupo muscular"></div>
             <button class="quiet-button" id="reset-session" type="button" aria-label="RESET del entrenamiento actual">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
@@ -1700,59 +1648,83 @@
               </button>
             </div>
           </div>
-          <div class="exercise-list" id="exercise-list"></div>
-          <div class="session-finish" id="session-finish" hidden>
-            <div><strong id="session-finish-title">Sesión en curso</strong><span id="session-finish-note"></span></div>
-            <button class="finish-button" type="button" data-reset-session>RESET</button>
+          <div class="session-stale" id="session-stale" hidden>
+            <span id="session-stale-note"></span>
+            <button class="quiet-button" type="button" data-reset-session>RESET</button>
           </div>
-          <p class="footer-note">La sesión actual se conserva automáticamente en este navegador. RESET vacía este día y conserva las referencias previas.<br>Demostraciones servidas por <a href="https://github.com/JahelCuadrado/ExerciseGymGifsDB" target="_blank" rel="noreferrer">ExerciseGymGifsDB</a>.</p>
+          <div class="exercise-list" id="exercise-list"></div>
         </section>
 
-        <aside class="summary-column" aria-label="Resumen del programa">
-          <section class="summary-panel">
-            <h2 id="weekly-title">Volumen semanal</h2>
-            <p id="weekly-caption">Series directas por grupo muscular.</p>
-            <div class="weekly-list" id="weekly-volume"></div>
-            <div class="optional-toggle" id="optional-toggle-wrap" hidden>
-              <span>Incluir día 4 opcional</span>
-              <label class="switch">
-                <input type="checkbox" id="include-optional" aria-label="Incluir día 4 opcional en el volumen semanal">
-                <span class="switch-track"></span>
-              </label>
+        <aside class="summary-column">
+          <section class="timer-dock" id="timer-dock" data-mode="work" aria-label="Serie actual y descanso">
+            <div class="console-panel console-work">
+              <button class="console-heading" type="button" data-scroll-next>
+                <span class="console-title"><strong id="console-name"></strong><span class="console-set" id="console-set"></span></span>
+                <span class="console-hint" id="console-hint"></span>
+              </button>
+              <div class="stepper stepper-weight" id="console-weight-stepper">
+                <button class="stepper-button" type="button" data-stepper="weight" data-direction="-1" aria-label="Bajar peso">−</button>
+                <label class="stepper-field"><input class="stepper-input" id="console-weight" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="—" aria-label="Peso de la serie actual en kilogramos" data-console-field="weight"><span class="stepper-unit" aria-hidden="true">kg</span></label>
+                <button class="stepper-button" type="button" data-stepper="weight" data-direction="1" aria-label="Subir peso">+</button>
+              </div>
+              <div class="stepper stepper-reps" id="console-reps-stepper">
+                <button class="stepper-button" type="button" data-stepper="reps" data-direction="-1" aria-label="Una repetición menos">−</button>
+                <label class="stepper-field"><input class="stepper-input" id="console-reps" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" aria-label="Repeticiones de la serie actual" data-console-field="reps"><span class="stepper-unit" aria-hidden="true">reps</span></label>
+                <button class="stepper-button" type="button" data-stepper="reps" data-direction="1" aria-label="Una repetición más">+</button>
+              </div>
+              <button class="console-done" id="console-done" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4.5 4.5L19 7"/></svg>
+                <span>Hecha</span>
+              </button>
             </div>
-          </section>
-          <section class="summary-panel" id="progress-guidance">
-            <h2>Cómo progresar</h2>
-            <p>Doble progresión, sin perseguir el fallo.</p>
-            <ol class="guidance-list">
-              <li><b>1</b><span>Completa el mínimo del rango con el RIR indicado.</span></li>
-              <li><b>2</b><span>Sube repeticiones manteniendo técnica y control.</span></li>
-              <li><b>3</b><span>Al lograr el máximo en todas las series con el RIR indicado en dos sesiones, sube el menor salto disponible (aprox. 2–5%) y vuelve al mínimo del rango.</span></li>
-            </ol>
+            <div class="console-panel console-rest">
+              <div class="console-rest-top">
+                <span class="timer-label" id="timer-label">Descanso</span>
+                <button class="console-undo" id="console-undo" type="button" hidden>Deshacer</button>
+              </div>
+              <div class="console-rest-main">
+                <output class="timer-time" id="timer-time">00:00</output>
+                <div class="timer-actions">
+                  <button class="timer-control wide" type="button" id="timer-minus" aria-label="Restar 15 segundos">−15</button>
+                  <button class="timer-control" type="button" id="timer-toggle" aria-label="Pausar temporizador">
+                    <svg id="timer-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>
+                  </button>
+                  <button class="timer-control wide" type="button" id="timer-plus" aria-label="Añadir 15 segundos">+15</button>
+                  <button class="timer-control wide" type="button" id="timer-skip" aria-label="Saltar descanso">Saltar</button>
+                </div>
+              </div>
+              <div class="timer-progress" aria-hidden="true"><div class="timer-progress-fill" id="timer-progress-fill"></div></div>
+            </div>
+            <div class="console-panel console-complete">
+              <div class="console-complete-copy"><strong>Sesión completa</strong><span id="console-complete-stats"></span></div>
+              <div class="console-complete-actions">
+                <button class="console-reset" id="console-reset" type="button" data-reset-session>RESET</button>
+                <button class="console-next-day" id="console-next-day" type="button" hidden></button>
+              </div>
+            </div>
           </section>
         </aside>
       </div>
     </main>
   </div>
 
-  <section class="timer-dock" id="timer-dock" aria-label="Temporizador de descanso">
-    <div class="timer-copy">
-      <span class="timer-label" id="timer-label">Descanso</span>
-      <output class="timer-time" id="timer-time">00:00</output>
-    </div>
-    <div class="timer-progress" aria-hidden="true"><div class="timer-progress-fill" id="timer-progress-fill"></div></div>
-    <div class="timer-actions">
-      <button class="timer-control wide" type="button" id="timer-minus" aria-label="Restar 15 segundos">−15</button>
-      <button class="timer-control" type="button" id="timer-toggle" aria-label="Iniciar temporizador">
-        <svg id="timer-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>
-      </button>
-      <button class="timer-control wide" type="button" id="timer-plus" aria-label="Añadir 15 segundos">+15</button>
-      <button class="timer-control" type="button" id="timer-reset" aria-label="Reiniciar temporizador">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-      </button>
-    </div>
-  </section>
   <div class="toast" id="toast" role="status"></div>
+  <div class="sr-only" id="sr-status" role="status"></div>
+  <dialog class="sheet session-sheet" id="session-sheet" aria-labelledby="session-sheet-title">
+    <div class="session-sheet-head">
+      <h2 id="session-sheet-title" tabindex="-1" autofocus>Cambiar sesión</h2>
+      <button class="session-sheet-close" id="session-sheet-close" type="button">Cerrar</button>
+    </div>
+    <p class="nav-label">Sesiones</p>
+    <nav class="day-nav" id="sheet-days" aria-label="Días"></nav>
+    <p class="nav-label">Programa</p>
+    <nav class="program-nav" id="sheet-programs" aria-label="Programas"></nav>
+    <p class="nav-label">Más</p>
+    <div class="program-nav">
+      <button class="program-button" id="sheet-install" type="button" hidden><span class="program-symbol" aria-hidden="true">↓</span><span class="program-copy"><strong>Instalar Setline</strong></span></button>
+      <button class="program-button" type="button" data-reset-session><span class="program-symbol" aria-hidden="true">↺</span><span class="program-copy"><strong>RESET</strong></span></button>
+    </div>
+  </dialog>
   <dialog class="gif-viewer" id="gif-viewer" aria-labelledby="gif-viewer-title">
     <div class="gif-viewer-head">
       <h2 id="gif-viewer-title">Demostración</h2>
@@ -1764,7 +1736,6 @@
   <dialog class="sheet" id="confirm-sheet" aria-labelledby="sheet-title">
     <form method="dialog" class="sheet-body">
       <h2 id="sheet-title"></h2>
-      <p id="sheet-message"></p>
       <div class="sheet-actions">
         <button class="sheet-cancel" type="submit" value="cancel" autofocus>Cancelar</button>
         <button class="sheet-confirm" id="sheet-confirm" type="submit" value="confirm">Confirmar</button>
@@ -1774,7 +1745,7 @@
   <aside class="pwa-banner" id="pwa-banner" aria-live="polite" hidden>
     <div class="pwa-banner-copy">
       <strong id="pwa-banner-title">Instalar Setline</strong>
-      <span id="pwa-banner-message">Añádela a la pantalla de inicio para usarla como una app.</span>
+      <span id="pwa-banner-message"></span>
     </div>
     <button class="pwa-banner-action" id="pwa-banner-action" type="button">Instalar</button>
     <button class="pwa-banner-close" id="pwa-banner-close" type="button" aria-label="Cerrar aviso">×</button>
@@ -1787,14 +1758,10 @@
       {
         id: "volley",
         short: "Vóley + gym",
-        mobileName: "Vóley",
-        title: "Gym compatible con vóley",
-        navNote: "2–3 sesiones compactas",
         symbol: "V+",
-        description: "Solo la parte de gimnasio. Si haces dos días, alterna A y B; añade C cuando recuperes bien.",
         days: [
           {
-            id: "v-a", code: "A", name: "Base de torso", note: "Compuestos estables primero; deltoides y brazos al final.",
+            id: "v-a", code: "A", name: "Base de torso",
             exercises: [
               { id: "va-press", name: "Press inclinado en máquina o mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 120, rir: "2", cue: "Escápulas firmes; evita rebotar en la parte baja. Si no hay inclinado, usa el press de pecho disponible; conserva series, reps, descanso y RIR, y calibra la carga de esa máquina." },
               { id: "va-row-db", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", unilateral: true, cue: "Apoya la mano libre en el banco; lleva el codo hacia la cadera sin girar el torso. Reps por lado; kg de una mancuerna." },
@@ -1805,7 +1772,7 @@
             ]
           },
           {
-            id: "v-b", code: "B", name: "Hombros y brazos", note: "Trabajo de torso con baja demanda lumbar y volumen de hombro controlado.",
+            id: "v-b", code: "B", name: "Hombros y brazos",
             exercises: [
               { id: "vb-chest", name: "Press de pecho convergente", muscle: "Pecho", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Agarre cómodo y recorrido sin despegar los hombros." },
               { id: "vb-highrow-db", name: "Remo inclinado con mancuernas", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Inclina el torso desde la cadera, mantén la espalda estable y lleva los codos atrás, algo separados. Kg por mancuerna." },
@@ -1816,7 +1783,7 @@
             ]
           },
           {
-            id: "v-c", code: "C", name: "Densidad de torso", note: "Tercer estímulo opcional, con cargas moderadas y ejecución muy controlada.", optional: true,
+            id: "v-c", code: "C", name: "Densidad de torso", optional: true,
             exercises: [
               { id: "vc-pulldown", name: "Jalón unilateral en polea", muscle: "Espalda", sets: 2, reps: "10–14", rest: 120, rir: "2", unilateral: true, cue: "Inicia bajando la escápula; no tires con el torso." },
               { id: "vc-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Misma trayectoria en todas las repeticiones. Si no hay inclinado, usa el press horizontal disponible con la misma pauta y RIR. Calibra su carga desde liviano." },
@@ -1832,14 +1799,10 @@
       {
         id: "solo",
         short: "Hipertrofia 3–4 días",
-        mobileName: "Hiper",
-        title: "Hipertrofia sin vóley",
-        navNote: "3 días + full-body opcional",
         symbol: "H4",
-        description: "Tres días de 30–45 min para torso y brazos; deja un día de recuperación entre sesiones. El cuarto es opcional. Usa este plan en semanas sin vóley, no encima del plan Vóley.",
         days: [
           {
-            id: "s-1", code: "1", name: "Torso A", note: "Base pesada equilibrada de pecho y espalda, con final de deltoides y tríceps.",
+            id: "s-1", code: "1", name: "Torso A",
             exercises: [
               { id: "s1-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 150, rir: "2", cue: "Progresión principal del día; repite banco y ángulo. Si no tienes banco inclinable, usa press horizontal con mancuernas o la máquina de press disponible, con la misma pauta y RIR." },
               { id: "s1-row-db", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 3, reps: "6–10", rest: 120, rir: "2", unilateral: true, cue: "Apoya la mano libre en el banco; lleva el codo hacia la cadera sin girar el torso. Reps por lado; kg de una mancuerna." },
@@ -1850,7 +1813,7 @@
             ]
           },
           {
-            id: "s-2", code: "2", name: "Espalda y bíceps", note: "Tirón vertical y horizontal, deltoides posterior y dos perfiles de curl. Volumen moderado para sostener la progresión.",
+            id: "s-2", code: "2", name: "Espalda y bíceps",
             exercises: [
               { id: "s2-pullup", name: "Dominada asistida/lastrada o jalón", muscle: "Espalda", sets: 3, reps: "6–10", rest: 150, rir: "2", cue: "Usa la variante que mantenga el rango completo." },
               { id: "s2-highrow-db", name: "Remo inclinado con mancuernas", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Inclina el torso desde la cadera, mantén la espalda estable y lleva los codos atrás, algo separados. Kg por mancuerna." },
@@ -1861,7 +1824,7 @@
             ]
           },
           {
-            id: "s-3", code: "3", name: "Pecho, hombros y tríceps", note: "Segundo estímulo de pecho, hombros y tríceps; mantén el RIR y los descansos en vez de añadir series.",
+            id: "s-3", code: "3", name: "Pecho, hombros y tríceps",
             exercises: [
               { id: "s3-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 3, reps: "6–10", rest: 150, rir: "2", cue: "Usa topes consistentes y registra la posición del asiento." },
               { id: "s3-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 2, reps: "8–12", rest: 120, rir: "2", cue: "No acortes la parte baja por buscar más carga. Si no hay inclinado, usa press horizontal con mancuernas o la máquina disponible con la misma pauta y RIR." },
@@ -1873,7 +1836,7 @@
             ]
           },
           {
-            id: "s-4", code: "4", name: "Full-body complementario", note: "Opcional. Piernas, torso y brazos con 2 series por movimiento. Añádelo solo si recuperas bien de los tres días base.", optional: true,
+            id: "s-4", code: "4", name: "Full-body complementario", optional: true,
             exercises: [
               { id: "s4-legpress", name: "Prensa de piernas", muscle: "Piernas", sets: 2, reps: "8–12", rest: 150, rir: "2–3", cue: "Recorrido cómodo y controlado; no busques fatiga que afecte al vóley." },
               { id: "s4-legcurl", name: "Curl femoral sentado", muscle: "Piernas", sets: 2, reps: "10–15", rest: 90, rir: "2", cue: "Pausa en flexión y controla la vuelta." },
@@ -1889,14 +1852,10 @@
       {
         id: "chest",
         short: "Pecho · prioridad",
-        mobileName: "Pecho",
-        title: "Especialización de pecho",
-        navNote: "Gym A/B + alternativa en casa",
         symbol: "P2",
-        description: "Dos sesiones de torso con prioridad de pecho por semana, separadas por 48–72 h. Casa reemplaza A o B. Sustituye el trabajo equivalente de otros programas; no acumules los planes.",
         days: [
           {
-            id: "p-a", code: "A", name: "Pecho · base fuerte", note: "Calienta con 2–3 series progresivas del primer press, sin registrarlas como trabajo.",
+            id: "p-a", code: "A", name: "Pecho · base fuerte",
             exercises: [
               { id: "pa-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 150, rir: "2", cue: "Banco a 15–30°, pies firmes y escápulas estables. Baja con control y sin rebote. Registra kg por mancuerna. Si no hay banco inclinable o máquina inclinada, usa el press de pecho disponible con las mismas 3 series, reps, descanso y RIR." },
               { id: "pa-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 2, reps: "8–12", rest: 120, rir: "1–2", cue: "Ajusta el asiento con las asas a la altura media del pecho. Mantén los hombros apoyados y un recorrido cómodo. Si falta esta máquina, usa press horizontal con mancuernas en banco o suelo con la misma pauta y RIR." },
@@ -1906,7 +1865,7 @@
             ]
           },
           {
-            id: "p-b", code: "B", name: "Pecho · volumen y control", note: "Calienta con 2–3 series progresivas del primer press. Busca más repeticiones limpias antes de subir peso.",
+            id: "p-b", code: "B", name: "Pecho · volumen y control",
             exercises: [
               { id: "pb-flat", name: "Press de pecho en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 150, rir: "2", cue: "Usa siempre la misma posición del asiento. Baja con control, mantén el pecho estable y evita adelantar los hombros. Si falta esta máquina, usa press horizontal con mancuernas en banco o suelo con la misma pauta y RIR." },
               { id: "pb-incline", name: "Press inclinado con mancuernas", muscle: "Pecho", sets: 2, reps: "10–12", rest: 120, rir: "1–2", cue: "Banco a 15–30°. Usa una carga que permita todo el rango sin arquear más la espalda. Kg por mancuerna. Si no hay inclinado, usa el press horizontal disponible o mancuernas en banco plano con la misma pauta y RIR." },
@@ -1917,7 +1876,6 @@
           },
           {
             id: "p-home", code: "C", name: "Pecho en casa", alternative: true,
-            note: "7 series de pecho + 3 de remo + 2 de hombros. Mancuernas, peso corporal y elástico; sin banco ni máquinas. Casa reemplaza A o B; no añade un tercer día.",
             exercises: [
               { id: "ph-floor", name: "Press con mancuernas en el suelo", muscle: "Pecho", sets: 3, reps: "8–15", rest: 120, rir: "2", cue: "Boca arriba, rodillas flexionadas y pies apoyados. Codos a unos 30–45° del torso; baja hasta apoyar suavemente los brazos en el suelo, sin rebote. Empuja hacia arriba. Registra kg por mancuerna; elige una carga que te deje 2 reps en reserva." },
               { id: "ph-pushup", name: "Flexiones", muscle: "Pecho", sets: 1, reps: "6–15", rest: 90, rir: "1–2", tracking: "reps", cue: "Cuerpo alineado, abdomen firme y codos en diagonal. Baja el pecho entre las manos. Si no llegas a 6 limpias, apoya las rodillas o eleva las manos sobre un apoyo firme. Al llegar a 15 con control, usa una variante más difícil." },
@@ -1932,14 +1890,10 @@
       {
         id: "calisthenics",
         short: "Calistenia 30–45 min",
-        mobileName: "Calis",
-        title: "Calistenia principiante",
-        navNote: "2 sesiones A/B · peso corporal",
         symbol: "BW",
-        description: "Alterna A y B dos veces por semana con un día de recuperación entre ellas. Un tercer día es opcional si recuperas bien. Usa una variante que deje unas 2 repeticiones en reserva.",
         days: [
           {
-            id: "c-a", code: "A", name: "Base A", note: "Empuje, tirón, piernas, hombros y core: 3 series por movimiento con descansos completos.",
+            id: "c-a", code: "A", name: "Base A",
             exercises: [
               { id: "ca-pushup", name: "Flexión inclinada", muscle: "Pecho", sets: 3, reps: "8–15", rest: 90, rir: "2", tracking: "reps", cue: "Apoya las manos en una mesa o banco firme; baja el pecho entre las manos." },
               { id: "ca-row", name: "Remo invertido con rodillas flexionadas", muscle: "Espalda", sets: 3, reps: "6–12", rest: 90, rir: "2", tracking: "reps", cue: "Usa solo una barra o mesa muy estable y mantén el cuerpo en bloque." },
@@ -1949,7 +1903,7 @@
             ]
           },
           {
-            id: "c-b", code: "B", name: "Base B", note: "Segunda variante de cuerpo completo para repetir patrones sin cargar siempre igual.",
+            id: "c-b", code: "B", name: "Base B",
             exercises: [
               { id: "cb-pushup", name: "Flexión con rodillas o completa", muscle: "Pecho", sets: 3, reps: "6–12", rest: 90, rir: "2", tracking: "reps", cue: "Elige la variante que te permita mantener el cuerpo alineado hasta la última repetición." },
               { id: "cb-row", name: "Remo invertido", muscle: "Espalda", sets: 3, reps: "6–12", rest: 90, rir: "2", tracking: "reps", cue: "Comprueba el apoyo antes de empezar y acerca el pecho con control." },
@@ -1963,12 +1917,9 @@
     ];
 
     programs.push({
-      id: "shoulder", short: "Hombro · tendinitis", mobileName: "Hombro",
-      title: "Movilidad y control de hombro", navNote: "5 ejercicios · PhysioWods", symbol: "H",
-      description: "Pauta inicial del video: 1 serie de 10 repeticiones por ejercicio, 2–3 días por semana, dejando un día de descanso entre sesiones. Confirma con tu fisioterapeuta qué movimientos son adecuados para tu lesión.",
+      id: "shoulder", short: "Hombro · tendinitis", symbol: "H",
       days: [{
         id: "h-a", code: "H", name: "Cuidado de hombro",
-        note: "Control escapular y movilidad, sin buscar el fallo.",
         exercises: [
           { id: "h-wall", name: "Retracciones con pared", muscle: "Hombros", sets: 1, reps: "10", rest: 60, tracking: "reps", loadLabel: "Pared", videoTime: 468, videoLabel: "7:48", cue: "Apoya las manos en la pared. Acerca y separa las escápulas con un movimiento lento, centrando la atención en la espalda." },
           { id: "h-band", name: "Retracciones con goma", muscle: "Hombros", sets: 1, reps: "10/lado", rest: 60, tracking: "reps", loadLabel: "Goma", unilateral: true, videoTime: 575, videoLabel: "9:35", cue: "Fija la goma a un anclaje estable. Con la mano dentro, empuja hacia delante separando la escápula y vuelve despacio. Completa 10 por brazo; registra las reps por lado." },
@@ -1987,11 +1938,7 @@
       const transitions = (day.exercises.length - 1) * 60;
       return {
         min: Math.ceil((360 + workMin + rest + transitions) / 60),
-        max: Math.ceil((480 + workMax + rest + transitions) / 60),
-        restMinutes: Math.round(rest / 60),
-        workMin: Math.ceil(workMin / 60),
-        workMax: Math.ceil(workMax / 60),
-        transitionMinutes: transitions / 60
+        max: Math.ceil((480 + workMax + rest + transitions) / 60)
       };
     }
 
@@ -2002,9 +1949,9 @@
     programs.sort((a, b) => (a.id === "solo" ? 0 : 1) - (b.id === "solo" ? 0 : 1));
 
     const LOAD_PRESETS = {
-      light: { label: "Light", multiplier: .75, description: "75% de la base · más margen y técnica" },
-      normal: { label: "Normal", multiplier: 1, description: "Base estimada · empieza aquí y calibra por RIR" },
-      heavy: { label: "Heavy", multiplier: 1.25, description: "125% de la base · solo si mantienes el RIR" }
+      light: { label: "Light", multiplier: .75 },
+      normal: { label: "Normal", multiplier: 1 },
+      heavy: { label: "Heavy", multiplier: 1.25 }
     };
 
     const NORMAL_LOADS = {
@@ -2100,6 +2047,7 @@
     };
 
     const storageKey = "setline-hypertrophy-v1";
+    const timerStorageKey = "setline-rest-timer";
     const defaultState = {
       schemaVersion: 3,
       programId: "solo",
@@ -2109,9 +2057,24 @@
       entries: {},
       references: {},
       lastVolumes: {},
-      heroSeenByProgram: { volley: false, solo: false, chest: false, calisthenics: false, shoulder: false },
-      includeOptionalByProgram: { volley: false, solo: false, chest: false, calisthenics: false, shoulder: false }
+      setLog: {},
+      focusExerciseId: null
     };
+
+    // Saved data is read defensively: one damaged value must not blank the app.
+    function isRecord(value) {
+      return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+    }
+
+    function cleanEntries(entries) {
+      return Object.fromEntries(Object.entries(isRecord(entries) ? entries : {}).filter(([, entry]) => isRecord(entry)));
+    }
+
+    function cleanSetLog(setLog) {
+      return Object.fromEntries(Object.entries(isRecord(setLog) ? setLog : {})
+        .map(([key, sets]) => [key, Array.isArray(sets) ? sets.filter(set => isRecord(set) && /^(\d{4}-\d{2}-\d{2})?$/.test(set.date)) : []])
+        .filter(([, sets]) => sets.length));
+    }
 
     function loadState() {
       try {
@@ -2120,11 +2083,10 @@
           ...defaultState,
           ...saved,
           dayByProgram: { ...defaultState.dayByProgram, ...(saved.dayByProgram || {}) },
-          entries: { ...(saved.entries || {}) },
+          entries: cleanEntries(saved.entries),
           references: { ...(saved.references || {}) },
           lastVolumes: { ...(saved.lastVolumes || {}) },
-          heroSeenByProgram: { ...defaultState.heroSeenByProgram, ...(saved.heroSeenByProgram || {}) },
-          includeOptionalByProgram: { ...defaultState.includeOptionalByProgram, ...(saved.includeOptionalByProgram || {}) }
+          setLog: cleanSetLog(saved.setLog)
         } : JSON.parse(JSON.stringify(defaultState));
         if (saved && Number(saved.schemaVersion || 1) < 2) {
           merged.programId = "solo";
@@ -2148,12 +2110,21 @@
     let deferredInstallPrompt = null;
     let refreshingForUpdate = false;
     let pwaBannerAction = null;
-    let pwaBannerKind = "";
-    let heroSeenTimer = null;
+    let sessionToolsOpen = false;
     let timerFinishTimeout = null;
     let sessionResetPending = false;
-    const expandedHeroPrograms = new Set();
-    const expandedCompleteCards = new Set();
+    let lastTimerSnapshot = null;
+    let lastDoneSet = null;
+    let tapGuardUntil = 0;
+    let renderedOn = dateKey();
+    let wakeLock = null;
+    let wakeLockPending = false;
+    let screenAwakeUntil = 0;
+    let screenAwakeTimer = null;
+    // Cards the user flipped against their default: open for the current exercise, closed otherwise.
+    const toggledCards = new Set();
+    const heldCards = new Set();
+    const cardRoles = new Map();
 
     const $ = (selector, scope = document) => scope.querySelector(selector);
     const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
@@ -2162,19 +2133,30 @@
     const entryKey = (dayId, exerciseId, index) => `${state.programId}:${dayId}:${exerciseId}:${index}`;
     const referenceKey = exerciseId => `${state.programId}:${exerciseId}`;
 
+    function automaticVolume(exerciseId) {
+      const day = activeDay();
+      const exercise = day.exercises.find(item => item.id === exerciseId);
+      const previous = exercise ? lastSessionSets(day, exercise) : [];
+      if (previous.length && previous.every(Boolean)) {
+        const volume = previous.reduce((sum, set) => sum + (exercise.tracking === "reps" ? safeNumber(set.reps) : safeNumber(set.weight) * safeNumber(set.reps)), 0);
+        if (volume) return volume;
+      }
+      return safeNumber(state.lastVolumes[referenceKey(exerciseId)] || "");
+    }
+
     function getReference(exerciseId) {
       const key = referenceKey(exerciseId);
       const manualValue = safeNumber(state.references[key] || "");
-      const automaticValue = safeNumber(state.lastVolumes[key] || "");
+      const automaticValue = automaticVolume(exerciseId);
       if (manualValue) return { value: manualValue, source: "manual" };
       if (automaticValue) return { value: automaticValue, source: "automatic" };
       return { value: 0, source: "none" };
     }
 
     function referenceRatioLabel(reference, ratio) {
-      if (reference.source === "automatic") return `${ratio}% de la referencia`;
+      if (reference.source === "automatic") return `${ratio}% de la última vez`;
       if (reference.source === "manual") return `${ratio}% del objetivo`;
-      return "Primera sesión";
+      return "";
     }
 
     function volumeUnit(exercise) {
@@ -2207,6 +2189,88 @@
       return Number.isFinite(number) && number > 0 ? number : 0;
     }
 
+    function dateKey(time = Date.now()) {
+      const date = new Date(time);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    }
+
+    function formatShortDate(key) {
+      const date = new Date(`${key}T12:00:00`);
+      return Number.isNaN(date.getTime()) ? key : new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "short" }).format(date);
+    }
+
+    // "Última vez" is written when a set is ticked, not by RESET, so RESET still creates nothing.
+    function rememberSet(key, entry) {
+      if (!safeNumber(entry.reps) && !safeNumber(entry.weight)) return;
+      const date = dateKey();
+      const earlier = (state.setLog[key] || []).filter(item => item.date !== date);
+      state.setLog[key] = [{ weight: entry.weight || "", reps: entry.reps || "", date }, ...earlier].slice(0, 2);
+    }
+
+    function forgetSet(key, before) {
+      // `before` is the log as it was when the set was ticked; sets ticked by older versions have none.
+      const kept = Array.isArray(before) ? before : (state.setLog[key] || []).filter(item => item.date !== dateKey());
+      if (kept.length) state.setLog[key] = kept;
+      else delete state.setLog[key];
+    }
+
+    function previousSet(key) {
+      // A set ticked today is the current one, not "last time"; once RESET clears it, it is.
+      const current = state.entries[key]?.completed ? dateKey() : null;
+      return (state.setLog[key] || []).find(item => item.date !== current) || null;
+    }
+
+    // Each set falls back to its own last value, but a comparison must come from one session only.
+    function lastSessionSets(day, exercise) {
+      const sets = Array.from({ length: exercise.sets }, (_, index) => previousSet(entryKey(day.id, exercise.id, index)));
+      const latest = sets.reduce((newest, set) => (set && set.date > newest ? set.date : newest), "");
+      return sets.map(set => (set && set.date === latest ? set : null));
+    }
+
+    function seedSetLog() {
+      // Sets ticked before "Última vez" existed keep their numbers through the next RESET.
+      Object.entries(state.entries).forEach(([key, entry]) => {
+        if (entry.completed && !state.setLog[key] && (safeNumber(entry.reps) || safeNumber(entry.weight))) {
+          state.setLog[key] = [{ weight: entry.weight || "", reps: entry.reps || "", date: "" }];
+        }
+      });
+    }
+
+    function repRange(exercise) {
+      const [min, max = min] = String(exercise.reps).match(/\d+/g).map(Number);
+      return { min, max };
+    }
+
+    function knownReps(day, exercise, index) {
+      const remembered = previousSet(entryKey(day.id, exercise.id, index))?.reps;
+      if (safeNumber(remembered)) return remembered;
+      const carried = index > 0 ? getEntry(day.id, exercise.id, index - 1).reps : "";
+      if (safeNumber(carried)) return carried;
+      const { min, max } = repRange(exercise);
+      return min === max ? String(min) : "";
+    }
+
+    function defaultReps(day, exercise, index) {
+      const current = getEntry(day.id, exercise.id, index).reps;
+      if (safeNumber(current)) return current;
+      return knownReps(day, exercise, index) || String(repRange(exercise).min);
+    }
+
+    function defaultWeight(day, exercise, index) {
+      const entry = getEntry(day.id, exercise.id, index);
+      if (safeNumber(entry.weight) || entry.weightSource === "manual" || index === 0) return entry.weight ?? "";
+      const above = getEntry(day.id, exercise.id, index - 1).weight;
+      return safeNumber(above) ? above : entry.weight ?? "";
+    }
+
+    function stepWeight(value, direction) {
+      // Same grid as the load presets: 1 kg up to 10 kg, then 2.5 kg.
+      const step = (direction > 0 ? value < 10 : value <= 10) ? 1 : 2.5;
+      const position = value / step;
+      const next = direction > 0 ? Math.floor(position + 1e-9) + 1 : Math.ceil(position - 1e-9) - 1;
+      return Math.max(0, next * step);
+    }
+
     function escapeAttribute(value) {
       return String(value ?? "").replace(/[&"<>]/g, character => ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[character]);
     }
@@ -2233,6 +2297,10 @@
       return remainder ? `${minutes}:${String(remainder).padStart(2, "0")}` : `${minutes}:00`;
     }
 
+    function displayDecimal(value) {
+      return String(value ?? "").replace(".", ",");
+    }
+
     function formatLoad(value) {
       return new Intl.NumberFormat("es-ES", { maximumFractionDigits: 1 }).format(value);
     }
@@ -2249,15 +2317,18 @@
     function ensurePresetWeights(day) {
       let changed = false;
       day.exercises.forEach(exercise => {
-        const target = suggestedLoad(exercise.id);
-        if (target === null) return;
-        const weight = String(target);
+        if (exercise.tracking === "reps") return;
+        const preset = suggestedLoad(exercise.id);
         Array.from({ length: exercise.sets }, (_, index) => {
           const key = entryKey(day.id, exercise.id, index);
           const entry = state.entries[key] || { weight: "", reps: "", completed: false, weightSource: "" };
+          const remembered = previousSet(key)?.weight;
+          const weight = remembered || (preset === null ? "" : String(preset));
+          const source = remembered ? "last" : "preset";
           const untouched = String(entry.weight ?? "") === "" && entry.weightSource !== "manual";
-          if ((entry.weightSource === "preset" || untouched) && (String(entry.weight ?? "") !== weight || entry.weightSource !== "preset")) {
-            state.entries[key] = { ...entry, weight, weightSource: "preset" };
+          const suggested = entry.weightSource === "preset" || entry.weightSource === "last";
+          if (weight && !entry.completed && (suggested || untouched) && (String(entry.weight ?? "") !== weight || entry.weightSource !== source)) {
+            state.entries[key] = { ...entry, weight, weightSource: source };
             changed = true;
           }
         });
@@ -2265,19 +2336,40 @@
       if (changed) persist();
     }
 
+    function carryWeight(day, exercise, index, weight) {
+      for (let later = index + 1; later < exercise.sets; later += 1) {
+        const entry = getEntry(day.id, exercise.id, later);
+        if (entry.completed || entry.weightSource === "manual") continue;
+        setEntry(day.id, exercise.id, later, { weight, weightSource: "carried" });
+        syncSetRow(day, exercise, later);
+      }
+    }
+
+    function setCounts(day) {
+      const total = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
+      const done = day.exercises.reduce((sum, exercise) => sum + Array.from({ length: exercise.sets }, (_, index) => getEntry(day.id, exercise.id, index).completed ? 1 : 0).reduce((a, b) => a + b, 0), 0);
+      return { done, total };
+    }
+
+    function dayStatus(day) {
+      const { done, total } = setCounts(day);
+      if (done && done === total) return "HECHA";
+      if (done) return `${done}/${total}`;
+      return day.optional ? "OPCIONAL" : "";
+    }
+
     function programButton(program) {
       const selected = program.id === state.programId;
       return `<button class="program-button" type="button" aria-pressed="${selected}" data-program="${program.id}">
         <span class="program-symbol">${program.symbol}</span>
-        <span class="program-copy"><strong>${program.short}</strong><span>${program.navNote}</span></span>
-        <span class="program-mobile-name">${program.mobileName}</span>
+        <span class="program-copy"><strong>${program.short}</strong></span>
       </button>`;
     }
 
     function dayButton(day) {
       const selected = day.id === activeDay().id;
       return `<button class="day-button" type="button" aria-pressed="${selected}" data-day="${day.id}">
-        <span class="day-code">${day.code}</span><span>${day.name}</span>${day.optional ? "<small>OPCIONAL</small>" : ""}
+        <span class="day-code">${day.code}</span><span>${day.name}</span><small>${dayStatus(day)}</small>
       </button>`;
     }
 
@@ -2285,148 +2377,162 @@
       const programMarkup = programs.map(programButton).join("");
       const dayMarkup = activeProgram().days.map(dayButton).join("");
       $("#desktop-programs").innerHTML = programMarkup;
-      $("#mobile-programs").innerHTML = programMarkup;
+      $("#sheet-programs").innerHTML = programMarkup;
       $("#desktop-days").innerHTML = dayMarkup;
-      $("#mobile-days").innerHTML = dayMarkup;
+      $("#sheet-days").innerHTML = dayMarkup;
+    }
+
+    function renderTopbar(day, done, total) {
+      const program = activeProgram();
+      $("#switch-title").textContent = day.name;
+      $("#switch-meta").textContent = program.days.length > 1 ? `${program.short} · Día ${day.code}` : program.short;
+      $("#switch-count").textContent = `${done}/${total}`;
+      $("#topbar-progress-fill").style.width = `${total ? (done / total) * 100 : 0}%`;
     }
 
     function renderHero() {
-      const program = activeProgram();
       const day = activeDay();
-      const totalSets = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
-      const isFirstView = !state.heroSeenByProgram[program.id];
-      const isExpanded = isFirstView || expandedHeroPrograms.has(program.id);
+      const { total } = setCounts(day);
       const hero = $("#session-hero");
-      hero.classList.toggle("is-compact", !isExpanded);
-      hero.innerHTML = `<div class="hero-copy">
-        <span class="hero-program">${program.title}</span>
-        <h1 id="session-title">${day.name}</h1>
-        <p id="session-description">${day.note} ${program.description}<br><strong>Tiempo estimado:</strong> ${program.id === "shoulder" ? "6–8 min de actividad suave, como caminar," : "6–8 min de calentamiento (incluye 2–3 series fáciles del primer movimiento),"} ${day.timing.workMin}–${day.timing.workMax} min de series y registro, unos ${day.timing.restMinutes} min de descanso entre series y ${day.timing.transitionMinutes} min para cambiar de ejercicio. Sin esperas por máquinas; puedes cortar antes.</p>
-        <span class="hero-compact-meta" aria-hidden="true">Día ${day.code} · ${day.duration} · ${totalSets} series</span>
-        <button class="hero-toggle" type="button" data-hero-toggle aria-expanded="${isExpanded}" aria-controls="session-description session-facts" aria-label="${isExpanded ? "Ocultar" : "Mostrar"} detalles de ${day.name}">
-          <span>${isExpanded ? "Ocultar" : "Detalles"}</span>
+      hero.classList.toggle("is-open", sessionToolsOpen);
+      hero.innerHTML = `<h1 id="session-title">${day.name}</h1>
+        <span class="hero-meta">${activeProgram().days.length > 1 ? `Día ${day.code} · ` : ""}${day.duration} · ${total} series</span>
+        <button class="hero-toggle" type="button" data-hero-toggle aria-expanded="${sessionToolsOpen}" aria-controls="load-preset-panel session-tools">
+          <span>Ajustes</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
-      </div>
-      <div class="hero-slate" id="session-facts" aria-label="Datos de la sesión">
-        <span class="hero-day-code">${day.code}</span>
-        <div class="hero-facts">
-          <span class="hero-fact"><span>Duración</span><strong>${day.duration}</strong></span>
-          <span class="hero-fact"><span>Trabajo</span><strong>${totalSets} series</strong></span>
-        </div>
-      </div>`;
-      clearTimeout(heroSeenTimer);
-      if (isFirstView) {
-        const programId = program.id;
-        heroSeenTimer = setTimeout(() => {
-          state.heroSeenByProgram[programId] = true;
-          persist();
-        }, 1500);
-      }
+        </button>`;
     }
 
     function renderLoadPresets() {
       const panel = $("#load-preset-panel");
       panel.hidden = ["calisthenics", "shoulder"].includes(activeProgram().id);
       if (panel.hidden) return;
-      const preset = LOAD_PRESETS[state.loadPreset];
-      const mobileNotes = {
-        light: "75% de base. Ajusta al RIR; no cambia tus pesos manuales.",
-        normal: "Base estimada. Ajusta al RIR; no cambia tus pesos manuales.",
-        heavy: "125% de base. Solo si mantienes el RIR; manuales intactos."
-      };
       $("#load-presets").innerHTML = Object.entries(LOAD_PRESETS).map(([id, item]) => `<button class="load-preset-button" type="button" aria-pressed="${state.loadPreset === id}" data-load-preset="${id}">${item.label}</button>`).join("");
-      $("#load-preset-note").innerHTML = `<span class="load-note-long">Base 174 cm / 74,4 kg · ${preset.description}. No es un estándar por talla: ajusta al RIR. No pisa pesos manuales; en mancuernas/unilaterales, usa kg por lado.</span><span class="load-note-mobile">${mobileNotes[state.loadPreset]}</span>`;
-      panel.classList.toggle("is-noted", !$("#session-hero").classList.contains("is-compact"));
     }
 
     function renderFilters() {
       const available = ["Todos", ...MUSCLE_ORDER.filter(muscle => activeDay().exercises.some(exercise => exercise.muscle === muscle))];
       if (!available.includes(state.filter)) state.filter = "Todos";
       $("#filters").innerHTML = available.map(muscle => `<button class="filter-button" type="button" aria-pressed="${state.filter === muscle}" data-filter="${muscle}">${muscle}</button>`).join("");
+      $("#filters").hidden = available.length < 3;
+      $(".session-tools").classList.toggle("has-active-filter", state.filter !== "Todos");
     }
 
     function setRow(day, exercise, index) {
       const entry = getEntry(day.id, exercise.id, index);
       const bodyweight = exercise.tracking === "reps";
+      const previousReps = previousSet(entryKey(day.id, exercise.id, index))?.reps;
       return `<div class="set-row ${entry.completed ? "is-done" : ""}" data-set-row="${index}">
         <span class="set-number">${index + 1}</span>
         ${bodyweight
           ? `<span class="bodyweight-load" aria-label="Carga: ${exercise.loadLabel || "peso corporal"}">${exercise.loadLabel || "Corporal"}</span>`
-          : `<input class="set-input" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Peso de la serie ${index + 1} en kilogramos" placeholder="kg" value="${escapeAttribute(entry.weight)}" data-weight data-exercise="${exercise.id}" data-set="${index}">`}
+          : `<input class="set-input" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Peso de la serie ${index + 1} en kilogramos" placeholder="kg" value="${escapeAttribute(displayDecimal(entry.weight))}" data-weight data-exercise="${exercise.id}" data-set="${index}">`}
         <span class="times" aria-hidden="true">${bodyweight ? "" : "×"}</span>
-        <input class="set-input" type="text" inputmode="numeric" enterkeyhint="${index + 1 === exercise.sets ? "done" : "next"}" autocomplete="off" aria-label="Repeticiones de la serie ${index + 1}" placeholder="${exercise.reps}" value="${escapeAttribute(entry.reps)}" data-reps data-exercise="${exercise.id}" data-set="${index}">
+        <input class="set-input" type="text" inputmode="numeric" enterkeyhint="${index + 1 === exercise.sets ? "done" : "next"}" autocomplete="off" aria-label="Repeticiones de la serie ${index + 1}" placeholder="${safeNumber(previousReps) ? escapeAttribute(previousReps) : exercise.reps}" value="${escapeAttribute(entry.reps)}" data-reps data-exercise="${exercise.id}" data-set="${index}">
         <input class="set-check" type="checkbox" ${entry.completed ? "checked" : ""} aria-label="Marcar serie ${index + 1} de ${exercise.name} como hecha" data-check data-exercise="${exercise.id}" data-set="${index}">
       </div>`;
     }
 
+    function formatLoggedSet(set, bodyweight) {
+      if (bodyweight || !safeNumber(set.weight)) return `${set.reps} reps`;
+      return safeNumber(set.reps) ? `${displayDecimal(set.weight)} kg × ${set.reps}` : `${displayDecimal(set.weight)} kg`;
+    }
+
+    function lastTimeSummary(day, exercise) {
+      const sets = lastSessionSets(day, exercise).filter(Boolean);
+      if (!sets.length) return "";
+      const date = sets[0].date;
+      const label = `Última vez${date ? ` (${formatShortDate(date)})` : ""}`;
+      const reps = sets.filter(set => safeNumber(set.reps));
+      if (exercise.tracking === "reps" || !sets.some(set => safeNumber(set.weight))) return `${label}: ${reps.map(set => set.reps).join(" · ")} reps`;
+      const weights = new Set(sets.map(set => String(safeNumber(set.weight))));
+      if (!reps.length) return `${label}: ${displayDecimal(sets[0].weight)} kg`;
+      if (weights.size === 1) return `${label}: ${displayDecimal(sets[0].weight)} kg × ${reps.map(set => set.reps).join(" · ")}`;
+      return `${label}: ${reps.map(set => (safeNumber(set.weight) ? `${displayDecimal(set.weight)}×${set.reps}` : set.reps)).join(" · ")}`;
+    }
+
     function exerciseCard(day, exercise, visibleIndex) {
       const volume = exerciseVolume(day, exercise);
+      const reps = loggedReps(day, exercise);
       const reference = getReference(exercise.id);
       const ratio = reference.value ? Math.round((volume / reference.value) * 100) : 0;
-      const complete = isExerciseComplete(day, exercise);
       const load = suggestedLoad(exercise.id);
       const bodyweight = exercise.tracking === "reps";
+      const shoulder = activeProgram().id === "shoulder";
       const unit = volumeUnit(exercise);
-      const loadHint = activeProgram().id === "shoulder" ? "Registra repeticiones · sin objetivo de volumen" : bodyweight ? (exercise.loadLabel ? "Elástico · registra repeticiones" : "Peso corporal · ajusta la variante") : (load === null ? "Carga manual" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`);
+      const lastLine = lastTimeSummary(day, exercise) || (bodyweight || load === null ? "" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`);
       const demo = exerciseGifs[exercise.id];
       const demoUrl = demo ? exerciseGifUrl(demo) : "";
-      const collapsed = complete && !expandedCompleteCards.has(exercise.id);
-      return `<article class="exercise-card ${complete ? "is-complete" : ""} ${collapsed ? "is-collapsed" : ""}" data-exercise-card="${exercise.id}">
+      const order = String(visibleIndex + 1).padStart(2, "0");
+      return `<article class="exercise-card is-collapsed ${demo?.[4] ? "has-video" : ""} ${volume > 0 || reps > 0 ? "has-readout" : ""} ${reference.value ? "has-reference" : ""}" data-exercise-card="${exercise.id}">
         <div class="exercise-head">
-          <span class="exercise-order">${String(visibleIndex + 1).padStart(2, "0")}</span>
+          ${demo ? `<div class="exercise-demo ${demo[4] ? "is-video-excerpt" : ""}" id="demo-${exercise.id}">
+            <button class="demo-frame" type="button" data-expand-gif="${exercise.id}" aria-label="Ampliar demostración de ${escapeAttribute(demo[1])}" aria-haspopup="dialog">
+              <img data-demo-image data-src="${demoUrl}" alt="Demostración animada: ${demo[1]}" width="112" height="112" loading="lazy" decoding="async">
+              <span class="demo-status" aria-hidden="true"></span>
+            </button>
+            <span class="exercise-order">${order}</span>
+            ${demo[4] ? `<button class="demo-toggle" type="button" data-demo-toggle="${exercise.id}" aria-pressed="${!window.matchMedia("(prefers-reduced-motion: reduce)").matches}">${window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "Reproducir" : "Pausar"} demostración</button>` : ""}
+          </div>` : `<span class="exercise-order">${order}</span>`}
           <div class="exercise-title-wrap">
-            <div class="exercise-title-line"><h2>${exercise.name}</h2><span class="muscle-badge">${exercise.muscle}</span><span class="next-badge">Siguiente</span></div>
-            <div class="exercise-meta"><span><strong>${exercise.sets}</strong> ${exercise.sets === 1 ? "serie" : "series"}</span><span><strong>${exercise.reps}</strong> reps</span>${exercise.rir ? `<span>RIR <strong>${exercise.rir}</strong></span>` : `<span>Control · sin dolor</span>`}<span class="preset-load-hint"><strong>${loadHint}</strong></span></div>
-            <p class="exercise-cue">${exercise.cue}</p>
-            <p class="exercise-collapsed-summary" data-collapsed-summary>${collapsedSummary(volume, unit, reference, ratio)}</p>
-            <div class="exercise-actions">
-              ${Number.isFinite(exercise.videoTime) ? `<a class="rest-button" href="https://www.youtube.com/watch?v=coXs4giH5F4&amp;t=${exercise.videoTime}s" target="_blank" rel="noopener noreferrer">Ver ejercicio · ${exercise.videoLabel} ↗</a>` : ""}
-              <button class="rest-button" type="button" data-rest="${exercise.rest}" data-exercise-name="${escapeAttribute(exercise.name)}" aria-label="Iniciar descanso de ${formatRest(exercise.rest)}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6"/></svg>Descanso ${formatRest(exercise.rest)}
-              </button>
-            </div>
+            <div class="exercise-title-line"><h2>${exercise.name}</h2><span class="next-badge">Siguiente</span></div>
+            <div class="exercise-meta"><span class="muscle-badge">${exercise.muscle}</span><span><strong>${exercise.sets}</strong> × <strong>${exercise.reps}</strong></span>${exercise.rir ? `<span>RIR <strong>${exercise.rir}</strong></span>` : ""}</div>
+            ${lastLine ? `<p class="exercise-last">${escapeAttribute(lastLine)}</p>` : ""}
+            <p class="exercise-collapsed-summary" data-collapsed-summary>${collapsedSummary(volume, unit, reference, ratio, reps)}</p>
           </div>
-          <button class="collapse-toggle" type="button" data-collapse-toggle aria-expanded="${!collapsed}" aria-label="${collapsed ? "Mostrar" : "Plegar"} ${escapeAttribute(exercise.name)}">
+          <button class="collapse-toggle" type="button" data-collapse-toggle aria-expanded="false" aria-label="Mostrar ${escapeAttribute(exercise.name)}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>
           </button>
         </div>
-        ${demo ? `<div class="exercise-demo ${demo[4] ? "is-video-excerpt" : ""}" id="demo-${exercise.id}">
-          <button class="demo-frame" type="button" data-expand-gif="${exercise.id}" aria-label="Ampliar demostración de ${escapeAttribute(demo[1])}" aria-haspopup="dialog">
-            <img data-demo-image data-src="${demoUrl}" alt="Demostración animada: ${demo[1]}" width="112" height="112" loading="lazy" decoding="async">
-            <span class="demo-status">Cargando GIF…</span>
-          </button>
-          <div class="demo-caption">${demo[4] ? `<button type="button" data-demo-toggle="${exercise.id}" aria-pressed="${!window.matchMedia("(prefers-reduced-motion: reduce)").matches}">${window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "Reproducir" : "Pausar"} demostración</button>` : ""}<span>${demo[4] ? "Extracto del video" : "Variante mostrada"}: <strong>${demo[1]}</strong></span><button type="button" data-expand-gif="${exercise.id}" aria-label="Ampliar demostración de ${escapeAttribute(demo[1])}" aria-haspopup="dialog">Ver en grande</button>${demo[2] ? `<a href="${demo[2]}" target="_blank" rel="noreferrer">Fuente: ${demo[3] || "Make a GIF"}</a>` : ""}</div>
-        </div>` : ""}
         <div class="exercise-body">
         <div class="sets-wrap">
           <div class="set-grid-head" aria-hidden="true"><span>#</span><span>${bodyweight ? "Carga" : "Peso"}</span><span></span><span>Reps</span><span>Hecha</span></div>
           ${Array.from({ length: exercise.sets }, (_, index) => setRow(day, exercise, index)).join("")}
         </div>
-        <div class="exercise-foot" ${activeProgram().id === "shoulder" ? "hidden" : ""}>
+        <div class="exercise-foot" ${shoulder ? "hidden" : ""}>
           <div class="volume-readout">
-            <div class="volume-topline"><span><strong class="volume-value" data-volume-value>${volumeText(volume, unit)}</strong></span><span data-ratio-label>${referenceRatioLabel(reference, ratio)}</span></div>
+            <div class="volume-topline"><span><strong class="volume-value" data-volume-value>${volumeText(volume, unit, reps)}</strong></span><span data-ratio-label>${referenceRatioLabel(reference, ratio)}</span></div>
             <div class="exercise-progress-track"><div class="exercise-progress-fill" data-exercise-fill style="width:${Math.min(ratio, 100)}%"></div></div>
           </div>
-          <div class="reference-field">
-            <label for="ref-${exercise.id}" data-reference-label>${referenceFieldLabel(reference, exercise)}</label>
-            <div class="reference-control">
-              <input class="reference-input" id="ref-${exercise.id}" type="text" inputmode="${bodyweight ? "numeric" : "decimal"}" enterkeyhint="done" autocomplete="off" placeholder="Opcional" value="${escapeAttribute(reference.value || "")}" data-reference data-exercise="${exercise.id}">
-              <button class="reference-auto-button" type="button" data-reference-auto data-exercise="${exercise.id}" aria-label="Volver a la referencia previa de ${exercise.name}" ${reference.source === "manual" && safeNumber(state.lastVolumes[referenceKey(exercise.id)]) ? "" : "hidden"}>Previa</button>
+        </div>
+        <div class="exercise-tools">
+          <details class="exercise-howto">
+            <summary>Técnica<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="exercise-howto-body">
+              <p class="exercise-cue">${exercise.cue}</p>
+              ${Number.isFinite(exercise.videoTime) ? `<a class="rest-button exercise-video-link" href="https://www.youtube.com/watch?v=coXs4giH5F4&amp;t=${exercise.videoTime}s" target="_blank" rel="noopener noreferrer">Ver ejercicio · ${exercise.videoLabel} ↗</a>` : ""}
+              <div class="reference-field" ${shoulder ? "hidden" : ""}>
+                <label for="ref-${exercise.id}" data-reference-label>${referenceFieldLabel(reference, exercise)}</label>
+                <div class="reference-control">
+                  <input class="reference-input" id="ref-${exercise.id}" type="text" inputmode="${bodyweight ? "numeric" : "decimal"}" enterkeyhint="done" autocomplete="off" placeholder="Opcional" value="${escapeAttribute(reference.value || "")}" data-reference data-exercise="${exercise.id}">
+                  <button class="reference-auto-button" type="button" data-reference-auto data-exercise="${exercise.id}" aria-label="Volver a la referencia previa de ${exercise.name}" ${reference.source === "manual" && automaticVolume(exercise.id) ? "" : "hidden"}>Previa</button>
+                </div>
+              </div>
             </div>
+          </details>
+          <div class="exercise-actions">
+            <button class="rest-button focus-exercise" type="button" data-focus-exercise="${exercise.id}" aria-label="Hacer ahora: ${escapeAttribute(exercise.name)}">Hacer ahora</button>
+            <button class="rest-button" type="button" data-rest="${exercise.rest}" data-exercise-name="${escapeAttribute(exercise.name)}" aria-label="Iniciar descanso ${formatRest(exercise.rest)}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6"/></svg><span class="rest-word">Descanso</span> ${formatRest(exercise.rest)}
+            </button>
           </div>
         </div>
         </div>
       </article>`;
     }
 
-    function volumeText(volume, unit) {
-      return volume > 0 ? `${formatVolume(volume)} ${unit}` : "Sin series registradas";
+    function loggedReps(day, exercise) {
+      return Array.from({ length: exercise.sets }, (_, index) => safeNumber(getEntry(day.id, exercise.id, index).reps)).reduce((sum, value) => sum + value, 0);
     }
 
-    function collapsedSummary(volume, unit, reference, ratio) {
+    function volumeText(volume, unit, reps = 0) {
+      if (volume > 0) return `${formatVolume(volume)} ${unit}`;
+      return reps > 0 ? `${formatVolume(reps)} reps` : "sin reps registradas";
+    }
+
+    function collapsedSummary(volume, unit, reference, ratio, reps = 0) {
       const ratioText = reference.value ? ` · ${referenceRatioLabel(reference, ratio)}` : "";
-      return `<strong>Completado</strong> · ${volumeText(volume, unit)}${ratioText}`;
+      return `<strong>Completado</strong> · ${volumeText(volume, unit, reps)}${ratioText}`;
     }
 
     function renderExercises() {
@@ -2440,80 +2546,17 @@
       updateSessionProgress();
     }
 
-    function renderWeeklyVolume() {
-      const program = activeProgram();
-      if (program.id === "shoulder") {
-        $("#weekly-title").textContent = "Pauta de hombro";
-        $("#weekly-caption").textContent = "Inicio: 5 ejercicios, 1 serie cada uno. Los checks registran lo realizado; no indican recuperación clínica.";
-        $("#weekly-volume").innerHTML = `<p>2–3 días por semana, con un día de descanso entre sesiones.</p><p>Pared, goma, pica y un peso liviano para el halo, si está indicado.</p><a class="rest-button" href="https://www.youtube.com/watch?v=coXs4giH5F4" target="_blank" rel="noopener noreferrer">Video completo · PhysioWods ↗</a>`;
-        $("#optional-toggle-wrap").hidden = true;
-        return;
-      }
-      const bodyweight = program.id === "calisthenics";
-      $("#weekly-title").textContent = bodyweight ? "Volumen base A+B" : "Volumen semanal";
-      $("#weekly-caption").textContent = bodyweight ? "Series directas al completar una vez cada sesión." : program.id === "chest" ? "Plan de 2 sesiones: A+B, o Casa en lugar de una de ellas. Casa no suma un tercer día." : "Series directas por grupo muscular.";
-      const includedDays = program.days.filter(day => !day.alternative && (!day.optional || state.includeOptionalByProgram[program.id]));
-      const totals = {};
-      includedDays.forEach(day => day.exercises.forEach(exercise => { totals[exercise.muscle] = (totals[exercise.muscle] || 0) + exercise.sets; }));
-      const activeMuscles = MUSCLE_ORDER.filter(muscle => totals[muscle]);
-      const max = Math.max(...activeMuscles.map(muscle => totals[muscle]), 1);
-      $("#weekly-volume").innerHTML = activeMuscles.map(muscle => `<div class="weekly-item">
-        <div class="weekly-label"><span>${muscle}</span><strong>${totals[muscle]} series</strong></div>
-        <div class="weekly-track"><div class="weekly-fill" style="width:${(totals[muscle] / max) * 100}%"></div></div>
-      </div>`).join("");
-      const optionalWrap = $("#optional-toggle-wrap");
-      optionalWrap.hidden = !program.days.some(day => day.optional);
-      optionalWrap.querySelector("span").textContent = program.id === "solo" ? "Incluir día 4 opcional" : "Incluir sesión C opcional";
-      $("#include-optional").checked = Boolean(state.includeOptionalByProgram[program.id]);
-    }
-
-    function renderProgressGuidance() {
-      if (activeProgram().id === "shoulder") {
-        $("#progress-guidance").innerHTML = `<h2>Cómo usar esta pauta</h2>
-          <p>Ejercicios educativos para tendinitis o tendinopatía de hombro. La selección y la carga dependen de tu valoración; no sustituyen el tratamiento.</p>
-          <ol class="guidance-list">
-            <li><b>1</b><span>Empieza con una serie de 10, según la explicación final del video (19:42). La goma se realiza por brazo; el halo suma 5 vueltas por sentido.</span></li>
-            <li><b>2</b><span>Si la primera semana va bien, consulta con tu fisio antes de añadir la segunda serie que propone el video. El registro inicial mantiene una serie.</span></li>
-            <li><b>3</b><span>Si aparece dolor, detén ese movimiento y consulta. No fuerces el recorrido ni aumentes el peso para completar las repeticiones.</span></li>
-          </ol>
-          <p>El descanso de 1 min es orientativo de esta app. Ajusta la sesión y la combinación con gym o vóley con tu fisioterapeuta.</p>
-          <p><a href="https://www.youtube.com/watch?v=coXs4giH5F4&amp;t=1182s" target="_blank" rel="noopener noreferrer">Ver pauta y progresión · 19:42 ↗</a></p>
-          <p><a href="https://www.orthoinfo.org/recovery/rotator-cuff-and-shoulder-conditioning-program" target="_blank" rel="noopener noreferrer">AAOS · ejercicio de hombro y dolor ↗</a></p>`;
-        return;
-      }
-      const bodyweight = activeProgram().id === "calisthenics";
-      $("#progress-guidance").innerHTML = `<h2>Cómo progresar</h2>
-        <p>${bodyweight ? "Más repeticiones y después una variante más difícil." : "Doble progresión, sin perseguir el fallo."}</p>
-        <ol class="guidance-list">
-          <li><b>1</b><span>Completa el mínimo del rango con el RIR indicado.</span></li>
-          <li><b>2</b><span>Sube repeticiones manteniendo técnica y control.</span></li>
-          <li><b>3</b><span>${bodyweight ? "Al lograr el máximo con el RIR indicado en dos sesiones, usa una variante más difícil y vuelve al mínimo del rango." : "Al lograr el máximo en todas las series con el RIR indicado en dos sesiones, sube el menor salto disponible (aprox. 2–5%) y vuelve al mínimo del rango."}</span></li>
-        </ol>
-        <p>Calienta 6–8 min y respeta los descansos: 2–2:30 min en los movimientos principales y 1–1:30 min en los accesorios. Si el rendimiento cae, añade descanso antes de añadir series.</p>
-        <p>Si falta equipo, usa la alternativa indicada con las mismas series, reps, descanso y RIR. Calibra su carga desde liviano: los kg y referencias no son comparables entre máquinas o variantes. Mantén la misma variante para seguir el progreso.</p>
-        <p>Si un movimiento provoca dolor, omítelo; no lo compenses con más series. Puedes cortar la sesión antes cuando quieras.</p>
-        ${activeProgram().id === "chest" ? `<p>Deja 1–2 repeticiones en reserva (RIR). Si llegas fatigado o baja tu rendimiento, reduce una serie por ejercicio esa semana. Estas sesiones ya incluyen espalda y hombros; cuenta también ese trabajo al combinarlas con otro plan.</p><p>En casa: sube primero las reps. Después aumenta el peso de las mancuernas, la dificultad de las flexiones o la resistencia del elástico. Compara las reps con la misma variante y banda.</p><p>A+B, A+Casa o B+Casa suman 14 series de pecho: reemplazan las de Hiper, Vóley o Calis. El resumen muestra A+B (14 pecho, 6 espalda y 4 hombros); Casa sustituye una sesión con el mismo reparto. No suma otros programas. Evalúa el progreso durante varias semanas.</p>` : ""}`;
-    }
-
     function renderAll() {
       renderNavigation();
-      $("#effort-note").innerHTML = activeProgram().id === "shoulder"
-        ? "<strong>Control y recuperación</strong><br>Trabaja sin dolor y deja un día de descanso entre sesiones. Sigue la pauta de tu fisioterapeuta."
-        : "<strong>Regla de esfuerzo</strong><br>Termina la mayoría de series con 1–2 repeticiones posibles en reserva. Prioriza técnica limpia.";
       renderHero();
       renderLoadPresets();
       renderFilters();
       renderExercises();
-      renderWeeklyVolume();
-      renderProgressGuidance();
-      requestAnimationFrame(() => {
-        $("#mobile-programs [aria-pressed=\"true\"]")?.scrollIntoView({ block: "nearest", inline: "center" });
-        $("#mobile-days [aria-pressed=\"true\"]")?.scrollIntoView({ block: "nearest", inline: "center" });
-      });
     }
 
     function findNextSet(day) {
-      for (const exercise of day.exercises) {
+      const focused = day.exercises.find(exercise => exercise.id === state.focusExerciseId);
+      for (const exercise of focused ? [focused, ...day.exercises] : day.exercises) {
         for (let index = 0; index < exercise.sets; index += 1) {
           if (!getEntry(day.id, exercise.id, index).completed) return { exercise, index, order: day.exercises.indexOf(exercise) + 1 };
         }
@@ -2521,13 +2564,33 @@
       return null;
     }
 
+    function syncCardStates(day = activeDay(), next = findNextSet(day)) {
+      $$("[data-exercise-card]").forEach(card => {
+        const exercise = day.exercises.find(item => item.id === card.dataset.exerciseCard);
+        if (!exercise) return;
+        const complete = isExerciseComplete(day, exercise);
+        const isNext = next?.exercise.id === exercise.id;
+        const role = complete ? "done" : isNext ? "next" : "upcoming";
+        if (cardRoles.get(exercise.id) !== role) {
+          cardRoles.set(exercise.id, role);
+          toggledCards.delete(exercise.id);
+        }
+        const collapsed = !heldCards.has(exercise.id) && (!isNext !== toggledCards.has(exercise.id));
+        card.classList.toggle("is-complete", complete);
+        card.classList.toggle("is-next", isNext);
+        card.classList.toggle("is-collapsed", collapsed);
+        setCollapseToggle(card, collapsed);
+      });
+    }
+
     function updateNextSet() {
       const day = activeDay();
-      $$(".exercise-card.is-next").forEach(card => card.classList.remove("is-next"));
-      $$(".set-row.is-next-set").forEach(row => row.classList.remove("is-next-set"));
       const next = findNextSet(day);
+      syncCardStates(day, next);
+      $$(".set-row.is-next-set").forEach(row => row.classList.remove("is-next-set"));
+      updateConsole();
       const button = $("#session-next");
-      const total = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
+      const { total } = setCounts(day);
       if (!next) {
         button.hidden = total === 0;
         button.classList.add("is-done");
@@ -2537,33 +2600,48 @@
       button.hidden = false;
       button.classList.remove("is-done");
       $("#session-next-label").textContent = `Siguiente · ${String(next.order).padStart(2, "0")} serie ${next.index + 1}`;
-      const card = $(`[data-exercise-card="${next.exercise.id}"]`);
-      if (!card) return;
-      card.classList.add("is-next");
-      $(`[data-set-row="${next.index}"]`, card)?.classList.add("is-next-set");
+      $(`[data-exercise-card="${next.exercise.id}"] [data-set-row="${next.index}"]`)?.classList.add("is-next-set");
     }
 
-    function updateSessionFinish(day, done, total) {
-      const panel = $("#session-finish");
-      const started = hasTrainingData(day);
-      panel.hidden = !started;
-      if (!started) return;
-      const complete = total > 0 && done === total;
-      panel.classList.toggle("is-complete", complete);
-      $("#session-finish-title").textContent = complete ? "Sesión completa" : "Sesión en curso";
-      $("#session-finish-note").textContent = complete
-        ? "Cuando quieras empezar de nuevo, pulsa RESET. Las referencias previas se conservan."
-        : `${done} de ${total} series hechas. RESET vacía el entrenamiento de este día sin crear una nueva referencia.`;
+    function completedTimes(day) {
+      const prefix = `${state.programId}:${day.id}:`;
+      return Object.entries(state.entries)
+        .filter(([key, entry]) => key.startsWith(prefix) && entry.completed && entry.doneAt)
+        .map(([, entry]) => entry.doneAt);
+    }
+
+    function sessionStats(day) {
+      const { done } = setCounts(day);
+      const parts = [`${done} ${done === 1 ? "serie" : "series"}`];
+      if (activeProgram().id !== "shoulder") {
+        const loaded = day.exercises.filter(exercise => exercise.tracking !== "reps").reduce((sum, exercise) => sum + exerciseVolume(day, exercise), 0);
+        const reps = day.exercises.filter(exercise => exercise.tracking === "reps").reduce((sum, exercise) => sum + exerciseVolume(day, exercise), 0);
+        if (loaded) parts.push(`${formatVolume(loaded)} kg·rep`);
+        if (reps) parts.push(`${formatVolume(reps)} reps`);
+      }
+      const times = completedTimes(day);
+      const minutes = times.length > 1 ? Math.round((Math.max(...times) - Math.min(...times)) / 60000) : 0;
+      if (minutes > 0 && minutes <= 180) parts.push(`${minutes} min`);
+      return parts.join(" · ");
+    }
+
+    function updateStaleNotice(day, done, total) {
+      const times = completedTimes(day);
+      const last = times.length ? Math.max(...times) : 0;
+      const stale = Boolean(last) && dateKey(last) !== dateKey();
+      $("#session-stale").hidden = !stale;
+      if (stale) $("#session-stale-note").textContent = `Registrada el ${formatShortDate(dateKey(last))} · ${done} de ${total} series.`;
     }
 
     function updateSessionProgress() {
       const day = activeDay();
-      const total = day.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
-      const done = day.exercises.reduce((sum, exercise) => sum + Array.from({ length: exercise.sets }, (_, index) => getEntry(day.id, exercise.id, index).completed ? 1 : 0).reduce((a, b) => a + b, 0), 0);
+      const { done, total } = setCounts(day);
       $("#session-progress-fill").style.width = `${total ? (done / total) * 100 : 0}%`;
       $("#session-progress-output").textContent = `${done} de ${total} series`;
+      renderTopbar(day, done, total);
+      $$(`[data-day="${day.id}"] small`).forEach(status => { status.textContent = dayStatus(day); });
       updateNextSet();
-      updateSessionFinish(day, done, total);
+      updateStaleNotice(day, done, total);
     }
 
     function updateExerciseStats(exerciseId) {
@@ -2572,21 +2650,206 @@
       const card = $(`[data-exercise-card="${exerciseId}"]`);
       if (!exercise || !card) return;
       const volume = exerciseVolume(day, exercise);
+      const reps = loggedReps(day, exercise);
       const reference = getReference(exerciseId);
       const ratio = reference.value ? Math.round((volume / reference.value) * 100) : 0;
-      $("[data-volume-value]", card).textContent = volumeText(volume, volumeUnit(exercise));
+      card.classList.toggle("has-readout", volume > 0 || reps > 0);
+      card.classList.toggle("has-reference", reference.value > 0);
+      $("[data-volume-value]", card).textContent = volumeText(volume, volumeUnit(exercise), reps);
       $("[data-ratio-label]", card).textContent = referenceRatioLabel(reference, ratio);
-      $("[data-collapsed-summary]", card).innerHTML = collapsedSummary(volume, volumeUnit(exercise), reference, ratio);
+      $("[data-collapsed-summary]", card).innerHTML = collapsedSummary(volume, volumeUnit(exercise), reference, ratio, reps);
       $("[data-reference-label]", card).textContent = referenceFieldLabel(reference, exercise);
-      $("[data-reference-auto]", card).hidden = reference.source !== "manual" || !safeNumber(state.lastVolumes[referenceKey(exerciseId)]);
+      $("[data-reference-auto]", card).hidden = reference.source !== "manual" || !automaticVolume(exerciseId);
       $("[data-exercise-fill]", card).style.width = `${Math.min(ratio, 100)}%`;
-      const complete = isExerciseComplete(day, exercise);
-      card.classList.toggle("is-complete", complete);
-      if (!complete) {
-        card.classList.remove("is-collapsed");
-        expandedCompleteCards.delete(exerciseId);
-        setCollapseToggle(card, false);
+    }
+
+    function syncSetRow(day, exercise, index) {
+      const row = $(`[data-exercise-card="${exercise.id}"] [data-set-row="${index}"]`);
+      if (!row) return;
+      const entry = getEntry(day.id, exercise.id, index);
+      [["[data-weight]", displayDecimal(entry.weight)], ["[data-reps]", entry.reps]].forEach(([selector, value]) => {
+        const input = $(selector, row);
+        if (input && input !== document.activeElement) input.value = value ?? "";
+      });
+      $("[data-check]", row).checked = Boolean(entry.completed);
+      row.classList.toggle("is-done", Boolean(entry.completed));
+    }
+
+    function applySetValue(day, exercise, index, field, value) {
+      if (field === "weight") {
+        const correcting = getEntry(day.id, exercise.id, index).completed;
+        setEntry(day.id, exercise.id, index, { weight: value, weightSource: "manual" });
+        if (safeNumber(value) && !correcting) carryWeight(day, exercise, index, value);
+      } else {
+        setEntry(day.id, exercise.id, index, { reps: value });
       }
+      const entry = getEntry(day.id, exercise.id, index);
+      if (entry.completed) {
+        rememberSet(entryKey(day.id, exercise.id, index), entry);
+        persist();
+      }
+      syncSetRow(day, exercise, index);
+      updateExerciseStats(exercise.id);
+      updateSessionProgress();
+    }
+
+    function restLabel(exercise, next) {
+      return next.exercise.id === exercise.id
+        ? `Descanso · sigue serie ${next.index + 1} de ${exercise.sets}`
+        : `Descanso · sigue ${next.exercise.name}`;
+    }
+
+    function revealCurrentSet(block = "nearest") {
+      $(".set-row.is-next-set")?.scrollIntoView({ block });
+    }
+
+    function revealCurrentCard() {
+      $(".set-row.is-next-set")?.closest(".exercise-card").scrollIntoView({ block: window.matchMedia("(max-width: 880px)").matches ? "start" : "nearest" });
+    }
+
+    function setSetDone(day, exercise, index, done) {
+      const key = entryKey(day.id, exercise.id, index);
+      state.focusExerciseId = exercise.id;
+      keepScreenAwake();
+      if (!done) {
+        forgetSet(key, getEntry(day.id, exercise.id, index).logBefore);
+        setEntry(day.id, exercise.id, index, { completed: false, doneAt: null, logBefore: undefined });
+        syncSetRow(day, exercise, index);
+        updateExerciseStats(exercise.id);
+        heldCards.delete(exercise.id);
+        if (lastDoneSet?.exerciseId === exercise.id && lastDoneSet.index === index) {
+          lastDoneSet = null;
+          clearSessionTimer();
+        }
+        updateSessionProgress();
+        revealCurrentSet();
+        return;
+      }
+      const entry = getEntry(day.id, exercise.id, index);
+      const reps = safeNumber(entry.reps) ? entry.reps : knownReps(day, exercise, index);
+      const weight = exercise.tracking === "reps" ? "" : defaultWeight(day, exercise, index);
+      const patch = {
+        completed: true,
+        doneAt: Date.now(),
+        logBefore: state.setLog[key] || [],
+        ...(reps ? { reps } : {}),
+        ...(safeNumber(weight) && !safeNumber(entry.weight) ? { weight, weightSource: "carried" } : {})
+      };
+      rememberSet(key, { ...entry, ...patch });
+      setEntry(day.id, exercise.id, index, patch);
+      lastDoneSet = { exerciseId: exercise.id, index };
+      syncSetRow(day, exercise, index);
+      updateExerciseStats(exercise.id);
+      const exerciseDone = isExerciseComplete(day, exercise);
+      if (exerciseDone) heldCards.add(exercise.id);
+      updateSessionProgress();
+      const next = findNextSet(day);
+      if (next) startTimer(exercise.rest, restLabel(exercise, next));
+      else {
+        clearSessionTimer();
+        releaseScreen();
+      }
+      if (!reps) {
+        // Nothing to log yet: keep the row open and ask for the one number only the user knows.
+        heldCards.delete(exercise.id);
+        if (exerciseDone) toggledCards.add(exercise.id);
+        syncCardStates(day, next);
+        $(`[data-exercise-card="${exercise.id}"] [data-set-row="${index}"] [data-reps]`)?.focus();
+        return;
+      }
+      if (!exerciseDone) {
+        revealCurrentSet();
+        return;
+      }
+      setTimeout(() => {
+        heldCards.delete(exercise.id);
+        syncCardStates();
+        if (next) revealCurrentCard();
+        else window.scrollTo({ top: 0 });
+      }, 480);
+    }
+
+    function completeFromConsole() {
+      const day = activeDay();
+      const next = findNextSet(day);
+      if (!next) return;
+      setEntry(day.id, next.exercise.id, next.index, { reps: $("#console-reps").value.trim() || defaultReps(day, next.exercise, next.index) });
+      setSetDone(day, next.exercise, next.index, true);
+    }
+
+    function stepConsole(field, direction) {
+      const day = activeDay();
+      const next = findNextSet(day);
+      if (!next) return;
+      const current = safeNumber($(field === "weight" ? "#console-weight" : "#console-reps").value);
+      const value = field === "weight" ? stepWeight(current, direction) : Math.max(1, current + direction);
+      keepScreenAwake();
+      applySetValue(day, next.exercise, next.index, field, value ? String(value) : "");
+    }
+
+    function undoLastSet() {
+      if (!lastDoneSet) return;
+      const day = activeDay();
+      const exercise = day.exercises.find(item => item.id === lastDoneSet.exerciseId);
+      if (exercise) setSetDone(day, exercise, lastDoneSet.index, false);
+    }
+
+    function nextDayInRotation() {
+      const program = activeProgram();
+      const rotation = program.days.filter(day => !day.optional && !day.alternative);
+      if (rotation.length < 2) return null;
+      return rotation[(rotation.findIndex(day => day.id === activeDay().id) + 1) % rotation.length];
+    }
+
+    function setDockMode(mode) {
+      const dock = $("#timer-dock");
+      if (dock.dataset.mode === mode) return;
+      const hadFocus = dock.contains(document.activeElement);
+      dock.dataset.mode = mode;
+      guardTaps(mode === "done" ? 900 : 350);
+      if (hadFocus) $({ work: "#console-done", rest: "#timer-skip", done: $("#console-next-day").hidden ? "#console-reset" : "#console-next-day" }[mode]).focus({ preventScroll: true });
+    }
+
+    // Each console state replaces the last in the same spot, so the second half of a double tap
+    // would land on whatever just appeared under the finger.
+    function guardTaps(milliseconds) {
+      tapGuardUntil = Math.max(tapGuardUntil, performance.now() + milliseconds);
+    }
+
+    function setConsoleValue(selector, value) {
+      const input = $(selector);
+      if (input !== document.activeElement) input.value = value ?? "";
+    }
+
+    function updateConsole() {
+      const day = activeDay();
+      const next = findNextSet(day);
+      const dock = $("#timer-dock");
+      if (next) {
+        const { exercise, index } = next;
+        const bodyweight = exercise.tracking === "reps";
+        const previous = previousSet(entryKey(day.id, exercise.id, index));
+        const hint = [`Objetivo ${exercise.reps}`, ...(exercise.rir ? [`RIR ${exercise.rir}`] : [])];
+        if (previous && (safeNumber(previous.reps) || !bodyweight)) hint.push(`última ${formatLoggedSet(previous, bodyweight)}`);
+        $("#console-name").textContent = exercise.name;
+        $("#console-set").textContent = `${dock.classList.contains("is-finished") ? "¡Listo! · " : ""}Serie ${index + 1}/${exercise.sets}`;
+        $("#console-hint").textContent = hint.join(" · ");
+        $("#console-weight-stepper").hidden = bodyweight;
+        dock.classList.toggle("is-reps-only", bodyweight);
+        setConsoleValue("#console-weight", displayDecimal(defaultWeight(day, exercise, index)));
+        setConsoleValue("#console-reps", defaultReps(day, exercise, index));
+        $("#console-done").setAttribute("aria-label", `Marcar serie ${index + 1} de ${exercise.name} como hecha`);
+      } else {
+        const nextDay = nextDayInRotation();
+        const button = $("#console-next-day");
+        button.hidden = !nextDay;
+        if (nextDay) {
+          button.dataset.day = nextDay.id;
+          button.textContent = `Próxima: ${nextDay.name}`;
+        }
+        $("#console-complete-stats").textContent = sessionStats(day);
+      }
+      setDockMode(timerRunning || timerRemaining > 0 ? "rest" : next ? "work" : "done");
     }
 
     function setCollapseToggle(card, collapsed) {
@@ -2597,23 +2860,37 @@
       toggle.setAttribute("aria-label", `${collapsed ? "Mostrar" : "Plegar"} ${name}`);
     }
 
-    function collapseCard(card, collapsed) {
+    function toggleCard(card) {
       const exerciseId = card.dataset.exerciseCard;
-      card.classList.toggle("is-collapsed", collapsed);
-      if (collapsed) expandedCompleteCards.delete(exerciseId);
-      else expandedCompleteCards.add(exerciseId);
-      setCollapseToggle(card, collapsed);
+      heldCards.delete(exerciseId);
+      if (toggledCards.has(exerciseId)) toggledCards.delete(exerciseId);
+      else toggledCards.add(exerciseId);
+      syncCardStates();
     }
 
-    function confirmSheet({ title, message, confirmLabel = "Confirmar" }) {
+    function announce(message) {
+      $("#sr-status").textContent = message;
+    }
+
+    function focusSessionControl() {
+      ($("#reset-session").offsetParent ? $("#reset-session") : $("#session-switch")).focus({ preventScroll: true });
+    }
+
+    function confirmSheet({ title, confirmLabel = "Confirmar" }) {
       const dialog = $("#confirm-sheet");
-      if (!dialog || typeof dialog.showModal !== "function") return Promise.resolve(window.confirm(`${title}\n${message}`));
+      if (!dialog || typeof dialog.showModal !== "function") return Promise.resolve(window.confirm(title));
       $("#sheet-title").textContent = title;
-      $("#sheet-message").textContent = message;
       $("#sheet-confirm").textContent = confirmLabel;
       dialog.returnValue = "cancel";
+      guardTaps(600);
       return new Promise(resolve => {
-        dialog.addEventListener("close", () => resolve(dialog.returnValue === "confirm"), { once: true });
+        dialog.addEventListener("close", () => {
+          guardTaps(350);
+          // The browser can leave focus on a dialog that has just closed.
+          const focused = document.activeElement;
+          if (!focused || focused === document.body || focused.closest("dialog:not([open])")) focusSessionControl();
+          resolve(dialog.returnValue === "confirm");
+        }, { once: true });
         dialog.showModal();
       });
     }
@@ -2626,9 +2903,8 @@
       toastTimeout = setTimeout(() => toast.classList.remove("show"), 2200);
     }
 
-    function showPwaBanner({ kind, title, message, actionLabel, onAction }) {
+    function showPwaBanner({ title, message = "", actionLabel, onAction }) {
       const banner = $("#pwa-banner");
-      pwaBannerKind = kind;
       pwaBannerAction = onAction;
       $("#pwa-banner-title").textContent = title;
       $("#pwa-banner-message").textContent = message;
@@ -2642,51 +2918,47 @@
       banner.classList.remove("is-visible");
       setTimeout(() => { banner.hidden = true; }, 240);
       pwaBannerAction = null;
-      pwaBannerKind = "";
     }
 
     function isStandaloneApp() {
       return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
     }
 
+    function isIOSDevice() {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    }
+
+    function canOfferInstall() {
+      return !isStandaloneApp() && (Boolean(deferredInstallPrompt) || isIOSDevice());
+    }
+
     function showInstallOffer() {
-      if (isStandaloneApp() || localStorage.getItem("setline-install-hint-dismissed") === "1") return;
+      if (isStandaloneApp()) return;
       if (deferredInstallPrompt) {
         showPwaBanner({
-          kind: "install",
           title: "Instalar Setline",
-          message: "Úsala a pantalla completa y accede incluso con mala conexión.",
           actionLabel: "Instalar",
           onAction: async () => {
             const prompt = deferredInstallPrompt;
             deferredInstallPrompt = null;
             await prompt.prompt();
-            const choice = await prompt.userChoice;
-            if (choice.outcome !== "accepted") localStorage.setItem("setline-install-hint-dismissed", "1");
             hidePwaBanner();
           }
         });
         return;
       }
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-      if (!isIOS) return;
+      if (!isIOSDevice()) return;
       showPwaBanner({
-        kind: "install",
         title: "Instalar en iPhone",
         message: "En Safari: Compartir → Añadir a pantalla de inicio.",
         actionLabel: "Entendido",
-        onAction: () => {
-          localStorage.setItem("setline-install-hint-dismissed", "1");
-          hidePwaBanner();
-        }
+        onAction: hidePwaBanner
       });
     }
 
     function showUpdateOffer(worker) {
       showPwaBanner({
-        kind: "update",
         title: "Nueva versión disponible",
-        message: "Actualiza Setline sin perder tus registros guardados en este iPhone.",
         actionLabel: "Actualizar",
         onAction: () => worker.postMessage({ type: "SKIP_WAITING" })
       });
@@ -2694,6 +2966,7 @@
 
     async function registerSetlineServiceWorker() {
       if (!("serviceWorker" in navigator) || !/^https?:$/.test(location.protocol)) return;
+      let controlled = Boolean(navigator.serviceWorker.controller);
       try {
         const registration = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
         if (registration.waiting) showUpdateOffer(registration.waiting);
@@ -2705,6 +2978,13 @@
           });
         });
         navigator.serviceWorker.addEventListener("controllerchange", () => {
+          // The first install only claims this page; reloading would interrupt whatever is on screen.
+          if (!controlled) {
+            controlled = true;
+            // What was fetched before the worker took over isn't in its cache yet.
+            $$("[data-demo-image][src]").forEach(image => fetch(image.src, { mode: "no-cors" }).catch(() => {}));
+            return;
+          }
           if (refreshingForUpdate) return;
           refreshingForUpdate = true;
           window.location.reload();
@@ -2715,6 +2995,31 @@
       }
     }
 
+    function closeOnBackdrop(dialog) {
+      dialog.addEventListener("click", event => {
+        const rect = dialog.getBoundingClientRect();
+        if (event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) dialog.close();
+      });
+    }
+
+    const sessionSheet = $("#session-sheet");
+    closeOnBackdrop(sessionSheet);
+    // Re-rendering the sheet removes its focused button, so the browser can't restore focus by itself.
+    sessionSheet.addEventListener("close", () => {
+      guardTaps(350);
+      $("#session-switch").focus({ preventScroll: true });
+    });
+    $("#session-sheet-close").addEventListener("click", () => sessionSheet.close());
+    $("#session-switch").addEventListener("click", () => {
+      $("#sheet-install").hidden = !canOfferInstall();
+      guardTaps(350);
+      sessionSheet.showModal();
+    });
+    $("#sheet-install").addEventListener("click", () => {
+      sessionSheet.close();
+      showInstallOffer();
+    });
+
     const gifViewer = $("#gif-viewer");
     const gifViewerImage = $("#gif-viewer-image");
     gifViewerImage.addEventListener("error", () => {
@@ -2723,10 +3028,7 @@
       $("#gif-viewer-error").hidden = false;
     });
     $("#gif-viewer-close").addEventListener("click", () => gifViewer.close());
-    gifViewer.addEventListener("click", event => {
-      const rect = gifViewer.getBoundingClientRect();
-      if (event.target === gifViewer && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) gifViewer.close();
-    });
+    closeOnBackdrop(gifViewer);
     gifViewer.addEventListener("close", () => gifViewerImage.removeAttribute("src"));
     document.addEventListener("click", event => {
       const trigger = event.target.closest("[data-expand-gif]");
@@ -2763,31 +3065,47 @@
       image.addEventListener("load", () => panel.classList.add("is-ready"), { once: true });
       image.addEventListener("error", () => {
         panel.classList.add("is-error");
-        $(".demo-status", panel).textContent = "GIF no disponible. Usa «Ver en grande».";
+        $(".demo-status", panel).textContent = "Sin GIF";
       }, { once: true });
       const demo = exerciseGifs[panel.id.replace("demo-", "")];
       image.src = demo?.[4] && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? demo[4] : image.dataset.src;
     }
 
+    // What was tied to the old session goes; a running rest keeps counting under a neutral label.
+    function leaveSession() {
+      state.focusExerciseId = null;
+      lastDoneSet = null;
+      sessionToolsOpen = false;
+      toggledCards.clear();
+      clearTimeout(timerFinishTimeout);
+      $("#timer-dock").classList.remove("is-finished");
+      if (timerRunning || timerRemaining > 0) $("#timer-label").textContent = "Descanso";
+    }
+
     function switchProgram(programId) {
-      const mobileSource = window.matchMedia("(max-width: 880px)").matches;
+      // The sheet stays open here so the session can be picked next.
+      if (programId !== state.programId) leaveSession();
       state.programId = programId;
       state.filter = "Todos";
       if (!state.dayByProgram[programId]) state.dayByProgram[programId] = activeProgram().days[0].id;
       persist();
       renderAll();
-      $(`#${mobileSource ? "mobile" : "desktop"}-programs [data-program="${programId}"]`)?.focus({ preventScroll: true });
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      updateTimerUI();
+      $(`#${sessionSheet.open ? "sheet" : "desktop"}-programs [data-program="${programId}"]`)?.focus({ preventScroll: true });
+      sessionSheet.scrollTo({ top: 0 });
+      window.scrollTo({ top: 0 });
     }
 
     function switchDay(dayId) {
-      const mobileSource = window.matchMedia("(max-width: 880px)").matches;
+      if (dayId !== activeDay().id) leaveSession();
       state.dayByProgram[state.programId] = dayId;
       state.filter = "Todos";
       persist();
       renderAll();
-      $(`#${mobileSource ? "mobile" : "desktop"}-days [data-day="${dayId}"]`)?.focus({ preventScroll: true });
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      updateTimerUI();
+      if (sessionSheet.open) sessionSheet.close();
+      else $(`#desktop-days [data-day="${dayId}"]`)?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0 });
     }
 
     function hasTrainingData(day) {
@@ -2824,18 +3142,18 @@
       try {
         const confirmed = await confirmSheet({
           title: `RESET · ${day.name}`,
-          message: "Se vaciarán los pesos, repeticiones y checks de este día. Las referencias previas y los demás días se conservan. No se guardará una nueva referencia.",
           confirmLabel: "RESET"
         });
         if (!confirmed || state.programId !== programId || activeDay().id !== day.id) return;
         clearSessionEntries(programId, day.id);
-        expandedCompleteCards.clear();
+        toggledCards.clear();
+        state.focusExerciseId = null;
         clearSessionTimer();
         state.filter = "Todos";
         persist();
         renderFilters();
         renderExercises();
-        $("#reset-session").focus({ preventScroll: true });
+        focusSessionControl();
         window.scrollTo({ top: 0, behavior: "smooth" });
         showToast(`${day.name} · RESET completado`);
       } finally {
@@ -2852,11 +3170,74 @@
       $("#timer-toggle").setAttribute("aria-label", timerRunning ? "Pausar temporizador" : "Iniciar temporizador");
       $("#timer-toggle-icon").innerHTML = timerRunning ? '<path d="M8 5h3v14H8zM14 5h3v14h-3z" fill="currentColor" stroke="none"/>' : '<path d="m8 5 11 7-11 7z"/>';
       $("#timer-progress-fill").style.width = `${timerInitial > 0 ? Math.min(100, (timerRemaining / timerInitial) * 100) : 0}%`;
-      if (timerRunning) {
+      if (timerRunning && $("#timer-dock").classList.contains("is-finished")) {
         clearTimeout(timerFinishTimeout);
         $("#timer-dock").classList.remove("is-finished");
+        updateConsole();
       }
       document.title = timerRunning ? `${$("#timer-time").textContent} · Setline` : "Setline — Rutinas de hipertrofia";
+      $("#console-undo").hidden = !lastDoneSet;
+      setDockMode(timerRunning || timerRemaining > 0 ? "rest" : findNextSet(activeDay()) ? "work" : "done");
+      saveTimer();
+    }
+
+    function saveTimer() {
+      const snapshot = timerRunning && timerDeadline
+        ? { deadline: timerDeadline, initial: timerInitial, label: $("#timer-label").textContent }
+        : timerRemaining > 0 ? { remaining: timerRemaining, initial: timerInitial, label: $("#timer-label").textContent } : null;
+      const serialized = JSON.stringify(snapshot);
+      if (serialized === lastTimerSnapshot) return;
+      lastTimerSnapshot = serialized;
+      try {
+        if (snapshot) localStorage.setItem(timerStorageKey, serialized);
+        else localStorage.removeItem(timerStorageKey);
+      } catch (_) {}
+    }
+
+    function restoreTimer() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(timerStorageKey));
+        if (!saved) return;
+        timerInitial = saved.initial || 60;
+        $("#timer-label").textContent = saved.label || "Descanso";
+        if (saved.deadline > Date.now()) {
+          timerRunning = true;
+          timerDeadline = saved.deadline;
+          timerRemaining = Math.ceil((saved.deadline - Date.now()) / 1000);
+          timerInterval = setInterval(syncTimer, 250);
+          keepScreenAwake();
+          // Audio needs a gesture; a reload lost it, so the next touch earns it back.
+          document.addEventListener("pointerdown", primeTimerAudio, { once: true });
+        } else if (saved.remaining > 0) {
+          timerRemaining = saved.remaining;
+        }
+      } catch (_) {}
+    }
+
+    async function acquireWakeLock() {
+      if (wakeLock || wakeLockPending || document.hidden || Date.now() > screenAwakeUntil || !navigator.wakeLock) return;
+      wakeLockPending = true;
+      try {
+        wakeLock = await navigator.wakeLock.request("screen");
+        wakeLock.addEventListener("release", () => { wakeLock = null; });
+      } catch (_) {
+      } finally {
+        wakeLockPending = false;
+      }
+    }
+
+    // A locked phone between sets costs an unlock per set; stays on for a while after the last action.
+    function keepScreenAwake() {
+      screenAwakeUntil = Date.now() + 600000;
+      clearTimeout(screenAwakeTimer);
+      screenAwakeTimer = setTimeout(releaseScreen, 600000);
+      acquireWakeLock();
+    }
+
+    function releaseScreen() {
+      screenAwakeUntil = 0;
+      clearTimeout(screenAwakeTimer);
+      wakeLock?.release().catch(() => {});
     }
 
     function syncTimer() {
@@ -2914,13 +3295,16 @@
       stopTimer();
       const dock = $("#timer-dock");
       dock.classList.add("is-finished");
-      $("#timer-label").textContent = "¡Listo! Siguiente";
+      updateConsole();
+      // Nothing the user did changed the screen, and a tap aimed at Saltar may already be on its way.
+      guardTaps(800);
       clearTimeout(timerFinishTimeout);
       timerFinishTimeout = setTimeout(() => {
         dock.classList.remove("is-finished");
-        $("#timer-label").textContent = "Descanso";
+        updateConsole();
       }, 6000);
-      showToast("Descanso terminado · siguiente serie");
+      const next = findNextSet(activeDay());
+      announce(next ? `Descanso terminado. Serie ${next.index + 1} de ${next.exercise.sets}: ${next.exercise.name}` : "Descanso terminado");
       if (navigator.vibrate) navigator.vibrate([120, 70, 120]);
       playTimerTone();
     }
@@ -2946,6 +3330,7 @@
     function adjustTimer(seconds) {
       if (timerRunning && timerDeadline) {
         timerDeadline = Math.max(Date.now(), timerDeadline + seconds * 1000);
+        timerInitial = Math.max(timerInitial, Math.ceil((timerDeadline - Date.now()) / 1000));
         syncTimer();
       } else {
         timerRemaining = Math.max(0, timerRemaining + seconds);
@@ -2957,13 +3342,8 @@
     document.addEventListener("click", event => {
       const heroToggle = event.target.closest("[data-hero-toggle]");
       if (heroToggle) {
-        const programId = activeProgram().id;
-        state.heroSeenByProgram[programId] = true;
-        if (heroToggle.getAttribute("aria-expanded") === "true") expandedHeroPrograms.delete(programId);
-        else expandedHeroPrograms.add(programId);
-        persist();
+        sessionToolsOpen = !sessionToolsOpen;
         renderHero();
-        renderLoadPresets();
         $("[data-hero-toggle]")?.focus({ preventScroll: true });
         return;
       }
@@ -2977,7 +3357,6 @@
         persist();
         renderLoadPresets();
         renderExercises();
-        showToast(`Preset ${LOAD_PRESETS[state.loadPreset].label} aplicado`);
         return;
       }
       const filterButton = event.target.closest("[data-filter]");
@@ -2986,23 +3365,47 @@
         persist(); renderFilters(); renderExercises(); return;
       }
       const resetButton = event.target.closest("[data-reset-session]");
-      if (resetButton) return resetCurrentSession();
+      if (resetButton) {
+        if (sessionSheet.open) sessionSheet.close();
+        return resetCurrentSession();
+      }
       const nextButton = event.target.closest("[data-scroll-next]");
       if (nextButton) {
-        const target = $(".set-row.is-next-set") || $("#session-finish");
-        target?.scrollIntoView({ block: "center", behavior: "smooth" });
+        const next = findNextSet(activeDay());
+        if (next && !$(`[data-exercise-card="${next.exercise.id}"]`)) {
+          state.filter = "Todos";
+          persist();
+          renderFilters();
+          renderExercises();
+        }
+        if (next) {
+          toggledCards.delete(next.exercise.id);
+          syncCardStates();
+        }
+        revealCurrentSet("center");
+        return;
+      }
+      const stepperButton = event.target.closest("[data-stepper]");
+      if (stepperButton) {
+        stepConsole(stepperButton.dataset.stepper, Number(stepperButton.dataset.direction));
+        return;
+      }
+      const focusButton = event.target.closest("[data-focus-exercise]");
+      if (focusButton) {
+        state.focusExerciseId = focusButton.dataset.focusExercise;
+        persist();
+        updateSessionProgress();
+        revealCurrentCard();
         return;
       }
       const collapseToggle = event.target.closest("[data-collapse-toggle]");
       if (collapseToggle) {
-        const card = collapseToggle.closest(".exercise-card");
-        collapseCard(card, !card.classList.contains("is-collapsed"));
+        toggleCard(collapseToggle.closest(".exercise-card"));
         return;
       }
-      const completeHead = event.target.closest(".exercise-card.is-complete .exercise-head");
-      if (completeHead && !event.target.closest("button, a, input")) {
-        const card = completeHead.closest(".exercise-card");
-        collapseCard(card, !card.classList.contains("is-collapsed"));
+      const exerciseHead = event.target.closest(".exercise-head");
+      if (exerciseHead && !event.target.closest("[data-expand-gif], [data-demo-toggle]")) {
+        toggleCard(exerciseHead.closest(".exercise-card"));
         return;
       }
       const automaticReferenceButton = event.target.closest("[data-reference-auto]");
@@ -3018,13 +3421,20 @@
       }
       const restButton = event.target.closest("[data-rest]");
       if (restButton) {
-        startTimer(Number(restButton.dataset.rest), restButton.dataset.exerciseName);
+        lastDoneSet = null;
+        keepScreenAwake();
+        startTimer(Number(restButton.dataset.rest), `Descanso · ${restButton.dataset.exerciseName}`);
         return;
       }
     });
 
     document.addEventListener("keydown", event => {
-      if (event.key !== "Enter" || !event.target.matches(".set-input")) return;
+      if (event.key !== "Enter") return;
+      if (event.target.matches(".stepper-input")) {
+        event.target.blur();
+        return;
+      }
+      if (!event.target.matches(".set-input")) return;
       event.preventDefault();
       const inputs = $$(".set-input", event.target.closest(".exercise-card"));
       const next = inputs[inputs.indexOf(event.target) + 1];
@@ -3035,38 +3445,8 @@
     document.addEventListener("change", event => {
       if (event.target.matches("[data-check]")) {
         const day = activeDay();
-        const exerciseId = event.target.dataset.exercise;
-        const index = Number(event.target.dataset.set);
-        const row = event.target.closest(".set-row");
-        const patch = { completed: event.target.checked };
-        if (event.target.checked && index > 0) {
-          const previous = getEntry(day.id, exerciseId, index - 1);
-          const repsInput = $("[data-reps]", row);
-          const weightInput = $("[data-weight]", row);
-          if (repsInput && !safeNumber(repsInput.value) && safeNumber(previous.reps)) {
-            repsInput.value = previous.reps;
-            patch.reps = previous.reps;
-          }
-          if (weightInput && !safeNumber(weightInput.value) && safeNumber(previous.weight)) {
-            weightInput.value = previous.weight;
-            patch.weight = previous.weight;
-            patch.weightSource = previous.weightSource || "manual";
-          }
-        }
-        setEntry(day.id, exerciseId, index, patch);
-        row.classList.toggle("is-done", event.target.checked);
-        updateExerciseStats(exerciseId);
-        updateSessionProgress();
-        const exercise = day.exercises.find(item => item.id === exerciseId);
-        if (event.target.checked) {
-          startTimer(exercise.rest, exercise.name);
-          if (isExerciseComplete(day, exercise)) {
-            const card = event.target.closest(".exercise-card");
-            setTimeout(() => {
-              if (card.classList.contains("is-complete") && !expandedCompleteCards.has(exerciseId)) collapseCard(card, true);
-            }, 480);
-          }
-        }
+        const exercise = day.exercises.find(item => item.id === event.target.dataset.exercise);
+        setSetDone(day, exercise, Number(event.target.dataset.set), event.target.checked);
       }
       if (event.target.matches("[data-reference]") && !safeNumber(event.target.value)) {
         const exerciseId = event.target.dataset.exercise;
@@ -3081,11 +3461,13 @@
     document.addEventListener("input", event => {
       if (event.target.matches("[data-weight], [data-reps]")) {
         const day = activeDay();
-        const exerciseId = event.target.dataset.exercise;
-        const index = Number(event.target.dataset.set);
-        setEntry(day.id, exerciseId, index, event.target.matches("[data-weight]") ? { weight: event.target.value, weightSource: "manual" } : { reps: event.target.value });
-        updateExerciseStats(exerciseId);
-        updateSessionProgress();
+        const exercise = day.exercises.find(item => item.id === event.target.dataset.exercise);
+        applySetValue(day, exercise, Number(event.target.dataset.set), event.target.matches("[data-weight]") ? "weight" : "reps", event.target.value);
+      }
+      if (event.target.matches("[data-console-field]")) {
+        const day = activeDay();
+        const next = findNextSet(day);
+        if (next) applySetValue(day, next.exercise, next.index, event.target.dataset.consoleField, event.target.value);
       }
       if (event.target.matches("[data-reference]")) {
         const exerciseId = event.target.dataset.exercise;
@@ -3094,38 +3476,93 @@
       }
     });
 
-    $("#reset-session").addEventListener("click", resetCurrentSession);
-    $("#include-optional").addEventListener("change", event => {
-      state.includeOptionalByProgram[state.programId] = event.target.checked;
-      persist(); renderWeeklyVolume();
+    document.addEventListener("pointerdown", event => {
+      document.documentElement.dataset.input = event.pointerType === "touch" ? "touch" : "pointer";
+    }, true);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Tab") document.documentElement.dataset.input = "keyboard";
+      // Holding a key down must not log set after set.
+      if (event.repeat && (event.key === "Enter" || event.key === " ") && event.target.closest?.("#timer-dock button:not([data-stepper])")) event.preventDefault();
+    }, true);
+    document.addEventListener("click", event => {
+      if (performance.now() >= tapGuardUntil || !event.target.closest("#timer-dock, dialog")) return;
+      event.preventDefault();
+      event.stopPropagation();
+    }, true);
+    document.addEventListener("focusin", event => {
+      if (event.target.matches(".set-input, .stepper-input")) event.target.select();
     });
+    document.addEventListener("focusout", event => {
+      if (event.target.matches("[data-console-field]")) updateConsole();
+    });
+
+    $("#reset-session").addEventListener("click", resetCurrentSession);
+    $("#console-done").addEventListener("click", completeFromConsole);
+    $("#console-undo").addEventListener("click", undoLastSet);
     $("#timer-toggle").addEventListener("click", () => timerRunning ? stopTimer() : runTimer());
     $("#timer-minus").addEventListener("click", () => adjustTimer(-15));
     $("#timer-plus").addEventListener("click", () => adjustTimer(15));
-    $("#timer-reset").addEventListener("click", () => { stopTimer(); clearTimeout(timerFinishTimeout); $("#timer-dock").classList.remove("is-finished"); timerRemaining = timerInitial; $("#timer-label").textContent = "Descanso"; updateTimerUI(); });
+    $("#timer-skip").addEventListener("click", clearSessionTimer);
     $("#pwa-banner-action").addEventListener("click", () => pwaBannerAction?.());
-    $("#pwa-banner-close").addEventListener("click", () => {
-      if (pwaBannerKind === "install") localStorage.setItem("setline-install-hint-dismissed", "1");
-      hidePwaBanner();
-    });
+    $("#pwa-banner-close").addEventListener("click", hidePwaBanner);
     window.addEventListener("beforeinstallprompt", event => {
       event.preventDefault();
       deferredInstallPrompt = event;
-      showInstallOffer();
     });
     window.addEventListener("appinstalled", () => {
       deferredInstallPrompt = null;
-      localStorage.removeItem("setline-install-hint-dismissed");
       hidePwaBanner();
       showToast("Setline instalada");
     });
-    document.addEventListener("visibilitychange", () => { if (!document.hidden) syncTimer(); });
-    window.addEventListener("focus", syncTimer);
+    function refreshIfNewDay() {
+      if (dateKey() === renderedOn) return;
+      renderedOn = dateKey();
+      renderAll();
+    }
 
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) return;
+      syncTimer();
+      acquireWakeLock();
+      refreshIfNewDay();
+    });
+    window.addEventListener("focus", () => {
+      syncTimer();
+      refreshIfNewDay();
+    });
+
+    function watchLayoutInsets() {
+      const root = document.documentElement;
+      const dock = $("#timer-dock");
+      const topbar = $(".mobile-topbar");
+      const measure = () => {
+        root.style.setProperty("--dock-height", `${dock.offsetHeight}px`);
+        root.style.setProperty("--topbar-height", `${topbar.offsetHeight}px`);
+      };
+      measure();
+      if ("ResizeObserver" in window) {
+        const observer = new ResizeObserver(measure);
+        observer.observe(dock);
+        observer.observe(topbar);
+      }
+      const viewport = window.visualViewport;
+      if (!viewport) return;
+      // Lifts the fixed console above the on-screen keyboard while its own fields are being typed in.
+      const syncKeyboard = () => {
+        const typing = document.activeElement?.matches?.(".stepper-input");
+        root.style.setProperty("--keyboard-inset", `${typing ? Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop) : 0}px`);
+      };
+      viewport.addEventListener("resize", syncKeyboard);
+      viewport.addEventListener("scroll", syncKeyboard);
+      document.addEventListener("focusout", syncKeyboard);
+    }
+
+    seedSetLog();
     renderAll();
+    restoreTimer();
     updateTimerUI();
+    watchLayoutInsets();
     registerSetlineServiceWorker();
-    setTimeout(showInstallOffer, 900);
   </script>
 </body>
 </html>

@@ -29,7 +29,7 @@ El press disponible puede sustituir al inclinado cuando falta banco o máquina i
 
 Las sesiones antiguas de Hipertrofia tenían 19–23 series y rótulos de 45–70 minutos. Ahora mantienen los patrones y reducen series a 14–15. Las de calistenia pasan de 12 a 15 series con descansos más completos, conservando empuje, tirón, piernas, hombros y core.
 
-La fórmula suma: 6–8 min de calentamiento, 45–60 s por serie incluyendo preparación/registro (75–90 s si se hacen ambos lados), descanso prescrito entre series del mismo ejercicio y 60 s por cambio de ejercicio. No añade descanso después de la última serie de cada ejercicio ni espera por máquinas. Los valores provienen del contenido, sin limitar artificialmente un número a 45. Los supuestos se muestran en Detalles de la sesión. Si se usan descansos más largos o cambia el equipo, el tiempo real puede superar el estimado.
+La fórmula suma: 6–8 min de calentamiento, 45–60 s por serie incluyendo preparación/registro (75–90 s si se hacen ambos lados), descanso prescrito entre series del mismo ejercicio y 60 s por cambio de ejercicio. No añade descanso después de la última serie de cada ejercicio ni espera por máquinas. Los valores provienen del contenido, sin limitar artificialmente un número a 45. Si se usan descansos más largos o cambia el equipo, el tiempo real puede superar el estimado.
 
 ## Progresión y recuperación
 

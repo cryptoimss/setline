@@ -21,7 +21,7 @@ function harness(saved) {
     localStorage:{getItem:()=>storage,setItem:(_,value)=>{storage=value;}},
     $:selector=>{if(!nodes.has(selector))nodes.set(selector,{textContent:'',focus(){},classList:{remove(){}}});return nodes.get(selector);},
     window:{scrollTo(){}},
-    clearTimeout(){}, stopTimer(){}, updateTimerUI(){}, renderFilters(){}, renderExercises(){},
+    clearTimeout(){}, stopTimer(){}, updateTimerUI(){}, renderFilters(){}, renderExercises(){}, focusSessionControl(){},
     showToast(){},
     confirmSheet:()=>{confirmationCount++;return new Promise(resolve=>{resolveConfirmation=resolve;});}
   };
@@ -30,7 +30,7 @@ function harness(saved) {
   vm.runInContext(script.slice(0,script.indexOf('    let state = loadState();'))+`
     let state = loadState(); let sessionResetPending = false;
     let timerRemaining=120; let timerInitial=120; let timerFinishTimeout=null;
-    const expandedCompleteCards=new Set(['pa-incline']);
+    const toggledCards=new Set(['pa-incline']);
     const activeProgram=()=>programs.find(p=>p.id===state.programId);
     const activeDay=()=>activeProgram().days.find(d=>d.id===state.dayByProgram[state.programId]);
   `,context);
@@ -123,4 +123,144 @@ test('RESET of shoulder session preserves gym entries and references',async()=>{
  const h=harness(saved), pending=h.reset(); h.confirm(true); await pending;
  assert.deepEqual(h.state().entries,fixture().entries);
  assert.deepEqual(h.state().references,saved.references);
+});
+
+// "Última vez" and console helpers.
+function logHarness(saved) {
+  const h=harness(saved);
+  vm.runInContext(`
+    const entryKey=(dayId,exerciseId,index)=>state.programId+":"+dayId+":"+exerciseId+":"+index;
+    const referenceKey=exerciseId=>state.programId+":"+exerciseId;
+  `,h.context);
+  for(const name of ['dateKey','rememberSet','forgetSet','previousSet','lastSessionSets','seedSetLog','repRange','knownReps','defaultReps','defaultWeight','stepWeight','getEntry','setEntry','suggestedLoad','ensurePresetWeights','automaticVolume','getReference'])vm.runInContext(functionSource(name),h.context);
+  return {...h,run:code=>JSON.parse(vm.runInContext(`JSON.stringify(${code})`,h.context))};
+}
+const earlier=(weight,reps,date='2026-01-05')=>({weight,reps,date});
+test('Weight steps follow the preset grid in both directions and never go below zero',()=>{
+ const h=logHarness(fixture());
+ const step=(value,direction)=>h.run(`stepWeight(${value},${direction})`);
+ assert.equal(step(18,1),20); assert.equal(step(20,1),22.5); assert.equal(step(17.5,1),20);
+ assert.equal(step(18,-1),17.5); assert.equal(step(12.5,-1),10); assert.equal(step(10,-1),9);
+ assert.equal(step(9,1),10); assert.equal(step(10,1),12.5); assert.equal(step(4,1),5);
+ assert.equal(step(0,1),1); assert.equal(step(0,-1),0); assert.equal(step(1,-1),0);
+});
+test('Every prescribed rep format parses, including per-side and single-number doses',()=>{
+ const h=logHarness(fixture());
+ const programs=h.run('programs');
+ for(const p of programs)for(const d of p.days)for(const e of d.exercises){
+  const range=h.run(`repRange(${JSON.stringify(e)})`);
+  assert.ok(range.min>=1 && range.max>=range.min,`${e.id}: ${e.reps}`);
+ }
+ assert.deepEqual(h.run('repRange({reps:"6–10"})'),{min:6,max:10});
+ assert.deepEqual(h.run('repRange({reps:"8–12/lado"})'),{min:8,max:12});
+ assert.deepEqual(h.run('repRange({reps:"10/lado"})'),{min:10,max:10});
+ assert.deepEqual(h.run('repRange({reps:"10"})'),{min:10,max:10});
+});
+test('Última vez skips the set being done today, keeps the previous session and can be undone without losing it',()=>{
+ const h=logHarness({...fixture(),setLog:{}});
+ h.run('(state.entries.k={completed:true},rememberSet("k",{weight:"18",reps:"9"}),null)');
+ assert.equal(h.run('previousSet("k")'),null,'a set ticked today is the current one, not "last time"');
+ h.run('(delete state.entries.k,null)');
+ assert.equal(h.run('previousSet("k").reps'),'9','once RESET clears it, today is the last time');
+ h.run('(state.entries.k={completed:true},state.setLog.k=[{weight:"16",reps:"8",date:"2026-01-05"}],null)');
+ h.run('(rememberSet("k",{weight:"18",reps:"9"}),null)');
+ assert.deepEqual(h.run('previousSet("k")'),earlier('16','8'));
+ h.run('(rememberSet("k",{weight:"20",reps:"7"}),null)');
+ assert.equal(h.run('state.setLog.k.length'),2,'re-ticking today replaces, it does not grow');
+ h.run('(forgetSet("k"),null)');
+ assert.deepEqual(h.run('state.setLog.k'),[earlier('16','8')]);
+ h.run('(state.setLog.only=[{weight:"",reps:"5",date:dateKey()}],forgetSet("only"),null)');
+ assert.equal(h.run('state.setLog.only===undefined'),true);
+ h.run('(rememberSet("empty",{weight:"",reps:""}),null)');
+ assert.equal(h.run('state.setLog.empty===undefined'),true,'nothing logged, nothing remembered');
+});
+test('RESET leaves Última vez untouched and does not create references or volumes',async()=>{
+ const saved={...fixture(),setLog:{'chest:p-a:pa-incline:0':[earlier('18','10')]}};
+ const h=logHarness(saved), pending=h.reset();
+ h.confirm(true); await pending;
+ assert.deepEqual(h.state().setLog,saved.setLog);
+ assert.deepEqual(h.state().references,saved.references);
+ assert.deepEqual(h.state().lastVolumes,saved.lastVolumes);
+});
+test('Sets ticked before this feature existed survive the next RESET as Última vez',()=>{
+ const h=logHarness(fixture());
+ h.run('(seedSetLog(),null)');
+ assert.deepEqual(h.run('previousSet("chest:p-a:pa-incline:0")'),{weight:'18',reps:'10',date:''});
+ h.run('(state.setLog["chest:p-a:pa-incline:0"]=[{weight:"1",reps:"1",date:"2026-01-05"}],seedSetLog(),null)');
+ assert.equal(h.run('state.setLog["chest:p-a:pa-incline:0"][0].weight'),'1','an existing log is never overwritten by seeding');
+});
+test('Weights come from the last session, then the preset, and never replace manual or finished sets',()=>{
+ const key=index=>`solo:s-1:s1-incline:${index}`;
+ const saved={...fixture(),programId:'solo',dayByProgram:{solo:'s-1'},entries:{
+  [key(1)]:{weight:'30',reps:'',completed:false,weightSource:'manual'},
+  [key(2)]:{weight:'18',reps:'8',completed:true,weightSource:'preset'}
+ },setLog:{[key(0)]:[earlier('22.5','9')],[key(1)]:[earlier('22.5','8')],[key(2)]:[earlier('22.5','7')]}};
+ const h=logHarness(saved);
+ h.run('(ensurePresetWeights(activeDay()),null)');
+ const entry=index=>h.run(`state.entries[${JSON.stringify(key(index))}]`);
+ assert.equal(entry(0).weight,'22.5'); assert.equal(entry(0).weightSource,'last');
+ assert.equal(entry(1).weight,'30','manual wins over last time');
+ assert.equal(entry(2).weight,'18','a finished set keeps what was logged');
+ const row=h.run('state.entries["solo:s-1:s1-row-db:0"]');
+ assert.equal(row.weight,'15'); assert.equal(row.weightSource,'preset');
+ h.run('(state.loadPreset="heavy",ensurePresetWeights(activeDay()),null)');
+ assert.equal(entry(2).weight,'18','changing preset never rewrites a finished set');
+ assert.equal(entry(0).weight,'22.5','last time outranks the preset');
+ assert.equal(h.run('state.entries["solo:s-1:s1-row-db:0"].weight'),'20','heavy preset: 15 kg × 1.25, on the 2.5 kg grid');
+});
+test('Known reps prefer last time, then the set before, and only invent nothing for ranges',()=>{
+ const saved={...fixture(),programId:'solo',dayByProgram:{solo:'s-1'},entries:{'solo:s-1:s1-incline:0':{reps:'9',completed:true}},setLog:{'solo:s-1:s1-incline:2':[earlier('18','7')]}};
+ const h=logHarness(saved);
+ const exercise='activeDay().exercises[0]';
+ assert.equal(h.run(`knownReps(activeDay(),${exercise},0)`),'', 'first set of a range with no history: only the user knows');
+ assert.equal(h.run(`knownReps(activeDay(),${exercise},1)`),'9');
+ assert.equal(h.run(`knownReps(activeDay(),${exercise},2)`),'7');
+ const fresh=logHarness({...fixture(),programId:'solo',dayByProgram:{solo:'s-1'},entries:{}});
+ assert.equal(fresh.run(`defaultReps(activeDay(),${exercise},0)`),'6','the console proposes the bottom of the range, visibly, before it is confirmed');
+ const shoulder=logHarness({...fixture(),programId:'shoulder',dayByProgram:{shoulder:'h-a'},entries:{}});
+ assert.equal(shoulder.run('knownReps(activeDay(),activeDay().exercises[0],0)'),'10','a single prescribed number is known');
+ assert.equal(shoulder.run('knownReps(activeDay(),activeDay().exercises[1],0)'),'10','10/lado logs 10');
+});
+test('The volume reference comes from a complete last session, manual targets win, and partial sessions do not count',()=>{
+ const key=index=>`solo:s-1:s1-incline:${index}`;
+ const h=logHarness({...fixture(),programId:'solo',dayByProgram:{solo:'s-1'},references:{},lastVolumes:{'solo:s1-row-db':111},setLog:{[key(0)]:[earlier('20','10')],[key(1)]:[earlier('20','9')],[key(2)]:[earlier('20','8')],'solo:s-1:s1-fly:0':[earlier('10','12')]}});
+ assert.deepEqual(h.run('getReference("s1-incline")'),{value:540,source:'automatic'});
+ assert.deepEqual(h.run('getReference("s1-row-db")'),{value:111,source:'automatic'},'legacy references keep working');
+ assert.deepEqual(h.run('getReference("s1-fly")'),{value:0,source:'none'},'one of two sets is not a comparable session');
+ h.run('(state.references["solo:s1-incline"]="700",null)');
+ assert.deepEqual(h.run('getReference("s1-incline")'),{value:700,source:'manual'});
+});
+
+test('Undoing a tick restores the log as it was, including numbers from a restart today and across midnight',()=>{
+ const h=logHarness({...fixture(),setLog:{}});
+ h.run('(state.setLog.k=[{weight:"22.5",reps:"10",date:dateKey()},{weight:"20",reps:"9",date:"2026-10-28"}],null)');
+ const before=h.run('state.setLog.k');
+ h.run('(rememberSet("k",{weight:"20",reps:"7"}),forgetSet("k",JSON.parse(%s)),null)'.replace('%s',JSON.stringify(JSON.stringify(before))));
+ assert.deepEqual(h.run('state.setLog.k'),before);
+ h.run('(state.setLog.fresh=[{weight:"20",reps:"7",date:"2026-01-05"}],forgetSet("fresh",[]),null)');
+ assert.equal(h.run('state.setLog.fresh===undefined'),true,'a set with no earlier log is removed even if the date moved on');
+});
+test('Damaged saved data is dropped on load instead of breaking the app',()=>{
+ const k='solo:s-1:s1-incline:0';
+ const load=extra=>{const h=logHarness({...fixture(),...extra});return h.state();};
+ assert.deepEqual(load({entries:{[k]:null,ok:{reps:'8'}}}).entries,{ok:{reps:'8'}});
+ assert.deepEqual(load({entries:[1,2]}).entries,{});
+ for(const setLog of ['garbage',7,[1],{[k]:'nope'},{[k]:{}},{[k]:7},{[k]:[null]},{[k]:[{reps:'9',date:'not-a-date'}]},{[k]:[{reps:'9',date:12}]},{[k]:[{reps:'9'}]}])assert.deepEqual(load({setLog}).setLog,{},JSON.stringify(setLog));
+ const kept=[{weight:'20',reps:'9',date:'2026-10-28'},{weight:'21',reps:'9',date:''}];
+ assert.deepEqual(load({setLog:{[k]:kept}}).setLog,{[k]:kept});
+});
+test('A comparison uses only the latest session; a set stopped short does not blend with an older one',()=>{
+ const key=index=>`solo:s-1:s1-incline:${index}`;
+ const h=logHarness({...fixture(),programId:'solo',dayByProgram:{solo:'s-1'},references:{},lastVolumes:{},setLog:{[key(0)]:[earlier('30','10','2026-11-02'),earlier('20','9','2026-10-28')],[key(1)]:[earlier('20','8','2026-10-28')],[key(2)]:[earlier('20','7','2026-10-28')]}});
+ assert.deepEqual(h.run('lastSessionSets(activeDay(),activeDay().exercises[0])'),[earlier('30','10','2026-11-02'),null,null]);
+ assert.deepEqual(h.run('getReference("s1-incline")'),{value:0,source:'none'});
+ assert.equal(h.run('previousSet(%s).reps'.replace('%s',JSON.stringify(key(1)))),'8','each set still keeps its own starting point');
+});
+test('A weight known for the set above is proposed, unless the user cleared this one on purpose',()=>{
+ const key=index=>`chest:p-a:pa-row:${index}`;
+ const exercise='activeDay().exercises.find(item=>item.id==="pa-row")';
+ const h=logHarness({...fixture(),entries:{[key(0)]:{weight:'15',reps:'10'},[key(2)]:{weight:'',weightSource:'manual'}}});
+ assert.equal(h.run(`defaultWeight(activeDay(),${exercise},1)`),'15');
+ assert.equal(h.run(`defaultWeight(activeDay(),${exercise},2)`),'');
+ assert.equal(h.run(`defaultWeight(activeDay(),${exercise},0)`),'15');
 });

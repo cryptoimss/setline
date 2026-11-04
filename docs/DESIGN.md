@@ -104,22 +104,18 @@ components:
     textColor: "{colors.chalk}"
     rounded: "{rounded.panel}"
     padding: "20px"
-  summary-panel:
-    backgroundColor: "{colors.slate-surface}"
+  session-console:
+    backgroundColor: "{colors.slate-raised}"
     textColor: "{colors.chalk}"
-    rounded: "{rounded.panel}"
-    padding: "20px"
-  signal-plate:
-    backgroundColor: "{colors.signal-coral}"
-    textColor: "{colors.signal-ink}"
-    rounded: "{rounded.panel}"
-    padding: "24px"
-  timer-dock:
-    backgroundColor: "{colors.timer-paper}"
+    rounded: "{rounded.dock}"
+    padding: "8px 10px 10px"
+    height: "126px"
+  session-console-resting:
+    backgroundColor: "{colors.completion-mint}"
     textColor: "{colors.timer-ink}"
     rounded: "{rounded.dock}"
-    padding: "11px 12px 11px 18px"
-    height: "70px"
+    padding: "8px 10px 10px"
+    height: "90px"
 ---
 
 # Design System: Setline
@@ -130,12 +126,12 @@ components:
 
 Setline should feel like a precision sheet clipped beside a court: ink-black slate, clear rules, equipment-label controls, and a small number of unmistakable signals. The interface is modern and premium because it is disciplined, not because it glows. Its density is purposeful, keeping sequence, entry, timing, and readout visually close while preserving comfortable touch targets.
 
-The system refuses the generic neon fitness dashboard. Warm coral behaves like a physical signal plate; mint behaves like a completion mark made by an operator; slate layers and ruled rows carry the rest of the interface. Controls are direct, numeric content is aligned, and the strongest visual gestures remain scarce.
+The system refuses the generic neon fitness dashboard. Warm coral behaves like a physical signal; mint behaves like a completion mark made by an operator; slate layers and ruled rows carry the rest of the interface. Controls are direct, numeric content is aligned, and the strongest visual gestures remain scarce.
 
 **Key Characteristics:**
 
 - Ink-black canvas with stepped slate work surfaces.
-- Warm coral signal plates for current selection and primary emphasis.
+- Warm coral for current selection and primary emphasis.
 - Mint completion marks, progress, and visible focus treatment.
 - Condensed uppercase display type paired with a plain system sans.
 - Ruled rows, compact equipment-label controls, and sparse structural depth.
@@ -146,7 +142,7 @@ The palette is a low-light slate field animated by three disciplined signals: co
 
 ### Primary
 
-- **Signal Coral** (`colors.signal-coral`): Marks the current choice, the large signal plate, and the main progress cue. Pair it with Signal Ink for dark, warm contrast.
+- **Signal Coral** (`colors.signal-coral`): Marks the current choice, the primary action, and the main progress cue. Pair it with Signal Ink for dark, warm contrast.
 
 ### Secondary
 
@@ -154,15 +150,15 @@ The palette is a low-light slate field animated by three disciplined signals: co
 
 ### Tertiary
 
-- **Summary Amber** (`colors.summary-amber`): Reserved for secondary aggregate bars and readouts that should remain distinct from live progress.
+- **Summary Amber** (`colors.summary-amber`): Reserved for reference values, such as last time or a suggested load, that should remain distinct from live progress.
 
 ### Neutral
 
 - **Ink Black** (`colors.ink-black`) and **Rail Black** (`colors.rail-black`): Form the page field and persistent navigation plane.
 - **Slate Surface**, **Raised Slate**, and **Soft Slate** (`colors.slate-surface`, `colors.slate-raised`, `colors.slate-soft`): Create the working hierarchy for panels, rows, and nested controls.
 - **Rule** and **Strong Rule** (`colors.rule`, `colors.rule-strong`): Separate rows and bound controls without introducing bright outlines.
-- **Chalk**, **Muted Steel**, and **Faint Steel** (`colors.chalk`, `colors.muted-steel`, `colors.faint-steel`): Carry primary text, secondary explanation, and quiet labels respectively.
-- **Timer Paper** and **Timer Ink** (`colors.timer-paper`, `colors.timer-ink`): Create the deliberate light-on-dark inversion used only by the floating utility dock.
+- **Chalk**, **Muted Steel**, and **Faint Steel** (`colors.chalk`, `colors.muted-steel`, `colors.faint-steel`): Carry primary text, secondary values, and quiet labels respectively.
+- **Timer Paper** and **Timer Ink** (`colors.timer-paper`, `colors.timer-ink`): Create the deliberate light-on-dark inversion used only by a paused rest in the session console; a running rest uses Completion Mint with Timer Ink.
 
 ### Named Rules
 
@@ -174,11 +170,11 @@ The palette is a low-light slate field animated by three disciplined signals: co
 
 **Body Font:** The platform system sans, beginning with `ui-sans-serif` and the native Apple or Segoe UI face.
 
-**Character:** Condensed, tightly tracked display type gives large labels the authority of a rotation board. The system sans keeps dense controls and explanatory copy neutral, fast, and readable.
+**Character:** Condensed, tightly tracked display type gives large labels the authority of a rotation board. The system sans keeps dense controls and values neutral, fast, and readable.
 
 ### Hierarchy
 
-- **Display** (950, `clamp(34px, 5vw, 60px)`, 0.96): Uppercase page-scale identifiers and signal plates; keep lines short and balanced.
+- **Display** (950, `clamp(34px, 5vw, 60px)`, 0.96): Uppercase page-scale identifiers; keep lines short and balanced.
 - **Title** (700, 18px, 1.2): Work-card and panel titles with compact negative tracking.
 - **Body** (400, 15px, 1.45): Explanatory copy and standard control text; long supporting copy should stay near 64ch.
 - **Label** (800, 11px, 0.08em): Uppercase navigation, metadata, and equipment-style annotations.
@@ -190,29 +186,29 @@ The palette is a low-light slate field animated by three disciplined signals: co
 
 ## Layout
 
-On wide screens, the application uses three visual stations: a persistent 258px rail, a flexible primary work sheet, and a sticky 286px readout column. The inner sheet is capped at 1280px with a 26px column gap, while page gutters breathe between 18px and 44px. The primary sheet leads; the readout remains visibly subordinate.
+On wide screens, the application uses three visual stations: a persistent 258px rail, a flexible primary work sheet, and a 286px column holding only the session console, pinned while the sheet scrolls. The inner sheet is capped at 1280px with a 26px column gap, while page gutters breathe between 18px and 44px.
 
-At 1100px, the rail and readout narrow to 228px and 252px, and the main gap contracts to 18px. At 880px, the rail becomes a sticky horizontal top bar, the main work becomes a single column, and readouts form a two-column band below it. At 620px, a compact dumbbell mark, four-program segmented control and horizontally scrolling day rail share the command area. The session header uses progressive disclosure: its explanation and signal plate appear on the first visit to each program, then default to a thin title-and-metadata row that can be reopened without moving keyboard focus. Filters and reset share one row, all panels stack, and gutters contract to 12px without shrinking touch targets below 44px where practical. Safe-area insets protect the sticky top bar and floating dock.
+At 1100px, the rail and console column narrow to 228px and 252px, and the main gap contracts to 18px. At 880px, the rail becomes a 56px sticky session bar that opens the session sheet, the main work becomes a single column, and the console becomes a fixed bar at the thumb's edge. On phones the first thing under the bar is the current set: above it there is only a metadata row, and the load presets, the filters and RESET live behind `Ajustes` (an active filter stays visible so it can't hide exercises unnoticed). Gutters contract to 12px without shrinking touch targets below 44px. Safe-area insets protect the sticky bar and the console; scroll padding keeps revealed rows clear of both.
 
 Spacing follows a compact 8px base with recurring 12px, 16px, 20px, 24px, and 28px steps. Use tighter gaps inside ruled rows and wider gaps between major stations.
 
 ## Elevation & Depth
 
-Setline is flat by default. Depth comes first from stepped slate tones, one-pixel rules, and sticky positioning; shadows are reserved for major work cards and the floating dock. The principal sheet uses `0 18px 44px rgba(0, 0, 0, .28)`, work cards use `0 12px 32px rgba(0, 0, 0, .18)`, summary panels use the quieter `.16` alpha variant, and the light timer dock uses `0 18px 50px rgba(0, 0, 0, .42)`.
+Setline is flat by default. Depth comes first from stepped slate tones, one-pixel rules, and sticky positioning; shadows are reserved for major work cards and the session console. The principal sheet uses `0 18px 44px rgba(0, 0, 0, .28)`, work cards use `0 12px 32px rgba(0, 0, 0, .18)`, summary panels use the quieter `.16` alpha variant, and the light timer dock uses `0 18px 50px rgba(0, 0, 0, .42)`.
 
 ### Shadow Vocabulary
 
 - **Sheet Lift** (`0 18px 44px rgba(0, 0, 0, .28)`): Separates the dominant work sheet from the ink canvas.
 - **Card Structure** (`0 12px 32px rgba(0, 0, 0, .16–.18)`): Gives repeated panels a restrained layer without making them float independently.
-- **Dock Float** (`0 18px 50px rgba(0, 0, 0, .42)`): Keeps the inverted utility dock legible above every work surface.
+- **Dock Float** (`0 18px 50px rgba(0, 0, 0, .42)`): Keeps the session console legible above every work surface.
 
 ### Named Rules
 
-**The Grounded Layer Rule.** Most separation comes from stepped slate and ruled borders; shadows are reserved for the primary sheet, work cards, and floating dock.
+**The Grounded Layer Rule.** Most separation comes from stepped slate and ruled borders; shadows are reserved for the primary sheet, work cards, and the session console.
 
 ## Shapes
 
-The form language is engineered but approachable: 8px corners on controls and fields, 10–12px corners on repeated rows and navigation, 14px corners on major panels, and 16px on the floating dock. Full pills belong to compact filters, segmented actions, progress tracks, and switches. Circular geometry is reserved for compact codes and switch thumbs. One-pixel borders and inset rules reinforce the technical-sheet character.
+The form language is engineered but approachable: 8px corners on controls and fields, 10–12px corners on repeated rows and navigation, 14px corners on major panels, and 16px on the session console. Full pills belong to compact filters, segmented actions, progress tracks, and switches. Circular geometry is reserved for compact codes and switch thumbs. One-pixel borders and inset rules reinforce the technical-sheet character.
 
 ## Components
 
@@ -220,7 +216,8 @@ The form language is engineered but approachable: 8px corners on controls and fi
 
 - **Program control:** A 48px-high, left-aligned equipment label with an outlined code block. Hover lifts the text from muted steel to chalk; selection raises the slate surface and adds a 3px coral inset rule.
 - **Day control:** A 44px-high row with a circular code. The selected state becomes a solid coral plate with Signal Ink text.
-- **Responsive treatment:** Below 880px, programs become a compact four-program segmented control and days scroll horizontally inside the sticky top bar. At phone width, the brand collapses to its dumbbell mark and the program selector uses the remaining width.
+- **Session bar:** Below 880px, a one-line sticky button shows the dumbbell mark, the day in display type, its program, the `done/total` count and a 3px coral progress line along its base. It is the only permanent navigation on a phone.
+- **Session sheet:** The bar opens a bottom sheet with sessions first (the common switch), then programs under their full names, then install and RESET. Picking a program keeps it open and refreshes the sessions; picking a session closes it and returns focus to the bar. Day controls carry their state: `3/14`, `HECHA` or `OPCIONAL`.
 
 ### Buttons and Chips
 
@@ -232,7 +229,6 @@ The form language is engineered but approachable: 8px corners on controls and fi
 
 - **Work cards:** 14px corners on a Slate Surface, with a restrained structural shadow. Their internal order is head, ruled data rows, then a separated readout footer.
 - **Completed cards:** Shift toward a deep green-black surface and turn the order plate mint; never wash the full card in bright color.
-- **Summary panels:** Use the same 14px shell and 20px padding, but a quieter shadow and simpler internal hierarchy.
 
 ### Inputs / Fields
 
@@ -244,36 +240,46 @@ The form language is engineered but approachable: 8px corners on controls and fi
 
 The signature row combines a compact index, 44px completion control, paired numeric fields, and faint separators on a Raised Slate strip. In bodyweight sessions, the weight field becomes a static `Corporal` marker and only repetitions are editable. Labels sit above in small uppercase type. Rows are repeated with 5px separation so the sheet scans as an ordered sequence rather than a stack of generic cards.
 
-### Coral Signal Plate
-
-The signal plate is a solid coral block inset with a quiet one-pixel inner rule. It pairs an oversized condensed code with compact ruled facts. On narrow screens it becomes a horizontal band beneath the heading while preserving the large code as its anchor.
-
 ### Session Header
 
-The session header is expanded only for the first reading of each program. Later visits use a 64–76px compact row with the day title, code, duration, and prescribed series; a clearly named `Detalles` control restores the full explanation and signal plate. Its open state is intentionally temporary, while the first-read flag persists locally. The toggle keeps focus in place and retains a 44px minimum touch target.
+One compact row: the day title (on phones, the session bar carries it), code, duration, and prescribed series. There is no expanded state and no introductory copy. On phones an `Ajustes` control reveals the load presets, filters and RESET, keeping focus in place with a 44px minimum touch target; on wide screens those are simply on screen.
 
 ### Exercise Card States
 
-- **Next:** The first exercise with an unfinished set carries a 3px coral inset rule and a coral `Siguiente` chip; its first pending row gets a 1.5px coral inset ring. The progress strip offers a `Siguiente · 02 serie 1` control that scrolls to that row.
-- **Complete:** Once every set is checked the card collapses to a one-line summary (order plate in mint, title, `Completado · volume · ratio`) with a chevron toggle; tapping the head reopens it. Unchecking any set expands it again.
-- **Ruled row order:** index, load, reps, then the 48px completion control on the trailing edge so the thumb reaches it one-handed. Checking a set copies the previous set's reps and load into empty fields.
+- **Accordion:** Only the current exercise is open. Upcoming and complete cards collapse to their head, and any head toggles its card; the next exercise opens by itself and scrolls into place when one finishes.
+- **Next:** The current exercise carries a 3px coral inset rule; its first pending row gets a 1.5px coral inset ring. On wide screens it also carries a coral `Siguiente` chip and the progress strip offers a `Siguiente · 02 serie 1` control. It follows the user: ticking elsewhere, or `Hacer ahora` on an upcoming card, moves it for as long as that exercise has sets left.
+- **Demonstration:** Every card always shows its GIF, in the head's first column with the order number on its corner: large on the open card, a 52–56px thumbnail on the others, and never behind a disclosure. Tapping it enlarges it without changing the card. Video excerpts run full width on the open card, with a pause control.
+- **Upcoming:** GIF thumbnail, title, muscle chip, `sets × reps` and RIR: enough to read the session as a list.
+- **Complete:** Once every set is checked the card collapses to a summary (thumbnail with a mint number, title, `Completado · volume · ratio`) with a chevron toggle. Unchecking any set expands it again.
+- **Ruled row order:** index, load, reps, then the 48px completion control on the trailing edge so the thumb reaches it one-handed. A pending reps field shows last time's value when there is one, and a plain tick logs exactly that; a range with no known value moves focus to the field instead of logging nothing. A new weight carries to the unfinished sets below without a weight of their own.
+- **Last time:** An amber line under the head (`Última vez (28 oct): 20 kg × 9 · 8 · 7`), or the preset hint when there is no history. Amber keeps it apart from live progress.
+- **Disclosure:** The technique cue, video link and optional volume target sit behind `Técnica`, closed by default everywhere. A volume readout appears only once there is volume to read; its bar only with a reference.
 
-### Session Finish Panel
+### Finishing and RESET
 
-A raised slate panel after the last card shows `Sesión en curso` or `Sesión completa` with the done/total count and a primary `RESET` action. Completion swaps the panel to the deep green surface and the button to mint. RESET also appears beside the filters. Confirmation uses an in-app `<dialog>` sheet (bottom-anchored on phones), focusing Cancel by default. Reset clears only the current day and timer, preserves references and other days, and restores focus to the upper RESET control.
+The console is the only finish state: there is no panel below the list. RESET is deliberately quiet everywhere, because a destructive action never looks primary: beside the filters, in the session sheet, and in the finished console. Confirmation uses an in-app `<dialog>` sheet (bottom-anchored on phones, with Cancel stacked below the action, where the thumb already is), asks only the question, and focuses Cancel by default. Reset clears only the current day and timer, preserves references, "Última vez" and other days, and restores focus to the upper RESET control or, on phones, the session bar. A session last logged on another day shows a quiet notice above the list with the same action.
 
-### Timer Dock
+### Session Console
 
-The dock is the system's one deliberate light surface: Timer Paper with Timer Ink, a 16px radius, strong shadow, tabular metric, and 46px controls. On phones it collapses to time, play, and reset while idle at zero; starting or pausing a timed rest restores the full adjustment controls and its running state turns mint. The label shows the exercise name being rested, a 3px ink progress line runs along the bottom edge, and when time runs out the dock turns coral with `¡Listo! Siguiente serie` for six seconds. Keep it fixed near the safe-area edge without obscuring more of the primary sheet than the current state needs.
+The console drives the session one-handed and only ever shows one of three states, so its surface tells the state from across a bench. It has a 16px radius, strong shadow and tabular numerals; it is fixed at the safe-area edge on phones (above the on-screen keyboard while its own fields are typed in, hidden while a list row is) and pinned in the readout column on wide screens, where it must not cover the work sheet.
+
+- **Work (Raised Slate):** The exercise and `Serie 1/3`, target, RIR and last value in one tappable heading that returns to the row. Below it, 56px steppers for weight and reps (`is-reps-only` for bodyweight) with a tappable number, and the coral `Hecha`, which sits under the thumb.
+- **Rest (Completion Mint; Timer Paper while paused):** What comes next, `Deshacer`, a large countdown, −15/+15, pause and `Saltar`, with a 4px ink line depleting along the bottom edge.
+- **Rest over (Signal Coral, six seconds):** The work state in coral with `¡Listo! · Serie 2/3`, plus vibration and tone where available.
+- **Done (deep green, mint title):** `Sesión completa`, the summary, the coral `Próxima: …` under the thumb and a quiet RESET on the far side.
+
+Stepping follows the preset grid: 1 kg up to 10 kg, then 2.5 kg.
+
+Every state replaces the last in the same spot, so a control must not catch the second half of a double tap. Console and dialog controls ignore taps briefly after appearing: 350 ms by default, 600 ms on a confirmation, 800 ms when a rest ends by itself, 900 ms on finishing a session. Holding Enter or Space repeats nothing except on the steppers.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** stage the page as a grounded work sheet: persistent selection rail, dominant content sheet, and a narrow readout column on wide screens.
-- **Do** reserve coral for current selection and signal plates, mint for completion/focus/progress, and amber for secondary readouts.
+- **Do** stage the page as a grounded work sheet: persistent selection rail, dominant content sheet, and the console beside it on wide screens.
+- **Do** reserve coral for current selection and the primary action, mint for completion/focus/progress, and amber for reference values.
 - **Do** keep repeated rows ruled, compact, and numerically aligned; preserve 44px controls where interaction is expected.
-- **Do** collapse the rail into a sticky horizontal top bar and stack the readout below the main work area at 880px and below.
+- **Do** collapse the rail into the one-line session bar and sheet and keep the console at the thumb's edge at 880px and below.
 - **Do** honor reduced-motion and keep a visible mint focus ring.
 
 ### Don't:
@@ -283,3 +289,5 @@ The dock is the system's one deliberate light surface: Timer Paper with Timer In
 - **Don't** float every card or add decorative shadows; depth is structural and sparse.
 - **Don't** round every element into a pill; pills are for compact filters and controls, not major panels.
 - **Don't** import task-specific content, performance claims, or exercise decisions into the visual system.
+- **Don't** give permanent screen space on a phone to choices made once per session.
+- **Don't** explain the app to its owner. No intro paragraphs, tips, provenance or attribution lines, reminders of how data is stored, or unprompted offers. The interface states values and actions; a tooltip-shaped sentence is a bug.

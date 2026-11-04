@@ -16,7 +16,7 @@ One primary user training for hypertrophy around volleyball sessions, using the 
 
 ## Product Purpose
 
-Present four ordered training programs, make each session easy to execute, and provide lightweight in-session tracking for sets, weight or bodyweight reps, rest, exercise volume, and weekly volume.
+Present ordered training programs, make each session easy to execute, and provide lightweight in-session tracking for sets, weight or bodyweight reps, rest and exercise volume.
 
 ## Positioning
 
@@ -33,9 +33,11 @@ Used in a gym or around volleyball training, often one-handed on a phone and und
 - Exercises include order, muscle group, sets, rep range, rest, and RIR.
 - The independent 3–4 day hypertrophy program is the first-run default.
 - Personalized Light, Normal, and Heavy starting-load presets prefill untouched set weights; manual edits always take precedence and the prescribed RIR remains the calibration rule.
-- Local tabs, filters, set completion, weight/reps inputs, reps-only bodyweight tracking, volume calculations, preserved previous references with manual targets, progress bars, rest timer, and weekly summary.
-- RESET clears only the current program/day entries and rest timer after confirmation. It preserves manual targets, previous volume references and other days, and never snapshots new volumes. Cancel and navigation away leave the session data intact.
-- Current session entries and preferences persist automatically in localStorage. There is no chronological session log, backend, IndexedDB or cross-device synchronization; Cache Storage stores shell/GIF assets.
+- Local session switcher, filters, a one-handed console (current set, weight and reps steppers, done, rest timer, undo), weight/reps rows, reps-only bodyweight tracking, volume calculations, per-set "Última vez" with manual targets, and progress bars.
+- A whole session can be logged from the console without the keyboard or scrolling. What the console shows is what is saved; a range with no known value is proposed from its minimum, visibly, before it is confirmed. A set ticked directly on its row never invents a number from a range: it asks.
+- RESET clears only the current program/day entries and rest timer after confirmation. It preserves manual targets, previous volume references, "Última vez" and other days, and never snapshots new volumes. Cancel and navigation away leave the session data intact.
+- "Última vez" stores the last two logged values per set, written when a set is ticked and restored to its earlier state when it is unticked. It is the starting point for the next session (weights, proposed reps, volume reference for fully logged exercises), not a chronological log.
+- Current session entries, preferences and the running rest persist automatically in localStorage. There is no chronological session log, backend, IndexedDB or cross-device synchronization; Cache Storage stores shell/GIF assets.
 - No medical claims, backend, account, or real cross-device synchronization.
 
 ## Brand Commitments
@@ -48,7 +50,8 @@ The user supplied their current measurements and training priorities in the refe
 
 ## Product Principles
 
-- Make the next set and its target obvious at a glance.
+- Make the next set and its target obvious at a glance, within thumb reach, with no setup between the user and logging it.
+- This is a personal tool for its owner, who knows the training plan and where the data comes from. The interface states values and actions and never explains itself: no instructions, tips, provenance or attribution copy, and no unprompted offers.
 - Preserve volleyball quality by keeping combined sessions concise and stable.
 - Use transparent arithmetic and previous-session references instead of opaque scores; keep manual overrides available.
 - Keep touch interactions comfortable and all data under the user's local control.
