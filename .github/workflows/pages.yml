@@ -30,7 +30,7 @@ jobs:
       - name: Preparar la versión publicable
         run: |
           mkdir _site
-          cp index.html catalog.html manifest.webmanifest sw.js _site/
+          cp index.html catalog.html guide.html guide.css guide.js manifest.webmanifest sw.js _site/
           cp -R assets _site/assets
           sed -i "s/__BUILD_VERSION__/${GITHUB_SHA}/g" _site/sw.js
 
