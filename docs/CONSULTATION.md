@@ -45,3 +45,9 @@ Las imágenes del usuario son páginas fotografiadas de un libro aportadas para 
 `tests/catalog.browser.cjs`: prueba con Playwright y WebKit. Requiere Playwright disponible y un servidor local; admite `SETLINE_URL`, `SETLINE_QA_DIR` y `SETLINE_WEBKIT_EXECUTABLE`. Verifica 19 referencias; filtros por origen y avanzadas; búsqueda sin tildes; estado vacío y recuperación de error; fotos; foco y Escape; ausencia de controles de dosis; preservación del almacenamiento de entrenamiento; navegación/fotos offline; separación de los dos documentos en caché; anchos 320, 768, 1024 y 1440; acceso desde rutinas en móvil y escritorio. No se usa Chrome ni almacenamiento real del usuario.
 
 Se inspeccionan visualmente las capturas de catálogo, visor móvil y accesos desde entrenamiento. Paleta slate/coral/mint y controles de 44 px acordes con el diseño existente. Veredicto: apto para el catálogo de referencia; no constituye una pauta clínica. El despliegue incluye explícitamente `catalog.html` y conserva las páginas de catálogo y entrenamiento separadas en caché.
+
+## Corrección del 10 de noviembre: integración en Hombro
+
+Las 19 fichas del médico ya no dependen de navegar al catálogo: están en el mismo listado principal que los cinco ejercicios de Ana y los seis del video nuevo. Se conservan las fotos originales y no se agregan dosis ni se alteran registros. Se verificaron GIFs para 9.25a–d y 9.26a; fuentes y diferencias en `assets/shoulder/doctor/sources.json`. Las 14 variantes restantes mantienen la foto original con «GIF pendiente», sin sustituirlas por otro movimiento.
+
+Los seis GIFs del nuevo video se recortaron de UFuQ2SYwt68 a velocidad original y se revisaron visualmente en secuencias de fotogramas. Los tiempos y transformaciones están en `assets/shoulder/new-video/sources.json`. Todos incluyen póster, pausa, ampliación y respeto de movimiento reducido.

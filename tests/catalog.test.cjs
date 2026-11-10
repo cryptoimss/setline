@@ -26,3 +26,12 @@ test('New video references preserve exact timestamps without adding a routine',(
  const script=fs.readFileSync(path.join(root,'assets/consultation/catalog.js'),'utf8');
  assert.ok(!script.includes('localStorage.setItem'));
 });
+test('All photo/video references are present in the main shoulder screen with local media',()=>{
+ const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+ const refs=JSON.parse(html.match(/const shoulderReferences = (\[[^\n]+\]);/)[1]);
+ assert.deepEqual(refs.map(e=>e.id),catalog.exercises.map(e=>e.id));
+ assert.equal(refs.filter(e=>e.gif).length,11);
+ assert.equal(refs.filter(e=>e.source==='video-ufu'&&e.gif).length,6);
+ for(const e of refs) for(const key of ['gif','poster','photo']) if(e[key]) assert.ok(fs.existsSync(path.join(root,e[key])));
+ assert.ok(html.includes('renderShoulderReferences();'));
+});

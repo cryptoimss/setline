@@ -1585,6 +1585,23 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
     }
+    .shoulder-sources { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 20px; }
+    .shoulder-sources[hidden] { display:none; }
+    .shoulder-sources a { text-decoration:none; min-height:44px; }
+    .shoulder-group { scroll-margin-top:110px; padding:24px 0 4px; }
+    .shoulder-group h2 { font-size:22px; margin:0 0 6px; }
+    .shoulder-group p, .shoulder-ref-note { color:var(--muted); font-size:13px; }
+    .shoulder-reference-card .exercise-head { cursor:default; }
+    .shoulder-ref-media { flex:0 0 112px; width:112px; }
+    .shoulder-ref-media img { display:block; width:112px; height:112px; object-fit:contain; border-radius:10px; background:var(--surface-soft); }
+    .shoulder-ref-media button { border:0; padding:0; background:none; cursor:pointer; }
+    .shoulder-ref-media small { display:block; margin-top:4px; color:var(--muted); font-size:11px; }
+    .shoulder-ref-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .shoulder-ref-actions a { min-height:44px; text-decoration:none; }
+    .shoulder-reference-card .exercise-body { padding:0 12px 16px; }
+    .shoulder-reference-card h2 { overflow-wrap:anywhere; }
+    .shoulder-ref-placeholder { display:grid; place-items:center; width:112px; height:112px; border-radius:10px; background:var(--surface-soft); color:var(--muted); font-size:13px; text-align:center; }
+    @media(max-width:400px) { .shoulder-ref-media { flex-basis:88px; width:88px; } .shoulder-ref-media img,.shoulder-ref-placeholder { width:88px; height:88px; } }
   </style>
 </head>
 <body>
@@ -1663,6 +1680,9 @@
             <span id="session-stale-note"></span>
             <button class="quiet-button" type="button" data-reset-session>RESET</button>
           </div>
+          <nav id="shoulder-sources" class="shoulder-sources" aria-label="Ejercicios de hombro" hidden>
+            <a class="rest-button" href="#exercise-list">Ana · 5</a><a class="rest-button" href="#shoulder-video">Video nuevo · 6</a><a class="rest-button" href="#shoulder-doctor">Médico · 19</a>
+          </nav>
           <div class="exercise-list" id="exercise-list"></div>
         </section>
 
@@ -2017,6 +2037,8 @@
       day.duration = `${day.timing.min}–${day.timing.max} min`;
     }));
     programs.sort((a, b) => (a.id === "solo" ? 0 : 1) - (b.id === "solo" ? 0 : 1));
+
+    const shoulderReferences = [{"id": "ref-ball-seated", "name": "Apoyo sentado sobre pelota con banda", "source": "p159", "figure": "9.3a", "description": "Apoyo del brazo sobre una pelota en la camilla, sentado, con resistencia externa.", "related": "ref-serratus-seated", "relation": "Comparte el apoyo sentado con el empuje de serrato de la figura 9.26b; el foco y la resistencia no se consideran equivalentes.", "sourceLabel": "Página 159", "photo": "./assets/consultation/IMG_5502.jpeg"}, {"id": "ref-ball-wall-band", "name": "Elevación contra pared con pelota y banda", "source": "p159", "figure": "9.3b", "description": "De pie frente a la pared, brazo elevado sobre la pelota y resistencia de banda.", "related": "ref-ball-wall-slide", "relation": "Variante relacionada con el deslizamiento de la figura 9.28; aquí se muestra una banda adicional.", "sourceLabel": "Página 159", "photo": "./assets/consultation/IMG_5502.jpeg"}, {"id": "ref-ball-reclined", "name": "Equilibrio con pelota reclinado", "source": "p159", "figure": "9.3c", "description": "Reclinado en la camilla con el brazo elevado y una pelota en la mano.", "sourceLabel": "Página 159", "photo": "./assets/consultation/IMG_5502.jpeg"}, {"id": "ref-side-er", "name": "Rotación externa en decúbito lateral", "source": "p174", "figure": "9.25a", "description": "Acostado de lado, con el codo junto al tronco y una mancuerna en la mano.", "demo": {"url": "https://www.csp.org.uk/conditions/shoulder-pain/video-exercises-shoulder-pain", "label": "Vídeo · CSP / Physiotec", "match": "Rotación externa acostado de lado; sección Side lying external rotation.", "verification": "Página de Chartered Society of Physiotherapy, vídeo de Physiotec y descripción de decúbito lateral con codo a 90° y peso en la mano. Consultado 2026-11-04."}, "gif": "./assets/shoulder/doctor/ref-side-er.gif", "gifSource": "https://raw.githubusercontent.com/JahelCuadrado/ExerciseGymGifsDB/main/delts/dumbbell-lying-external-shoulder-rotation.gif", "gifMatch": "Rotación externa con mancuerna y codo junto al tronco. Suelo en lugar de camilla.", "poster": "./assets/shoulder/doctor/ref-side-er.jpg", "gifCreator": "ExerciseGymGifsDB / JahelCuadrado", "gifStartSeconds": null, "sourceLabel": "Página 174", "photo": "./assets/consultation/IMG_5505.jpeg"}, {"id": "ref-side-flexion", "name": "Flexión anterior en decúbito lateral", "source": "p174", "figure": "9.25b", "description": "Acostado de lado, con el brazo superior desplazándose hacia delante.", "demo": {"url": "https://pubmed.ncbi.nlm.nih.gov/30797676/", "label": "Ilustración · estudio, figura 12", "match": "Ilustración de flexión anterior acostado de lado; no es un vídeo.", "verification": "Pie de figura 12: Side-lying forward flexion. Consultado 2026-11-04."}, "gif": "./assets/shoulder/doctor/ref-side-flexion.gif", "poster": "./assets/shoulder/doctor/ref-side-flexion.jpg", "gifSource": "https://www.youtube.com/watch?v=KIhv5K_VMAw", "gifCreator": "BSR Physical Therapy", "gifMatch": "Flexión anterior de lado con mancuerna y camilla.", "gifStartSeconds": 10, "sourceLabel": "Página 174", "photo": "./assets/consultation/IMG_5505.jpeg"}, {"id": "ref-prone-abduction", "name": "Abducción horizontal prono con rotación externa", "source": "p174", "figure": "9.25c", "description": "Boca abajo en la camilla, con el brazo hacia el lado y rotación externa.", "gif": "./assets/shoulder/doctor/ref-prone-abduction.gif", "poster": "./assets/shoulder/doctor/ref-prone-abduction.jpg", "gifSource": "https://www.youtube.com/watch?v=Pmzz9c_ID3E", "gifCreator": "Cooley Dickinson Hospital", "gifMatch": "Abducción horizontal prono con mancuerna y pulgar arriba/rotación externa; profesional supervisa la escápula.", "gifStartSeconds": 19, "sourceLabel": "Página 174", "photo": "./assets/consultation/IMG_5505.jpeg"}, {"id": "ref-prone-extension", "name": "Extensión de hombro prono", "source": "p174", "figure": "9.25d", "description": "Boca abajo en la camilla, con el brazo extendido junto al tronco.", "demo": {"url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4827371/#fig9", "label": "Ilustración · estudio, figura 9", "match": "Extensión del hombro boca abajo; no es un vídeo.", "verification": "El artículo identifica la figura 9 como Prone shoulder extension. Consultado 2026-11-04."}, "gif": "./assets/shoulder/doctor/ref-prone-extension.gif", "poster": "./assets/shoulder/doctor/ref-prone-extension.jpg", "gifSource": "https://www.youtube.com/watch?v=3l1gpGWWXXM", "gifCreator": "Physical Therapy First", "gifMatch": "Extensión unilateral prono con mancuerna y camilla.", "gifStartSeconds": 6, "sourceLabel": "Página 174", "photo": "./assets/consultation/IMG_5505.jpeg"}, {"id": "ref-elbow-pushup", "name": "Empuje escapular sobre antebrazos", "source": "p174", "figure": "9.26a", "description": "Apoyo en antebrazos y pies. La foto lo denomina elbow push-up; no se interpreta como un curl o una flexión convencional de codos.", "gif": "./assets/shoulder/doctor/ref-elbow-pushup.gif", "poster": "./assets/shoulder/doctor/ref-elbow-pushup.jpg", "gifSource": "https://www.youtube.com/watch?v=3EfZ9Jt6UsU", "gifCreator": "Annie Miller", "gifMatch": "Plancha sobre codos con movimiento escapular; no flexión de brazos convencional.", "gifStartSeconds": 0, "sourceLabel": "Página 174", "photo": "./assets/consultation/IMG_5505.jpeg"}, {"id": "ref-serratus-seated", "name": "Empuje de serrato sentado sobre pelota", "source": "p174", "figure": "9.26b", "description": "Sentado con el brazo apoyado en una pelota sobre la camilla; serratus push-in en cadena cerrada.", "related": "ref-ball-seated", "relation": "Comparte postura con la figura 9.3a. Se conserva como referencia diferenciada por el trabajo escapular indicado en su pie de figura.", "sourceLabel": "Página 174", "photo": "./assets/consultation/IMG_5505.jpeg"}, {"id": "ref-band-elevation-er", "name": "Elevación con rotación externa y banda", "source": "p174", "figure": "9.27", "description": "Banda entre las manos durante la elevación, con tensión hacia fuera.", "sourceLabel": "Página 174", "photo": "./assets/consultation/IMG_5505.jpeg"}, {"id": "ref-ball-wall-slide", "name": "Deslizamiento en pared con pelota", "source": "p174", "figure": "9.28", "description": "De pie frente a la pared, elevación con apoyo de la mano sobre una pelota.", "related": "ref-ball-wall-band", "relation": "Relacionado con la figura 9.3b; esta imagen no muestra la misma banda adicional. Tampoco equivale al ejercicio actual Retracciones con pared.", "sourceLabel": "Página 174", "photo": "./assets/consultation/IMG_5505.jpeg"}, {"id": "ref-diagonal-ir", "name": "Rotación interna diagonal", "source": "p179", "figure": "9.36a", "description": "Movimiento diagonal con resistencia de banda, identificado como rotación interna en la foto.", "sourceLabel": "Página 179", "photo": "./assets/consultation/IMG_5508.jpeg"}, {"id": "ref-diagonal-er", "name": "Rotación externa diagonal", "source": "p179", "figure": "9.36b", "description": "Movimiento diagonal con resistencia de banda, identificado como rotación externa en la foto.", "sourceLabel": "Página 179", "photo": "./assets/consultation/IMG_5508.jpeg"}, {"id": "ref-side-catch", "name": "Recepción de pelota en flexión, acostado de lado", "source": "p179", "figure": "9.37", "description": "Acostado de lado, con el brazo hacia delante y una pelota para recepción.", "tag": "Recepción · confirmar variante", "sourceLabel": "Página 179", "photo": "./assets/consultation/IMG_5508.jpeg"}, {"id": "ref-elevated-er", "name": "Rotación externa elevada con banda", "source": "p179", "figure": "9.38a", "description": "De pie frente al anclaje, con el brazo elevado y resistencia de banda.", "demo": {"url": "https://www.orthoinfo.org/recovery/rotator-cuff-and-shoulder-conditioning-program/", "label": "Ilustración · AAOS, ejercicio 7", "match": "Rotación externa con brazo abducido 90° y banda. Confirmar el ángulo de la variante de la foto.", "verification": "Ejercicio 7: External Rotation with Arm Abducted 90°. Consultado 2026-11-04."}, "sourceLabel": "Página 179", "photo": "./assets/consultation/IMG_5508.jpeg"}, {"id": "ref-elevated-ir", "name": "Rotación interna elevada con banda", "source": "p179", "figure": "9.38b", "description": "De pie de espaldas al anclaje, con el brazo elevado y resistencia de banda.", "demo": {"url": "https://nismat.org/patient-care/patient-education/injury-prevention/exercise-programs/nismat-arm-care-program/", "label": "Vídeo · NISMAT, IR 90/90", "match": "Rotación interna con banda y brazo a 90°. Confirmar el ángulo de la variante elevada de la foto.", "verification": "Sección Shoulder IR at 90/90 Position, vídeo y descripción con anclaje detrás de la persona. Copyright NISMAT, todos los derechos reservados; solo enlace. Consultado 2026-11-04."}, "sourceLabel": "Página 179", "photo": "./assets/consultation/IMG_5508.jpeg"}, {"id": "ref-drop-catch", "name": "Captura de pelota con brazo abducido a 90°", "source": "p179", "figure": "9.39a", "description": "Captura y suelta de pelota con el brazo separado del tronco a la altura del hombro.", "advanced": true, "tag": "Avanzado · confirmar con deportólogo", "sourceLabel": "Página 179", "photo": "./assets/consultation/IMG_5508.jpeg"}, {"id": "ref-drop-catch-lean", "name": "Captura de pelota con tronco inclinado", "source": "p179", "figure": "9.39b", "description": "Variante de captura con el tronco inclinado hacia delante.", "advanced": true, "tag": "Avanzado · confirmar con deportólogo", "sourceLabel": "Página 179", "photo": "./assets/consultation/IMG_5508.jpeg"}, {"id": "ref-kneeling-throw", "name": "Lanzamiento y recepción explosivos, medio arrodillado", "source": "p179", "figure": "9.39c", "description": "En posición de media rodilla, recepción y devolución de pelota por encima del hombro.", "advanced": true, "tag": "Explosivo avanzado · confirmar con deportólogo", "sourceLabel": "Página 179", "photo": "./assets/consultation/IMG_5508.jpeg"}, {"id": "ref-ufu-lateral", "name": "Elevación lateral suave", "source": "video-ufu", "timestamp": 96, "timeLabel": "1:36", "description": "El video muestra la elevación del brazo hacia el costado en un recorrido sin dolor.", "tag": "Referencia · sin pauta asignada", "demo": {"label": "Ver fragmento · 1:36", "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=96s", "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.", "match": "Enlace al momento identificado en la transcripción del video original."}, "gif": "./assets/shoulder/new-video/ref-ufu-lateral.gif", "poster": "./assets/shoulder/new-video/ref-ufu-lateral.jpg", "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68", "gifCreator": "Fisioterapia para la gente", "gifMatch": "Fragmento real del video, a velocidad original, sin audio.", "gifStartSeconds": 108.5, "sourceLabel": "Fisioterapia para la gente", "photo": null}, {"id": "ref-ufu-front", "name": "Elevación frontal suave", "source": "video-ufu", "timestamp": 170, "timeLabel": "2:50", "description": "El video muestra la elevación del brazo hacia delante dentro del recorrido tolerado.", "tag": "Referencia · sin pauta asignada", "demo": {"label": "Ver fragmento · 2:50", "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=170s", "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.", "match": "Enlace al momento identificado en la transcripción del video original."}, "gif": "./assets/shoulder/new-video/ref-ufu-front.gif", "poster": "./assets/shoulder/new-video/ref-ufu-front.jpg", "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68", "gifCreator": "Fisioterapia para la gente", "gifMatch": "Fragmento real del video, a velocidad original, sin audio.", "gifStartSeconds": 176, "sourceLabel": "Fisioterapia para la gente", "photo": null}, {"id": "ref-ufu-back", "name": "Movimiento del brazo hacia atrás", "source": "video-ufu", "timestamp": 208, "timeLabel": "3:28", "description": "Referencia del movimiento suave del brazo hacia atrás.", "tag": "Referencia · sin pauta asignada", "demo": {"label": "Ver fragmento · 3:28", "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=208s", "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.", "match": "Enlace al momento identificado en la transcripción del video original."}, "gif": "./assets/shoulder/new-video/ref-ufu-back.gif", "poster": "./assets/shoulder/new-video/ref-ufu-back.jpg", "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68", "gifCreator": "Fisioterapia para la gente", "gifMatch": "Fragmento real del video, a velocidad original, sin audio.", "gifStartSeconds": 211, "sourceLabel": "Fisioterapia para la gente", "photo": null}, {"id": "ref-ufu-retraction", "name": "Retracción escapular", "source": "video-ufu", "timestamp": 235, "timeLabel": "3:55", "description": "Referencia del movimiento que acerca las escápulas.", "tag": "Referencia · sin pauta asignada", "demo": {"label": "Ver fragmento · 3:55", "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=235s", "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.", "match": "Enlace al momento identificado en la transcripción del video original."}, "gif": "./assets/shoulder/new-video/ref-ufu-retraction.gif", "poster": "./assets/shoulder/new-video/ref-ufu-retraction.jpg", "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68", "gifCreator": "Fisioterapia para la gente", "gifMatch": "Fragmento real del video, a velocidad original, sin audio.", "gifStartSeconds": 250, "sourceLabel": "Fisioterapia para la gente", "photo": null}, {"id": "ref-ufu-protraction", "name": "Protracción escapular", "source": "video-ufu", "timestamp": 300, "timeLabel": "5:00", "description": "Referencia del movimiento que separa las escápulas con las manos hacia delante.", "tag": "Referencia · sin pauta asignada", "demo": {"label": "Ver fragmento · 5:00", "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=300s", "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.", "match": "Enlace al momento identificado en la transcripción del video original."}, "gif": "./assets/shoulder/new-video/ref-ufu-protraction.gif", "poster": "./assets/shoulder/new-video/ref-ufu-protraction.jpg", "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68", "gifCreator": "Fisioterapia para la gente", "gifMatch": "Fragmento real del video, a velocidad original, sin audio.", "gifStartSeconds": 315.5, "sourceLabel": "Fisioterapia para la gente", "photo": null}, {"id": "ref-ufu-neck", "name": "Rotaciones suaves de cuello", "source": "video-ufu", "timestamp": 435, "timeLabel": "7:15", "description": "El video muestra giros suaves de la cabeza de un lado a otro, como al decir «no».", "tag": "Referencia · sin pauta asignada", "demo": {"label": "Ver fragmento · 7:15", "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=435s", "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.", "match": "Enlace al momento identificado en la transcripción del video original."}, "gif": "./assets/shoulder/new-video/ref-ufu-neck.gif", "poster": "./assets/shoulder/new-video/ref-ufu-neck.jpg", "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68", "gifCreator": "Fisioterapia para la gente", "gifMatch": "Fragmento real del video, a velocidad original, sin audio.", "gifStartSeconds": 454, "sourceLabel": "Fisioterapia para la gente", "photo": null}];
 
     const LOAD_PRESETS = {
       light: { label: "Light", multiplier: .75 },
@@ -2646,6 +2668,36 @@
       return `<strong>Completado</strong> · ${volumeText(volume, unit, reps)}${ratioText}`;
     }
 
+    function shoulderReferenceCard(exercise) {
+      const title = escapeAttribute(exercise.name);
+      const media = exercise.gif || exercise.photo;
+      const origin = exercise.source === 'video-ufu' ? `Video · ${exercise.timeLabel}` : `Médico · figura ${exercise.figure}`;
+      return `<article class="exercise-card is-collapsed shoulder-reference-card ${exercise.gif ? 'has-video' : ''}" data-shoulder-reference="${exercise.id}">
+        <div class="exercise-head">
+          <div class="exercise-demo ${exercise.gif ? 'is-video-excerpt' : ''}" id="demo-${exercise.id}">${media ? `<button class="demo-frame" type="button" data-reference-media="${exercise.id}" aria-label="Ampliar ${title}"><img data-demo-image data-src="${media}" alt="${exercise.gif ? 'Demostración' : 'Foto original'}: ${title}" width="112" height="112" loading="lazy"><span class="demo-status" aria-hidden="true"></span></button>` : `<div class="shoulder-ref-placeholder">Video original<br>${exercise.timeLabel}</div>`}${exercise.gif && exercise.poster ? `<button class="demo-toggle" type="button" data-reference-play="${exercise.id}" aria-pressed="${!window.matchMedia('(prefers-reduced-motion: reduce)').matches}">${window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'Reproducir' : 'Pausar'} demostración</button>` : ''}</div>
+          <div class="exercise-title-wrap"><div class="exercise-title-line"><h2>${title}</h2></div><div class="exercise-meta"><span class="muscle-badge">${origin}</span></div>
+            <p class="shoulder-ref-note">${exercise.gif ? 'GIF disponible' : exercise.photo ? 'Foto original · GIF pendiente' : 'Fragmento del video'}</p>
+          </div>
+          <button class="collapse-toggle" type="button" data-reference-toggle="${exercise.id}" aria-expanded="false" aria-label="Mostrar ${title}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></button>
+        </div>
+        <div class="exercise-body"><p class="shoulder-ref-note">${escapeAttribute(exercise.description)}</p>
+          ${exercise.gifMatch ? `<p class="shoulder-ref-note">${escapeAttribute(exercise.gifMatch)}</p>` : ''}
+          ${exercise.tag && exercise.source !== 'video-ufu' ? `<p class="shoulder-ref-note">${escapeAttribute(exercise.tag)}</p>` : ''}
+          <div class="shoulder-ref-actions">${exercise.gifSource ? `<a class="rest-button" href="${exercise.gifSource}" target="_blank" rel="noopener noreferrer">Fuente GIF · ${escapeAttribute(exercise.gifCreator || 'Original')} ↗</a>` : ''}${exercise.demo ? `<a class="rest-button" href="${exercise.demo.url}" target="_blank" rel="noopener noreferrer">${escapeAttribute(exercise.demo.label)} ↗</a>` : ''}</div>
+        </div>
+      </article>`;
+    }
+
+    function renderShoulderReferences() {
+      const shoulder = activeProgram().id === 'shoulder';
+      $('#shoulder-sources').hidden = !shoulder;
+      if (!shoulder) return;
+      const group = (id, title, description, refs) => `<section class="shoulder-group" id="${id}"><h2>${title}</h2><p>${description}</p></section>${refs.map(shoulderReferenceCard).join('')}`;
+      $('#exercise-list').insertAdjacentHTML('beforeend',
+        group('shoulder-video', 'Video nuevo · movilidad suave', 'Seis movimientos del video. Sin series asignadas; no se suman automáticamente a tu sesión de Ana.', shoulderReferences.filter(e => e.source === 'video-ufu')) +
+        group('shoulder-doctor', 'Ejercicios del médico', 'Tus 19 referencias de las fotos, acá mismo. Seguí la selección y la pauta que te dio el profesional; no es una indicación de hacerlas todas.', shoulderReferences.filter(e => e.source !== 'video-ufu')));
+    }
+
     function renderExercises() {
       const day = activeDay();
       ensurePresetWeights(day);
@@ -2653,6 +2705,7 @@
       $("#exercise-list").innerHTML = filtered.length
         ? filtered.map((exercise) => exerciseCard(day, exercise, day.exercises.indexOf(exercise))).join("")
         : `<div class="empty-state"><strong>No hay ejercicios con este filtro.</strong>Elige otro grupo muscular para volver a la sesión.</div>`;
+      renderShoulderReferences();
       $$(".exercise-demo").forEach(loadExerciseDemo);
       configureNumericTriggers();
       updateSessionProgress();
@@ -3260,6 +3313,29 @@
       button.textContent = `${playing ? "Pausar" : "Reproducir"} demostración`;
     });
 
+    document.addEventListener('click', event => {
+      const play = event.target.closest('[data-reference-play]');
+      if (play) {
+        const ref = shoulderReferences.find(e => e.id === play.dataset.referencePlay);
+        const playing = play.getAttribute('aria-pressed') !== 'true';
+        play.closest('.exercise-demo').querySelector('img').src = playing ? ref.gif : ref.poster;
+        play.setAttribute('aria-pressed', String(playing));
+        play.textContent = `${playing ? 'Pausar' : 'Reproducir'} demostración`;
+        return;
+      }
+      const button = event.target.closest('[data-reference-media]');
+      if (!button) return;
+      const ref = shoulderReferences.find(e => e.id === button.dataset.referenceMedia);
+      if (!ref) return;
+      $('#gif-viewer-title').textContent = ref.name;
+      $('#gif-viewer-error').hidden = true;
+      gifViewerImage.hidden = false;
+      gifViewerImage.style.display = 'block';
+      gifViewerImage.alt = ref.name;
+      gifViewerImage.src = ref.gif || ref.photo;
+      gifViewer.showModal();
+    });
+
     function exerciseGifUrl(demo) {
       return (demo[0].startsWith("https://") || demo[0].startsWith("./")) ? demo[0] : GIF_BASE + demo[0];
     }
@@ -3272,6 +3348,8 @@
         panel.classList.add("is-error");
         $(".demo-status", panel).textContent = "Sin GIF";
       }, { once: true });
+      const ref = shoulderReferences.find(e => e.id === panel.id.replace("demo-", ""));
+      if (ref?.poster && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { image.src = ref.poster; return; }
       const demo = exerciseGifs[panel.id.replace("demo-", "")];
       image.src = demo?.[4] && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? demo[4] : image.dataset.src;
     }
@@ -3606,13 +3684,19 @@
         revealCurrentCard();
         return;
       }
+      const refCard = event.target.closest('[data-shoulder-reference]');
+      if (refCard && event.target.closest('[data-reference-toggle], .exercise-head') && !event.target.closest('[data-reference-media], [data-reference-play], a')) {
+        const collapsed = refCard.classList.toggle('is-collapsed');
+        refCard.querySelector('[data-reference-toggle]').setAttribute('aria-expanded', String(!collapsed));
+        return;
+      }
       const collapseToggle = event.target.closest("[data-collapse-toggle]");
       if (collapseToggle) {
         toggleCard(collapseToggle.closest(".exercise-card"));
         return;
       }
       const exerciseHead = event.target.closest(".exercise-head");
-      if (exerciseHead && !event.target.closest("[data-expand-gif], [data-demo-toggle]")) {
+      if (exerciseHead && !event.target.closest("[data-shoulder-reference], [data-expand-gif], [data-demo-toggle]")) {
         toggleCard(exerciseHead.closest(".exercise-card"));
         return;
       }

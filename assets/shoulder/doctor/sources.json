@@ -1,0 +1,67 @@
+[
+  {
+    "id": "ref-side-er",
+    "figure": "9.25a",
+    "sourceUrl": "https://raw.githubusercontent.com/JahelCuadrado/ExerciseGymGifsDB/main/delts/dumbbell-lying-external-shoulder-rotation.gif",
+    "creator": "ExerciseGymGifsDB / JahelCuadrado",
+    "gif": "./assets/shoulder/doctor/ref-side-er.gif",
+    "poster": "./assets/shoulder/doctor/ref-side-er.jpg",
+    "startSeconds": null,
+    "durationSeconds": null,
+    "match": "Rotación externa con mancuerna y codo junto al tronco. Suelo en lugar de camilla.",
+    "verified": "Inspección visual de secuencia de fotogramas; recorte fiel a velocidad original. Sin prescripción de dosis.",
+    "license": "No licencia libre confirmada; fuente pública accesible. Atribuir y enlazar original."
+  },
+  {
+    "id": "ref-side-flexion",
+    "figure": "9.25b",
+    "sourceUrl": "https://www.youtube.com/watch?v=KIhv5K_VMAw",
+    "creator": "BSR Physical Therapy",
+    "gif": "./assets/shoulder/doctor/ref-side-flexion.gif",
+    "poster": "./assets/shoulder/doctor/ref-side-flexion.jpg",
+    "startSeconds": 10,
+    "durationSeconds": 10,
+    "match": "Flexión anterior de lado con mancuerna y camilla.",
+    "verified": "Inspección visual de secuencia de fotogramas; recorte fiel a velocidad original. Sin prescripción de dosis.",
+    "license": "No licencia libre confirmada; fuente pública accesible. Atribuir y enlazar original."
+  },
+  {
+    "id": "ref-prone-abduction",
+    "figure": "9.25c",
+    "sourceUrl": "https://www.youtube.com/watch?v=Pmzz9c_ID3E",
+    "creator": "Cooley Dickinson Hospital",
+    "gif": "./assets/shoulder/doctor/ref-prone-abduction.gif",
+    "poster": "./assets/shoulder/doctor/ref-prone-abduction.jpg",
+    "startSeconds": 19,
+    "durationSeconds": 6,
+    "match": "Abducción horizontal prono con mancuerna y pulgar arriba/rotación externa; profesional supervisa la escápula.",
+    "verified": "Inspección visual de secuencia de fotogramas; recorte fiel a velocidad original. Sin prescripción de dosis.",
+    "license": "No licencia libre confirmada; fuente pública accesible. Atribuir y enlazar original."
+  },
+  {
+    "id": "ref-prone-extension",
+    "figure": "9.25d",
+    "sourceUrl": "https://www.youtube.com/watch?v=3l1gpGWWXXM",
+    "creator": "Physical Therapy First",
+    "gif": "./assets/shoulder/doctor/ref-prone-extension.gif",
+    "poster": "./assets/shoulder/doctor/ref-prone-extension.jpg",
+    "startSeconds": 6,
+    "durationSeconds": 7,
+    "match": "Extensión unilateral prono con mancuerna y camilla.",
+    "verified": "Inspección visual de secuencia de fotogramas; recorte fiel a velocidad original. Sin prescripción de dosis.",
+    "license": "No licencia libre confirmada; fuente pública accesible. Atribuir y enlazar original."
+  },
+  {
+    "id": "ref-elbow-pushup",
+    "figure": "9.26a",
+    "sourceUrl": "https://www.youtube.com/watch?v=3EfZ9Jt6UsU",
+    "creator": "Annie Miller",
+    "gif": "./assets/shoulder/doctor/ref-elbow-pushup.gif",
+    "poster": "./assets/shoulder/doctor/ref-elbow-pushup.jpg",
+    "startSeconds": 0,
+    "durationSeconds": 9,
+    "match": "Plancha sobre codos con movimiento escapular; no flexión de brazos convencional.",
+    "verified": "Inspección visual de secuencia de fotogramas; recorte fiel a velocidad original. Sin prescripción de dosis.",
+    "license": "No licencia libre confirmada; fuente pública accesible. Atribuir y enlazar original."
+  }
+]

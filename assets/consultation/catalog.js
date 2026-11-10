@@ -70,6 +70,11 @@
         photo.setAttribute('aria-label', `Ver figura ${exercise.figure}: ${exercise.name}`);
         actions.append(photo);
       }
+      if (exercise.gif) {
+        const gif = element('a', 'button', 'Ver GIF ↗');
+        gif.href = exercise.gif; gif.target = '_blank'; gif.rel = 'noopener noreferrer';
+        actions.append(gif);
+      }
       if (exercise.demo) {
         const demo = element('a', 'button', `${exercise.demo.label} ↗`);
         demo.href = exercise.demo.url;
@@ -78,7 +83,7 @@
         actions.append(demo);
       }
       content.append(actions);
-      content.append(element('p', 'media-note', source.type === 'video' ? 'Referencia identificada por transcripción. El enlace abre el video completo en ese momento; no es una pauta para realizar todo lo que sigue. Requiere conexión.' : exercise.demo ? `${exercise.demo.match} Sin GIF verificado para esta variante.` : 'Demostración de esta variante: foto original. Sin vídeo o GIF equivalente verificado.'));
+      content.append(element('p', 'media-note', exercise.gif ? 'GIF del movimiento verificado. La selección y la pauta siguen siendo individuales.' : source.type === 'video' ? 'Referencia identificada por transcripción. El enlace abre el video completo en ese momento; no es una pauta para realizar todo lo que sigue. Requiere conexión.' : exercise.demo ? `${exercise.demo.match} Sin GIF verificado para esta variante.` : 'Demostración de esta variante: foto original. Sin vídeo o GIF equivalente verificado.'));
       if (exercise.demo?.index) {
         const fallback = element('a', '', 'Si el vídeo no abre: consultar el índice de Cornell Health ↗');
         fallback.href = exercise.demo.index;

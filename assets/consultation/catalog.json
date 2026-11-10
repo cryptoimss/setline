@@ -66,7 +66,13 @@
         "label": "Vídeo · CSP / Physiotec",
         "match": "Rotación externa acostado de lado; sección Side lying external rotation.",
         "verification": "Página de Chartered Society of Physiotherapy, vídeo de Physiotec y descripción de decúbito lateral con codo a 90° y peso en la mano. Consultado 2026-11-04."
-      }
+      },
+      "gif": "./assets/shoulder/doctor/ref-side-er.gif",
+      "gifSource": "https://raw.githubusercontent.com/JahelCuadrado/ExerciseGymGifsDB/main/delts/dumbbell-lying-external-shoulder-rotation.gif",
+      "gifMatch": "Rotación externa con mancuerna y codo junto al tronco. Suelo en lugar de camilla.",
+      "poster": "./assets/shoulder/doctor/ref-side-er.jpg",
+      "gifCreator": "ExerciseGymGifsDB / JahelCuadrado",
+      "gifStartSeconds": null
     },
     {
       "id": "ref-side-flexion",
@@ -79,14 +85,26 @@
         "label": "Ilustración · estudio, figura 12",
         "match": "Ilustración de flexión anterior acostado de lado; no es un vídeo.",
         "verification": "Pie de figura 12: Side-lying forward flexion. Consultado 2026-11-04."
-      }
+      },
+      "gif": "./assets/shoulder/doctor/ref-side-flexion.gif",
+      "poster": "./assets/shoulder/doctor/ref-side-flexion.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=KIhv5K_VMAw",
+      "gifCreator": "BSR Physical Therapy",
+      "gifMatch": "Flexión anterior de lado con mancuerna y camilla.",
+      "gifStartSeconds": 10
     },
     {
       "id": "ref-prone-abduction",
       "name": "Abducción horizontal prono con rotación externa",
       "source": "p174",
       "figure": "9.25c",
-      "description": "Boca abajo en la camilla, con el brazo hacia el lado y rotación externa."
+      "description": "Boca abajo en la camilla, con el brazo hacia el lado y rotación externa.",
+      "gif": "./assets/shoulder/doctor/ref-prone-abduction.gif",
+      "poster": "./assets/shoulder/doctor/ref-prone-abduction.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=Pmzz9c_ID3E",
+      "gifCreator": "Cooley Dickinson Hospital",
+      "gifMatch": "Abducción horizontal prono con mancuerna y pulgar arriba/rotación externa; profesional supervisa la escápula.",
+      "gifStartSeconds": 19
     },
     {
       "id": "ref-prone-extension",
@@ -99,14 +117,26 @@
         "label": "Ilustración · estudio, figura 9",
         "match": "Extensión del hombro boca abajo; no es un vídeo.",
         "verification": "El artículo identifica la figura 9 como Prone shoulder extension. Consultado 2026-11-04."
-      }
+      },
+      "gif": "./assets/shoulder/doctor/ref-prone-extension.gif",
+      "poster": "./assets/shoulder/doctor/ref-prone-extension.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=3l1gpGWWXXM",
+      "gifCreator": "Physical Therapy First",
+      "gifMatch": "Extensión unilateral prono con mancuerna y camilla.",
+      "gifStartSeconds": 6
     },
     {
       "id": "ref-elbow-pushup",
       "name": "Empuje escapular sobre antebrazos",
       "source": "p174",
       "figure": "9.26a",
-      "description": "Apoyo en antebrazos y pies. La foto lo denomina elbow push-up; no se interpreta como un curl o una flexión convencional de codos."
+      "description": "Apoyo en antebrazos y pies. La foto lo denomina elbow push-up; no se interpreta como un curl o una flexión convencional de codos.",
+      "gif": "./assets/shoulder/doctor/ref-elbow-pushup.gif",
+      "poster": "./assets/shoulder/doctor/ref-elbow-pushup.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=3EfZ9Jt6UsU",
+      "gifCreator": "Annie Miller",
+      "gifMatch": "Plancha sobre codos con movimiento escapular; no flexión de brazos convencional.",
+      "gifStartSeconds": 0
     },
     {
       "id": "ref-serratus-seated",
@@ -221,7 +251,13 @@
         "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=96s",
         "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
         "match": "Enlace al momento identificado en la transcripción del video original."
-      }
+      },
+      "gif": "./assets/shoulder/new-video/ref-ufu-lateral.gif",
+      "poster": "./assets/shoulder/new-video/ref-ufu-lateral.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68",
+      "gifCreator": "Fisioterapia para la gente",
+      "gifMatch": "Fragmento real del video, a velocidad original, sin audio.",
+      "gifStartSeconds": 108.5
     },
     {
       "id": "ref-ufu-front",
@@ -236,7 +272,13 @@
         "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=170s",
         "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
         "match": "Enlace al momento identificado en la transcripción del video original."
-      }
+      },
+      "gif": "./assets/shoulder/new-video/ref-ufu-front.gif",
+      "poster": "./assets/shoulder/new-video/ref-ufu-front.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68",
+      "gifCreator": "Fisioterapia para la gente",
+      "gifMatch": "Fragmento real del video, a velocidad original, sin audio.",
+      "gifStartSeconds": 176
     },
     {
       "id": "ref-ufu-back",
@@ -251,7 +293,13 @@
         "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=208s",
         "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
         "match": "Enlace al momento identificado en la transcripción del video original."
-      }
+      },
+      "gif": "./assets/shoulder/new-video/ref-ufu-back.gif",
+      "poster": "./assets/shoulder/new-video/ref-ufu-back.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68",
+      "gifCreator": "Fisioterapia para la gente",
+      "gifMatch": "Fragmento real del video, a velocidad original, sin audio.",
+      "gifStartSeconds": 211
     },
     {
       "id": "ref-ufu-retraction",
@@ -266,7 +314,13 @@
         "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=235s",
         "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
         "match": "Enlace al momento identificado en la transcripción del video original."
-      }
+      },
+      "gif": "./assets/shoulder/new-video/ref-ufu-retraction.gif",
+      "poster": "./assets/shoulder/new-video/ref-ufu-retraction.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68",
+      "gifCreator": "Fisioterapia para la gente",
+      "gifMatch": "Fragmento real del video, a velocidad original, sin audio.",
+      "gifStartSeconds": 250
     },
     {
       "id": "ref-ufu-protraction",
@@ -281,7 +335,13 @@
         "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=300s",
         "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
         "match": "Enlace al momento identificado en la transcripción del video original."
-      }
+      },
+      "gif": "./assets/shoulder/new-video/ref-ufu-protraction.gif",
+      "poster": "./assets/shoulder/new-video/ref-ufu-protraction.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68",
+      "gifCreator": "Fisioterapia para la gente",
+      "gifMatch": "Fragmento real del video, a velocidad original, sin audio.",
+      "gifStartSeconds": 315.5
     },
     {
       "id": "ref-ufu-neck",
@@ -296,7 +356,13 @@
         "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=435s",
         "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
         "match": "Enlace al momento identificado en la transcripción del video original."
-      }
+      },
+      "gif": "./assets/shoulder/new-video/ref-ufu-neck.gif",
+      "poster": "./assets/shoulder/new-video/ref-ufu-neck.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=UFuQ2SYwt68",
+      "gifCreator": "Fisioterapia para la gente",
+      "gifMatch": "Fragmento real del video, a velocidad original, sin audio.",
+      "gifStartSeconds": 454
     }
   ],
   "mediaPolicy": "No se incorporan GIFs externos: no se verificó una combinación de correspondencia exacta y permiso de reutilización. Las demostraciones se enlazan a sus autores, sin descargar ni convertir sus medios. Las tres fotos del usuario se conservan sin editar para revisión local; no se ha verificado permiso para redistribuir las páginas del libro.",

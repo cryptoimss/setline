@@ -68,3 +68,9 @@ Abre `http://localhost:8080`. `tests/session.browser.cjs` requiere Playwright co
 ## Video de movilidad · referencias, sin rutina añadida
 
 La biblioteca **Referencias de hombro** incorpora seis movimientos suaves del video https://www.youtube.com/watch?v=UFuQ2SYwt68, identificados mediante su transcripción automática: elevaciones lateral (1:36) y frontal (2:50), brazo hacia atrás (3:28), retracción (3:55) y protracción escapular (5:00), y rotación cervical suave (7:15). Cada ficha abre su momento del original. Son referencias sin dosis y no reemplazan ni amplían automáticamente la sesión de PhysioWods/Ana Galeote. La selección requiere valoración individual. No se incluyen tracción, presión clavicular ni elevaciones rápidas atravesando dolor. No se extrajeron GIFs nuevos ni se altera el almacenamiento del entrenamiento.
+
+## Hombro: todo en la pantalla de ejercicios
+
+Los cinco ejercicios de Ana conservan sus IDs y registros. Los seis movimientos del video nuevo y las 19 referencias del médico aparecen ahora en tarjetas del mismo listado de Hombro, con navegación visible por origen, imágenes ampliables y GIFs cuando se verificó la correspondencia. Las tarjetas añadidas no asignan dosis ni cambian el cómputo de la sesión existente. Los GIFs se pueden pausar y comienzan con póster si el sistema solicita movimiento reducido. Las fotos originales siguen disponibles para las variantes sin GIF verificado; no se sustituye una variante por otra parecida.
+
+Prueba específica: `SETLINE_URL=http://localhost:8080 node tests/shoulder-unified.browser.cjs`. Usa datos sintéticos, verifica 5 tarjetas existentes y 25 añadidas en la misma pantalla, controles, imágenes, estados y anchos móviles/escritorio.
