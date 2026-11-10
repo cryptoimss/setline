@@ -2,6 +2,15 @@ const BUILD_VERSION = "__BUILD_VERSION__";
 const SHELL_CACHE = `setline-shell-${BUILD_VERSION}`;
 const GIF_CACHE = "setline-gifs-v1";
 const SHELL_FILES = [
+  "./assets/shoulder/guide/curl.jpg",
+  "./assets/shoulder/guide/curl.gif",
+  "./assets/shoulder/guide/isometric-er.jpg",
+  "./assets/shoulder/guide/isometric-er.gif",
+  "./assets/shoulder/guide/band-row.jpg",
+  "./assets/shoulder/guide/band-row.gif",
+  "./guide.html",
+  "./guide.css",
+  "./guide.js",
   "./assets/shoulder/doctor/ref-diagonal-er.jpg",
   "./assets/shoulder/doctor/ref-diagonal-er.gif",
   "./assets/shoulder/doctor/ref-band-elevation-er.jpg",

@@ -77,3 +77,6 @@ Prueba específica: `SETLINE_URL=http://localhost:8080 node tests/shoulder-unifi
 
 ### GIFs médicos, segunda revisión
 Se añaden demostraciones verificadas de elevación bilateral con banda (9.27; mini-band cerrada en lugar de tira abierta) y diagonal externa (9.36b). Hay siete GIFs médicos y seis del video nuevo. Las doce variantes médicas restantes conservan su foto original, sin sustituirlas por movimientos parecidos.
+
+## Pestaña Guía hombro
+La navegación principal incluye **Entrenar** y **Guía hombro**. `guide.html` presenta cuatro opciones para revisar con el profesional: remo con banda, rotación externa isométrica, referencia escapular de la figura 9.25d y curl opcional si tolera carga. No establece diagnóstico, superioridad, dosis ni nueva rutina. Incluye GIFs revisados, fuentes, control de reproducción y movimiento reducido; no escribe en el almacenamiento del entrenamiento. Fuentes de medios en `assets/shoulder/guide/sources.json`. Comprobación: `node --test tests/guide.test.cjs` y `SETLINE_URL=http://localhost:8098/ node tests/guide.browser.cjs` con Playwright/WebKit.

@@ -1,0 +1,33 @@
+[
+  {
+    "id": "band-row",
+    "gif": "./assets/shoulder/guide/band-row.gif",
+    "poster": "./assets/shoulder/guide/band-row.jpg",
+    "sourceUrl": "https://www.youtube.com/watch?v=_hnWc4kwVZg",
+    "creator": "Therapeutic Innovations Physical Therapy",
+    "startSeconds": 12,
+    "durationSeconds": 8,
+    "match": "Remo bilateral con banda anclada por delante; codos pasan cerca del torso. Resistencia no cuantificable visualmente.",
+    "transformation": "Recorte real a velocidad original; 360px 10fps. No incluye dosis."
+  },
+  {
+    "id": "isometric-er",
+    "gif": "./assets/shoulder/guide/isometric-er.gif",
+    "poster": "./assets/shoulder/guide/isometric-er.jpg",
+    "sourceUrl": "https://www.youtube.com/watch?v=kWtMKNnjyd0",
+    "creator": "Hope Physical Therapy and Aquatics",
+    "startSeconds": 19,
+    "durationSeconds": 6,
+    "match": "Codo a 90 grados junto al torso, dorso de mano/muñeca presiona toalla contra pared sin excursión de rotación. Isométrico: muy poco movimiento visible por diseño.",
+    "transformation": "Recorte real a velocidad original; 360px 10fps. No incluye dosis."
+  },
+  {
+    "id": "curl",
+    "gif": "./assets/shoulder/guide/curl.gif",
+    "poster": "./assets/shoulder/guide/curl.jpg",
+    "sourceUrl": "https://raw.githubusercontent.com/JahelCuadrado/ExerciseGymGifsDB/main/biceps/dumbbell-biceps-curl.gif",
+    "creator": "ExerciseGymGifsDB / JahelCuadrado",
+    "match": "Animación existente de curl bilateral supinado, codos junto al cuerpo. No es filmación ni indica carga; no interpretar tamaño de mancuernas como carga recomendada.",
+    "transformation": "Original sin modificación."
+  }
+]
