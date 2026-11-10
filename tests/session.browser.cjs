@@ -354,7 +354,7 @@ scenario('Session sheet: full names, program keeps it open, day closes it, Escap
   assert.equal(await sheet.isVisible(), true);
   assert.equal(await page.locator('#session-sheet-title').evaluate(title => title === document.activeElement), true, 'no focus ring on a button for touch users');
   assert.equal(await page.locator('#sheet-programs [data-program]').count(), 5);
-  assert.match(await sheet.textContent(), /Fotos de consulta/);
+  assert.match(await sheet.textContent(), /Referencias de hombro/);
   assert.equal(await sheet.locator('a[href="./catalog.html"]').count(), 1);
   await press(page, '#sheet-programs [data-program="calisthenics"]');
   assert.equal(await sheet.isVisible(), true);
@@ -443,7 +443,7 @@ scenario('The interface states data and does not explain itself, on any program 
   await page.waitForTimeout(300);
   await clean('RESET confirmation');
   assert.equal(await page.locator('#confirm-sheet p').count(), 0, 'just a question and two answers');
-  await press(page, '.sheet-cancel', 650);
+  await press(page, '#confirm-sheet .sheet-cancel', 650);
   assert.equal(await page.locator('.exercise-howto[open]').count(), 0, 'technique stays closed until asked for');
 });
 
@@ -601,17 +601,17 @@ scenario('Regression: the tap that opens the RESET confirmation cannot answer it
   await page.waitForTimeout(700);
   assert.equal(await doneCount(page), 2, 'double tap on the RESET row');
   assert.equal(await page.locator('#confirm-sheet').isVisible(), true);
-  const cancel = await page.locator('.sheet-cancel').boundingBox();
-  const confirm = await page.locator('.sheet-confirm').boundingBox();
+  const cancel = await page.locator('#confirm-sheet .sheet-cancel').boundingBox();
+  const confirm = await page.locator('#confirm-sheet .sheet-confirm').boundingBox();
   assert.ok(cancel.y > confirm.y, 'on a phone the harmless answer is where the thumb already is');
-  await press(page, '.sheet-cancel', 0);
+  await press(page, '#confirm-sheet .sheet-cancel', 0);
   await page.waitForTimeout(420);
   await finishSession(page);
   await page.waitForTimeout(950);
   await doubleTap(page, '#console-reset');
   await page.waitForTimeout(700);
   assert.equal(await doneCount(page), 14, 'double tap on RESET in the finished console');
-  await press(page, '.sheet-cancel', 0);
+  await press(page, '#confirm-sheet .sheet-cancel', 0);
 });
 
 scenario('Regression: extra taps on the last Hecha never wipe the session', async page => {
@@ -625,7 +625,7 @@ scenario('Regression: extra taps on the last Hecha never wipe the session', asyn
     }
     await page.waitForTimeout(700);
     assert.equal(await doneCount(page), 14, `three taps ${gap} ms apart`);
-    if (await page.locator('#confirm-sheet').isVisible()) await press(page, '.sheet-cancel', 650);
+    if (await page.locator('#confirm-sheet').isVisible()) await press(page, '#confirm-sheet .sheet-cancel', 650);
   }
 });
 
@@ -812,7 +812,7 @@ scenario('Regression: an app left open overnight notices the new day', async pag
   assert.match(await page.locator('#session-stale-note').textContent(), /Registrada el 4 nov · 1 de 14 series/);
   assert.equal(await page.locator('#session-stale').isVisible(), true);
   await page.locator('#session-stale [data-reset-session]').tap();
-  await press(page, '.sheet-cancel', 650);
+  await press(page, '#confirm-sheet .sheet-cancel', 650);
 });
 
 scenario('Regression: closing a RESET opened from the sheet returns focus to the session bar', async page => {

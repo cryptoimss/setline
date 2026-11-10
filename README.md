@@ -38,7 +38,7 @@ La selección debe acordarse con el fisioterapeuta. No hay RIR, presets de kilos
 
 ## Fotos de consulta · catálogo de referencia
 
-El acceso **Fotos de consulta** abre `catalog.html` desde escritorio o móvil. Contiene 19 referencias identificadas en las tres fotos aportadas por el usuario, con página/figura, búsqueda, filtros, visor de la página original y enlaces a demostraciones cuando se verificó el movimiento. Las figuras 9.39a–c se marcan como avanzadas para confirmar con el deportólogo. Pantorrilla queda pendiente: no aparece en estas fotos.
+El acceso **Referencias de hombro** abre `catalog.html` desde escritorio o móvil. Contiene 19 referencias identificadas en las tres fotos aportadas por el usuario, con página/figura, búsqueda, filtros, visor de la página original y enlaces a demostraciones cuando se verificó el movimiento. Las figuras 9.39a–c se marcan como avanzadas para confirmar con el deportólogo. Pantorrilla queda pendiente: no aparece en estas fotos.
 
 Este catálogo es de consulta: no crea rutinas, no asigna dosis y no lee ni escribe el estado de entrenamiento. Conserva los programas, sus IDs y la clave de almacenamiento. Las fotos y el catálogo están disponibles offline tras la primera carga con conexión; los enlaces externos requieren conexión. Las variantes relacionadas se identifican sin fusionarlas. Consulta [procedencia y revisión](docs/CONSULTATION.md).
 
@@ -64,3 +64,7 @@ Abre `http://localhost:8080`. `tests/session.browser.cjs` requiere Playwright co
 - `manifest.webmanifest`, `sw.js`, `assets/icons/`: instalación y modo offline.
 - `.github/workflows/pages.yml`: publicación automática.
 - `docs/`: producto, diseño y justificación de programación.
+
+## Video de movilidad · referencias, sin rutina añadida
+
+La biblioteca **Referencias de hombro** incorpora seis movimientos suaves del video https://www.youtube.com/watch?v=UFuQ2SYwt68, identificados mediante su transcripción automática: elevaciones lateral (1:36) y frontal (2:50), brazo hacia atrás (3:28), retracción (3:55) y protracción escapular (5:00), y rotación cervical suave (7:15). Cada ficha abre su momento del original. Son referencias sin dosis y no reemplazan ni amplían automáticamente la sesión de PhysioWods/Ana Galeote. La selección requiere valoración individual. No se incluyen tracción, presión clavicular ni elevaciones rápidas atravesando dolor. No se extrajeron GIFs nuevos ni se altera el almacenamiento del entrenamiento.

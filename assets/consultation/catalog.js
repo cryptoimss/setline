@@ -28,7 +28,7 @@
     $('#photo-viewer').showModal();
   }
   function renderSources() {
-    $('#source-photos').replaceChildren(...catalog.sources.map(source => {
+    $('#source-photos').replaceChildren(...catalog.sources.filter(source => source.type !== 'video').map(source => {
       const button = photoButton(source, '', source.figure);
       button.className = 'source';
       const image = element('img');
@@ -47,7 +47,7 @@
     const query = normalize($('#catalog-search').value.trim());
     const matches = catalog.exercises.filter(exercise => {
       const inFilter = filter === 'all' || (filter === 'advanced' ? exercise.advanced : exercise.source === filter);
-      return inFilter && normalize(`${exercise.name} ${exercise.description} ${exercise.figure}`).includes(query);
+      return inFilter && normalize(`${exercise.name} ${exercise.description} ${exercise.figure || exercise.timeLabel || ""}`).includes(query);
     });
     $('.filters').querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === filter)));
     $('#catalog-count').textContent = `${matches.length} de ${catalog.exercises.length} referencias · sin pauta asignada`;
@@ -61,13 +61,15 @@
       const number = element('span', 'number', String(index).padStart(2, '0'));
       number.setAttribute('aria-hidden', 'true');
       const content = element('div');
-      content.append(element('div', 'meta', `${source.label} · figura ${exercise.figure}`), element('h2', '', exercise.name));
+      content.append(element('div', 'meta', `${source.label} · ${source.type === "video" ? exercise.timeLabel : `figura ${exercise.figure}`}`), element('h2', '', exercise.name));
       if (exercise.tag) content.append(element('span', 'tag', exercise.tag));
       content.append(element('p', 'description', exercise.description));
       const actions = element('div', 'actions');
-      const photo = photoButton(source, 'Ver foto de consulta', exercise.figure);
-      photo.setAttribute('aria-label', `Ver figura ${exercise.figure}: ${exercise.name}`);
-      actions.append(photo);
+      if (source.type !== 'video') {
+        const photo = photoButton(source, 'Ver foto de consulta', exercise.figure);
+        photo.setAttribute('aria-label', `Ver figura ${exercise.figure}: ${exercise.name}`);
+        actions.append(photo);
+      }
       if (exercise.demo) {
         const demo = element('a', 'button', `${exercise.demo.label} ↗`);
         demo.href = exercise.demo.url;
@@ -76,7 +78,7 @@
         actions.append(demo);
       }
       content.append(actions);
-      content.append(element('p', 'media-note', exercise.demo ? `${exercise.demo.match} Sin GIF verificado para esta variante.` : 'Demostración de esta variante: foto original. Sin vídeo o GIF equivalente verificado.'));
+      content.append(element('p', 'media-note', source.type === 'video' ? 'Referencia identificada por transcripción. El enlace abre el video completo en ese momento; no es una pauta para realizar todo lo que sigue. Requiere conexión.' : exercise.demo ? `${exercise.demo.match} Sin GIF verificado para esta variante.` : 'Demostración de esta variante: foto original. Sin vídeo o GIF equivalente verificado.'));
       if (exercise.demo?.index) {
         const fallback = element('a', '', 'Si el vídeo no abre: consultar el índice de Cornell Health ↗');
         fallback.href = exercise.demo.index;

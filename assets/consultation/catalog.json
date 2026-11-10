@@ -1,7 +1,7 @@
 {
-  "title": "Hombro · fotos de consulta",
+  "title": "Hombro · biblioteca de referencias",
   "source": "Tres fotos aportadas por el usuario, recibidas de su deportólogo en consulta. Capítulo 9: Shoulder pain: management; páginas 159, 174 y 179. Título y edición del libro sin identificar.",
-  "reviewedAt": "2026-11-04",
+  "reviewedAt": "2026-11-10",
   "prescription": null,
   "sources": [
     {
@@ -21,6 +21,12 @@
       "label": "Página 179",
       "file": "./assets/consultation/IMG_5508.jpeg",
       "figure": "9.36–9.39"
+    },
+    {
+      "id": "video-ufu",
+      "type": "video",
+      "label": "Fisioterapia para la gente",
+      "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68"
     }
   ],
   "exercises": [
@@ -201,6 +207,96 @@
       "description": "En posición de media rodilla, recepción y devolución de pelota por encima del hombro.",
       "advanced": true,
       "tag": "Explosivo avanzado · confirmar con deportólogo"
+    },
+    {
+      "id": "ref-ufu-lateral",
+      "name": "Elevación lateral suave",
+      "source": "video-ufu",
+      "timestamp": 96,
+      "timeLabel": "1:36",
+      "description": "El video muestra la elevación del brazo hacia el costado en un recorrido sin dolor.",
+      "tag": "Referencia · sin pauta asignada",
+      "demo": {
+        "label": "Ver fragmento · 1:36",
+        "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=96s",
+        "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
+        "match": "Enlace al momento identificado en la transcripción del video original."
+      }
+    },
+    {
+      "id": "ref-ufu-front",
+      "name": "Elevación frontal suave",
+      "source": "video-ufu",
+      "timestamp": 170,
+      "timeLabel": "2:50",
+      "description": "El video muestra la elevación del brazo hacia delante dentro del recorrido tolerado.",
+      "tag": "Referencia · sin pauta asignada",
+      "demo": {
+        "label": "Ver fragmento · 2:50",
+        "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=170s",
+        "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
+        "match": "Enlace al momento identificado en la transcripción del video original."
+      }
+    },
+    {
+      "id": "ref-ufu-back",
+      "name": "Movimiento del brazo hacia atrás",
+      "source": "video-ufu",
+      "timestamp": 208,
+      "timeLabel": "3:28",
+      "description": "Referencia del movimiento suave del brazo hacia atrás.",
+      "tag": "Referencia · sin pauta asignada",
+      "demo": {
+        "label": "Ver fragmento · 3:28",
+        "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=208s",
+        "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
+        "match": "Enlace al momento identificado en la transcripción del video original."
+      }
+    },
+    {
+      "id": "ref-ufu-retraction",
+      "name": "Retracción escapular",
+      "source": "video-ufu",
+      "timestamp": 235,
+      "timeLabel": "3:55",
+      "description": "Referencia del movimiento que acerca las escápulas.",
+      "tag": "Referencia · sin pauta asignada",
+      "demo": {
+        "label": "Ver fragmento · 3:55",
+        "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=235s",
+        "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
+        "match": "Enlace al momento identificado en la transcripción del video original."
+      }
+    },
+    {
+      "id": "ref-ufu-protraction",
+      "name": "Protracción escapular",
+      "source": "video-ufu",
+      "timestamp": 300,
+      "timeLabel": "5:00",
+      "description": "Referencia del movimiento que separa las escápulas con las manos hacia delante.",
+      "tag": "Referencia · sin pauta asignada",
+      "demo": {
+        "label": "Ver fragmento · 5:00",
+        "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=300s",
+        "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
+        "match": "Enlace al momento identificado en la transcripción del video original."
+      }
+    },
+    {
+      "id": "ref-ufu-neck",
+      "name": "Rotaciones suaves de cuello",
+      "source": "video-ufu",
+      "timestamp": 435,
+      "timeLabel": "7:15",
+      "description": "El video muestra giros suaves de la cabeza de un lado a otro, como al decir «no».",
+      "tag": "Referencia · sin pauta asignada",
+      "demo": {
+        "label": "Ver fragmento · 7:15",
+        "url": "https://www.youtube.com/watch?v=UFuQ2SYwt68&t=435s",
+        "verification": "Identificado en la transcripción automática del video original; revisión 2026-11-10. No implica validación clínica.",
+        "match": "Enlace al momento identificado en la transcripción del video original."
+      }
     }
   ],
   "mediaPolicy": "No se incorporan GIFs externos: no se verificó una combinación de correspondencia exacta y permiso de reutilización. Las demostraciones se enlazan a sus autores, sin descargar ni convertir sus medios. Las tres fotos del usuario se conservan sin editar para revisión local; no se ha verificado permiso para redistribuir las páginas del libro.",
