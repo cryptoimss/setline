@@ -2,6 +2,8 @@ const BUILD_VERSION = "__BUILD_VERSION__";
 const SHELL_CACHE = `setline-shell-${BUILD_VERSION}`;
 const GIF_CACHE = "setline-gifs-v1";
 const SHELL_FILES = [
+  "./assets/shoulder/guide/isometric-er-clear.gif",
+  "./assets/shoulder/guide/isometric-er-clear.jpg",
   "./assets/shoulder/guide/curl.jpg",
   "./assets/shoulder/guide/curl.gif",
   "./assets/shoulder/guide/isometric-er.jpg",

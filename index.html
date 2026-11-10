@@ -1636,7 +1636,7 @@
     </aside>
 
     <main class="page">
-      <nav class="app-tabs" aria-label="Vistas de Setline"><a href="./index.html" aria-current="page">Entrenar</a><a href="./guide.html">Guía hombro</a></nav>
+      <nav class="app-tabs" aria-label="Acceso directo a entrenamientos"><button type="button" data-program="solo">Gym</button><button type="button" data-open-shoulder>Entrenar hombro</button></nav>
       <header class="mobile-topbar">
         <button class="session-switch" id="session-switch" type="button" aria-haspopup="dialog">
           <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
@@ -1984,6 +1984,8 @@
       }]
     });
 
+    programs.push({"id": "shoulder-focus", "short": "Hombro · sesión", "symbol": "H", "days": [{"id": "hf-main", "code": "H", "name": "Entrenar hombro", "freeLog": true, "exercises": [{"id": "hf-row", "name": "Remo suave con banda", "muscle": "Hombros", "tracking": "reps", "loadLabel": "Banda", "cue": "Fijá la banda delante tuyo. Tirás llevando los codos cerca del cuerpo y volvés despacio, sin encoger los hombros.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}, {"id": "hf-iso", "name": "Empuje hacia fuera · sin mover el brazo", "muscle": "Hombros", "tracking": "reps", "loadLabel": "Pared", "cue": "De costado a la pared, codo doblado y pegado al cuerpo. Apoyá el dorso de la mano sobre una toalla y presioná suavemente hacia la pared sin mover el brazo. El GIF casi no se mueve: eso es el isométrico. Registrá contracciones, no segundos.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}, {"id": "hf-scapula", "name": "Extensión boca abajo · control escapular", "muscle": "Hombros", "tracking": "reps", "loadLabel": "Acordada", "cue": "Boca abajo con apoyo estable, llevá el brazo hacia atrás junto al cuerpo y volvé con control. De tu hoja, figura 9.25d. La mancuerna del GIF no indica qué carga usar: confirmá la variante con tu profesional.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}]}, {"id": "hf-optional", "code": "+", "name": "Curl · opcional", "optional": true, "alternative": true, "freeLog": true, "exercises": [{"id": "hf-curl", "name": "Curl liviano · opcional", "muscle": "Bíceps", "cue": "Palma hacia arriba, doblá el codo y bajá despacio. Solo si tolerás la carga; omitilo si estás en una fase irritable o el hombro empeora. El tamaño de la mancuerna del GIF no es una indicación de peso.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}]}]});
+
     // Optional repertoire: choose variants with Hacer ahora; excluded from the A/B rotation.
     const chestExtraExercises = [
       {"id": "px-bar-flat", "name": "Press plano con barra", "muscle": "Pecho", "sets": 2, "reps": "8–15", "rest": 90, "rir": "2", "cue": "Pies firmes y escápulas estables. Baja con control, sin rebote. Registra el peso total de la barra y los discos. Usa topes de seguridad o ayuda."},
@@ -2036,7 +2038,7 @@
 
     programs.forEach(program => program.days.forEach(day => {
       day.timing = estimateSessionTiming(day);
-      day.duration = `${day.timing.min}–${day.timing.max} min`;
+      day.duration = day.freeLog ? "Registro libre" : `${day.timing.min}–${day.timing.max} min`;
     }));
     programs.sort((a, b) => (a.id === "solo" ? 0 : 1) - (b.id === "solo" ? 0 : 1));
 
@@ -2181,6 +2183,8 @@
       "px-dip-assisted": ["pectorals/assisted-chest-dip-kneeling.gif", "Fondos asistidos para pecho"]
     });
 
+    Object.assign(exerciseGifs, {"hf-row": ["./assets/shoulder/guide/band-row.gif", "Remo suave con banda", "https://www.youtube.com/watch?v=_hnWc4kwVZg", "Therapeutic Innovations PT", "./assets/shoulder/guide/band-row.jpg"], "hf-iso": ["./assets/shoulder/guide/isometric-er-clear.gif", "Empuje hacia fuera · sin mover el brazo", "https://www.youtube.com/watch?v=rvoct7h9Z-0", "BEYOND Physical Therapy", "./assets/shoulder/guide/isometric-er-clear.jpg"], "hf-scapula": ["./assets/shoulder/doctor/ref-prone-extension.gif", "Extensión boca abajo · control escapular", "https://www.youtube.com/watch?v=3l1gpGWWXXM", "Physical Therapy First", "./assets/shoulder/doctor/ref-prone-extension.jpg"], "hf-curl": ["./assets/shoulder/guide/curl.gif", "Curl liviano · opcional", "https://github.com/JahelCuadrado/ExerciseGymGifsDB", "ExerciseGymGifsDB", "./assets/shoulder/guide/curl.jpg"]});
+
     const storageKey = "setline-hypertrophy-v1";
     const timerStorageKey = "setline-rest-timer";
     const defaultState = {
@@ -2235,6 +2239,13 @@
     }
 
     let state = loadState();
+    function restoreFreeSets() {
+      const counts = isRecord(state.freeSetCounts) ? state.freeSetCounts : {};
+      programs.find(p => p.id === 'shoulder-focus').days.forEach(d => d.exercises.forEach(e => {
+        e.sets = Math.max(1, Math.min(20, Number(counts[e.id]) || 1));
+      }));
+    }
+    restoreFreeSets();
     let timerRemaining = 0;
     let timerInitial = 60;
     let timerRunning = false;
@@ -2372,7 +2383,7 @@
     }
 
     function repRange(exercise) {
-      const [min, max = min] = String(exercise.reps).match(/\d+/g).map(Number);
+      const [min, max = min] = (String(exercise.reps).match(/\d+/g) || [0]).map(Number);
       return { min, max };
     }
 
@@ -2381,6 +2392,7 @@
       if (safeNumber(remembered)) return remembered;
       const carried = index > 0 ? getEntry(day.id, exercise.id, index - 1).reps : "";
       if (safeNumber(carried)) return carried;
+      if (exercise.freeLog) return "";
       const { min, max } = repRange(exercise);
       return min === max ? String(min) : "";
     }
@@ -2388,7 +2400,7 @@
     function defaultReps(day, exercise, index) {
       const current = getEntry(day.id, exercise.id, index).reps;
       if (safeNumber(current)) return current;
-      return knownReps(day, exercise, index) || String(repRange(exercise).min);
+      return knownReps(day, exercise, index) || (exercise.freeLog ? "" : String(repRange(exercise).min));
     }
 
     function defaultWeight(day, exercise, index) {
@@ -2511,6 +2523,7 @@
     function renderNavigation() {
       const programMarkup = programs.map(programButton).join("");
       const dayMarkup = activeProgram().days.map(dayButton).join("");
+      document.querySelector("[data-open-shoulder]").setAttribute("aria-pressed", String(state.programId === "shoulder-focus"));
       $("#desktop-programs").innerHTML = programMarkup;
       $("#sheet-programs").innerHTML = programMarkup;
       $("#desktop-days").innerHTML = dayMarkup;
@@ -2531,7 +2544,7 @@
       const hero = $("#session-hero");
       hero.classList.toggle("is-open", sessionToolsOpen);
       hero.innerHTML = `<h1 id="session-title">${day.name}</h1>
-        <span class="hero-meta">${activeProgram().days.length > 1 ? `Día ${day.code} · ` : ""}${day.duration} · ${total} series</span>
+        <span class="hero-meta">${activeProgram().days.length > 1 ? `Día ${day.code} · ` : ""}${day.duration} · ${total} ${day.freeLog ? "filas de registro" : "series"}</span>
         <button class="hero-toggle" type="button" data-hero-toggle aria-expanded="${sessionToolsOpen}" aria-controls="load-preset-panel session-tools">
           <span>Ajustes</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
@@ -2540,7 +2553,7 @@
 
     function renderLoadPresets() {
       const panel = $("#load-preset-panel");
-      panel.hidden = ["calisthenics", "shoulder"].includes(activeProgram().id);
+      panel.hidden = ["calisthenics", "shoulder", "shoulder-focus"].includes(activeProgram().id);
       if (panel.hidden) return;
       $("#load-presets").innerHTML = Object.entries(LOAD_PRESETS).map(([id, item]) => `<button class="load-preset-button" type="button" aria-pressed="${state.loadPreset === id}" data-load-preset="${id}">${item.label}</button>`).join("");
     }
@@ -2593,7 +2606,7 @@
       const ratio = reference.value ? Math.round((volume / reference.value) * 100) : 0;
       const load = suggestedLoad(exercise.id);
       const bodyweight = exercise.tracking === "reps";
-      const shoulder = activeProgram().id === "shoulder";
+      const shoulder = ["shoulder", "shoulder-focus"].includes(activeProgram().id);
       const unit = volumeUnit(exercise);
       const lastLine = lastTimeSummary(day, exercise) || (bodyweight || load === null ? "" : `${LOAD_PRESETS[state.loadPreset].label}: ${formatLoad(load)} kg`);
       const demo = exerciseGifs[exercise.id];
@@ -2611,7 +2624,7 @@
           </div>` : `<span class="exercise-order">${order}</span>`}
           <div class="exercise-title-wrap">
             <div class="exercise-title-line"><h2>${exercise.name}</h2><span class="next-badge">Siguiente</span></div>
-            <div class="exercise-meta"><span class="muscle-badge">${exercise.muscle}</span><span><strong>${exercise.sets}</strong> × <strong>${exercise.reps}</strong></span>${exercise.rir ? `<span>RIR <strong>${exercise.rir}</strong></span>` : ""}</div>
+            <div class="exercise-meta"><span class="muscle-badge">${exercise.muscle}</span>${exercise.freeLog ? `<span>Registro libre · sin dosis asignada</span>` : `<span><strong>${exercise.sets}</strong> × <strong>${exercise.reps}</strong></span>`}${exercise.rir ? `<span>RIR <strong>${exercise.rir}</strong></span>` : ""}</div>
             ${lastLine ? `<p class="exercise-last">${escapeAttribute(lastLine)}</p>` : ""}
             <p class="exercise-collapsed-summary" data-collapsed-summary>${collapsedSummary(volume, unit, reference, ratio, reps)}</p>
             <button class="rest-button focus-exercise" type="button" data-focus-exercise="${exercise.id}" aria-label="Hacer ahora: ${escapeAttribute(exercise.name)}">Hacer ahora</button>
@@ -2621,6 +2634,7 @@
           </button>
         </div>
         <div class="exercise-body">
+        ${exercise.freeLog ? `<p class="exercise-cue focus-cue">${exercise.cue}</p>` : ""}
         <div class="sets-wrap">
           <div class="set-grid-head" aria-hidden="true"><span>#</span><span>${bodyweight ? "Carga" : "Peso"}</span><span></span><span>Reps</span><span>Hecha</span></div>
           ${Array.from({ length: exercise.sets }, (_, index) => setRow(day, exercise, index)).join("")}
@@ -2647,7 +2661,8 @@
             </div>
           </details>
           <div class="exercise-actions">
-            <button class="rest-button" type="button" data-rest="${exercise.rest}" data-exercise-name="${escapeAttribute(exercise.name)}" aria-label="Iniciar descanso ${formatRest(exercise.rest)}">
+            ${exercise.freeLog ? `<button class="rest-button" type="button" data-add-free-set="${exercise.id}">+ Añadir serie al registro</button>` : ""}
+            <button class="rest-button" type="button" ${exercise.freeLog ? "hidden" : ""} data-rest="${exercise.rest}" data-exercise-name="${escapeAttribute(exercise.name)}" aria-label="Iniciar descanso ${formatRest(exercise.rest)}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9 2h6"/></svg><span class="rest-word">Descanso</span> ${formatRest(exercise.rest)}
             </button>
           </div>
@@ -2707,6 +2722,8 @@
       $("#exercise-list").innerHTML = filtered.length
         ? filtered.map((exercise) => exerciseCard(day, exercise, day.exercises.indexOf(exercise))).join("")
         : `<div class="empty-state"><strong>No hay ejercicios con este filtro.</strong>Elige otro grupo muscular para volver a la sesión.</div>`;
+      document.querySelector('#focus-session-note')?.remove();
+      if(day.freeLog) $("#exercise-list").insertAdjacentHTML('beforebegin', `<div id="focus-session-note" class="focus-session-note"><p>Usá la pauta acordada con tu profesional. Las filas son para registrar, no una dosis. Frená si hay dolor punzante; ajustá si mañana estás peor.</p><div><button class="rest-button" data-day="hf-main">Sesión principal</button> <button class="rest-button" data-day="hf-optional">Curl opcional</button> <a href="https://msk-bexley.nhs.uk/conditions/shoulder-pain/biceps-tendinopathy" target="_blank" rel="noopener noreferrer">Fuente clínica ↗</a></div></div>`);
       renderShoulderReferences();
       $$(".exercise-demo").forEach(loadExerciseDemo);
       configureNumericTriggers();
@@ -2912,7 +2929,7 @@
       if (exerciseDone) heldCards.add(exercise.id);
       updateSessionProgress();
       const next = findNextSet(day);
-      if (next) startTimer(exercise.rest, restLabel(exercise, next));
+      if (next && !exercise.freeLog) startTimer(exercise.rest, restLabel(exercise, next));
       else {
         clearSessionTimer();
         releaseScreen();
@@ -3089,7 +3106,7 @@
         const { exercise, index } = next;
         const bodyweight = exercise.tracking === "reps";
         const previous = previousSet(entryKey(day.id, exercise.id, index));
-        const hint = [`Objetivo ${exercise.reps}`, ...(exercise.rir ? [`RIR ${exercise.rir}`] : [])];
+        const hint = [exercise.freeLog ? "Registrá lo realizado · sin objetivo fijado" : `Objetivo ${exercise.reps}`, ...(exercise.rir ? [`RIR ${exercise.rir}`] : [])];
         if (previous && (safeNumber(previous.reps) || !bodyweight)) hint.push(`última ${formatLoggedSet(previous, bodyweight)}`);
         $("#console-name").textContent = exercise.name;
         $("#console-set").textContent = `${dock.classList.contains("is-finished") ? "¡Listo! · " : ""}Serie ${index + 1}/${exercise.sets}`;
@@ -3632,6 +3649,9 @@
         $("[data-hero-toggle]")?.focus({ preventScroll: true });
         return;
       }
+      if(event.target.closest('[data-open-shoulder]')) { switchProgram('shoulder-focus'); switchDay('hf-main'); return; }
+      const addSet = event.target.closest('[data-add-free-set]');
+      if(addSet){const e=activeDay().exercises.find(e=>e.id===addSet.dataset.addFreeSet);if(e?.freeLog&&e.sets<20){e.sets++;state.freeSetCounts={...(isRecord(state.freeSetCounts)?state.freeSetCounts:{}),[e.id]:e.sets};persist();renderHero();renderExercises();}return;}
       const programButton = event.target.closest("[data-program]");
       if (programButton) return switchProgram(programButton.dataset.program);
       const dayButton = event.target.closest("[data-day]");
@@ -3870,6 +3890,10 @@
       syncKeyboard();
     }
 
+    if (new URLSearchParams(location.search).get('program') === 'shoulder-focus') {
+      state.programId='shoulder-focus';state.dayByProgram['shoulder-focus']='hf-main';state.filter='Todos';persist();
+      history.replaceState(null,'',location.pathname);
+    }
     seedSetLog();
     renderAll();
     restoreTimer();

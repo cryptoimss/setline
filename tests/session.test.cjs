@@ -85,13 +85,13 @@ test('A rest started before any set can also be reset without a destructive conf
 test('Strength routines retain 30–45 minute estimates and chest volume stays at seven direct sets',()=>{
  const h=harness(fixture()); const programs=JSON.parse(vm.runInContext('JSON.stringify(programs)',h.context));
  const ids=new Set();
- for(const p of programs.filter(p=>p.id!=='shoulder'))for(const d of p.days.filter(d=>d.id!=='p-extra')){
+ for(const p of programs.filter(p=>!['shoulder','shoulder-focus'].includes(p.id)))for(const d of p.days.filter(d=>d.id!=='p-extra')){
   assert.ok(d.timing.min>=30 && d.timing.max<=45,`${p.id}/${d.id}: ${d.duration}`);
   assert.ok(d.timing.min<d.timing.max);assert.equal(d.duration,`${d.timing.min}–${d.timing.max} min`);
   for(const e of d.exercises){assert.ok(e.sets>=1 && e.rest>=60);assert.ok(!ids.has(e.id));ids.add(e.id);}
   if(p.id==='chest')assert.equal(d.exercises.filter(e=>e.muscle==='Pecho').reduce((sum,e)=>sum+e.sets,0),7);
  }
- assert.equal(programs.filter(p=>p.id!=='shoulder').flatMap(p=>p.days.filter(d=>d.id!=='p-extra')).length,12);
+ assert.equal(programs.filter(p=>!['shoulder','shoulder-focus'].includes(p.id)).flatMap(p=>p.days.filter(d=>d.id!=='p-extra')).length,12);
  const home=programs.find(p=>p.id==='chest').days.find(d=>d.id==='p-home');
  assert.ok(!home.exercises.some(e=>/máquina|polea|banco/i.test(e.name)));
 });
@@ -148,6 +148,7 @@ test('Every prescribed rep format parses, including per-side and single-number d
  const h=logHarness(fixture());
  const programs=h.run('programs');
  for(const p of programs)for(const d of p.days)for(const e of d.exercises){
+  if(e.freeLog){assert.equal(e.reps,"—");continue;}
   const range=h.run(`repRange(${JSON.stringify(e)})`);
   assert.ok(range.min>=1 && range.max>=range.min,`${e.id}: ${e.reps}`);
  }
@@ -291,7 +292,7 @@ test('Every unambiguous loaded movement has a starting load; bodyweight and reha
  const plans=h.run('programs');
  for(const p of plans)for(const day of p.days)for(const e of day.exercises){
   const load=h.run(`NORMAL_LOADS[${JSON.stringify(e.id)}] ?? null`);
-  if(e.tracking==='reps') { assert.equal(load,null,e.id); continue; }
+  if(e.tracking==='reps'||e.freeLog) { assert.equal(load,null,e.id); continue; }
   // This existing slot mixes assistance, added load and a pulldown: no shared kg meaning.
   if(e.id==='s2-pullup') { assert.equal(load,null); continue; }
   assert.ok(load>0,e.id);
@@ -311,4 +312,10 @@ test('New chest suggestions fill untouched sets, respect presets and retain manu
  assert.equal(h.run(`state.entries[${JSON.stringify(key(1))}].weight`),'22.5');
  assert.equal(h.run('state.entries["chest:p-extra:px-db-flat:0"].weight'),'22.5');
  assert.equal(h.reload().entries[key(1)].weight,'22.5');
+});
+test('Focused shoulder session is free logging, keeps curl separate and never invents reps or loads',()=>{
+ const h=logHarness({...fixture(),programId:'shoulder-focus',dayByProgram:{'shoulder-focus':'hf-main'},entries:{}});
+ const p=h.run('programs.find(p=>p.id==="shoulder-focus")');assert.equal(p.days[0].exercises.length,3);assert.equal(p.days[1].optional,true);assert.equal(p.days[1].exercises[0].id,'hf-curl');
+ for(const e of p.days.flatMap(d=>d.exercises)){assert.equal(e.freeLog,true);assert.equal(e.rest,0);assert.equal(e.reps,'—');assert.equal(h.run(`suggestedLoad(${JSON.stringify(e.id)})`),null);}
+ const e=p.days[0].exercises[0];assert.equal(h.run(`defaultReps(activeDay(),${JSON.stringify(e)},0)`),'');
 });

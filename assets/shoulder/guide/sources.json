@@ -29,5 +29,19 @@
     "creator": "ExerciseGymGifsDB / JahelCuadrado",
     "match": "Animación existente de curl bilateral supinado, codos junto al cuerpo. No es filmación ni indica carga; no interpretar tamaño de mancuernas como carga recomendada.",
     "transformation": "Original sin modificación."
+  },
+  {
+    "id": "isometric-er-clear",
+    "gif": "./assets/shoulder/guide/isometric-er-clear.gif",
+    "poster": "./assets/shoulder/guide/isometric-er-clear.jpg",
+    "sourceUrl": "https://www.youtube.com/watch?v=rvoct7h9Z-0",
+    "creator": "BEYOND Physical Therapy",
+    "title": "Shoulder External Rotation (Isometric, Wall)",
+    "startSeconds": 14,
+    "durationSeconds": 8,
+    "posterSeconds": 17,
+    "match": "Vista frontal/lateral de isométrico de rotación externa: codo flexionado al costado; dorso de mano presiona toalla contra marco sin rotación visible.",
+    "limits": "Casi estático por definición; acompañar texto indicando dirección de la fuerza. Sin dosis importada.",
+    "transformation": "Recorte fiel velocidad original,360px,8fps,paleta96."
   }
 ]
