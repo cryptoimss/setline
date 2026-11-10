@@ -2,6 +2,10 @@ const BUILD_VERSION = "__BUILD_VERSION__";
 const SHELL_CACHE = `setline-shell-${BUILD_VERSION}`;
 const GIF_CACHE = "setline-gifs-v1";
 const SHELL_FILES = [
+  "./assets/shoulder/doctor/ref-diagonal-er.jpg",
+  "./assets/shoulder/doctor/ref-diagonal-er.gif",
+  "./assets/shoulder/doctor/ref-band-elevation-er.jpg",
+  "./assets/shoulder/doctor/ref-band-elevation-er.gif",
   "./",
   "./index.html",
   "./catalog.html",

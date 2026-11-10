@@ -63,5 +63,35 @@
     "match": "Plancha sobre codos con movimiento escapular; no flexión de brazos convencional.",
     "verified": "Inspección visual de secuencia de fotogramas; recorte fiel a velocidad original. Sin prescripción de dosis.",
     "license": "No licencia libre confirmada; fuente pública accesible. Atribuir y enlazar original."
+  },
+  {
+    "id": "ref-band-elevation-er",
+    "figure": "9.27",
+    "sourceUrl": "https://www.youtube.com/watch?v=0tWDr1WzmVg",
+    "creator": "Wibbi (marca Physiotec visible)",
+    "title": "Full shoulder flexion with mini-band",
+    "startSeconds": 1,
+    "durationSeconds": 8,
+    "gif": "./assets/shoulder/doctor/ref-band-elevation-er.gif",
+    "poster": "./assets/shoulder/doctor/ref-band-elevation-er.jpg",
+    "match": "Elevación bilateral de pie manteniendo tensión externa sobre banda entre ambas manos. Movimiento verificado en secuencia de fotogramas. Mini-band cerrada en vez de tira abierta.",
+    "limits": "Mini-band cerrada en lugar de tira abierta. Sin pauta de dosis ni afirmación de idoneidad clínica.",
+    "transform": "Recorte temporal fiel, 10fps, 400px, paleta96. Velocidad original.",
+    "verified": "Secuencia de fotogramas contrastada con foto original. Velocidad original, sin inversión ni dosis añadidas.",
+    "license": "No licencia libre confirmada; fuente pública accesible. Atribución y enlace al original."
+  },
+  {
+    "id": "ref-diagonal-er",
+    "figure": "9.36b",
+    "sourceUrl": "https://www.youtube.com/watch?v=mx8wYClGCXY",
+    "creator": "ROI Strength & Conditioning",
+    "title": "Standing Band Shoulder D2 Flexion",
+    "startSeconds": 0,
+    "durationSeconds": 6,
+    "match": "Diagonal ascendente con rotación externa de pie y banda en anclaje fijo bajo, cruzando desde la cadera opuesta.",
+    "gif": "./assets/shoulder/doctor/ref-diagonal-er.gif",
+    "poster": "./assets/shoulder/doctor/ref-diagonal-er.jpg",
+    "verified": "Secuencia de fotogramas contrastada con foto original. Velocidad original, sin inversión ni dosis añadidas.",
+    "license": "No licencia libre confirmada; fuente pública accesible. Atribución y enlace al original."
   }
 ]

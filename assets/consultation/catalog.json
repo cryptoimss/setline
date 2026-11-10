@@ -152,7 +152,13 @@
       "name": "Elevación con rotación externa y banda",
       "source": "p174",
       "figure": "9.27",
-      "description": "Banda entre las manos durante la elevación, con tensión hacia fuera."
+      "description": "Banda entre las manos durante la elevación, con tensión hacia fuera.",
+      "gif": "./assets/shoulder/doctor/ref-band-elevation-er.gif",
+      "poster": "./assets/shoulder/doctor/ref-band-elevation-er.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=0tWDr1WzmVg",
+      "gifCreator": "Wibbi (marca Physiotec visible)",
+      "gifMatch": "Elevación bilateral de pie manteniendo tensión externa sobre banda entre ambas manos. Movimiento verificado en secuencia de fotogramas. Mini-band cerrada en vez de tira abierta.",
+      "gifStartSeconds": 1
     },
     {
       "id": "ref-ball-wall-slide",
@@ -175,7 +181,13 @@
       "name": "Rotación externa diagonal",
       "source": "p179",
       "figure": "9.36b",
-      "description": "Movimiento diagonal con resistencia de banda, identificado como rotación externa en la foto."
+      "description": "Movimiento diagonal con resistencia de banda, identificado como rotación externa en la foto.",
+      "gif": "./assets/shoulder/doctor/ref-diagonal-er.gif",
+      "poster": "./assets/shoulder/doctor/ref-diagonal-er.jpg",
+      "gifSource": "https://www.youtube.com/watch?v=mx8wYClGCXY",
+      "gifCreator": "ROI Strength & Conditioning",
+      "gifMatch": "Diagonal ascendente con rotación externa de pie y banda en anclaje fijo bajo, cruzando desde la cadera opuesta.",
+      "gifStartSeconds": 0
     },
     {
       "id": "ref-side-catch",
