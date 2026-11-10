@@ -1636,7 +1636,6 @@
     </aside>
 
     <main class="page">
-      <nav class="app-tabs" aria-label="Acceso directo a entrenamientos"><button type="button" data-program="solo">Gym</button><button type="button" data-open-shoulder>Entrenar hombro</button></nav>
       <header class="mobile-topbar">
         <button class="session-switch" id="session-switch" type="button" aria-haspopup="dialog">
           <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
@@ -1984,7 +1983,7 @@
       }]
     });
 
-    programs.push({"id": "shoulder-focus", "short": "Hombro · sesión", "symbol": "H", "days": [{"id": "hf-main", "code": "H", "name": "Entrenar hombro", "freeLog": true, "exercises": [{"id": "hf-row", "name": "Remo suave con banda", "muscle": "Hombros", "tracking": "reps", "loadLabel": "Banda", "cue": "Fijá la banda delante tuyo. Tirás llevando los codos cerca del cuerpo y volvés despacio, sin encoger los hombros.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}, {"id": "hf-iso", "name": "Empuje hacia fuera · sin mover el brazo", "muscle": "Hombros", "tracking": "reps", "loadLabel": "Pared", "cue": "De costado a la pared, codo doblado y pegado al cuerpo. Apoyá el dorso de la mano sobre una toalla y presioná suavemente hacia la pared sin mover el brazo. El GIF casi no se mueve: eso es el isométrico. Registrá contracciones, no segundos.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}, {"id": "hf-scapula", "name": "Extensión boca abajo · control escapular", "muscle": "Hombros", "tracking": "reps", "loadLabel": "Acordada", "cue": "Boca abajo con apoyo estable, llevá el brazo hacia atrás junto al cuerpo y volvé con control. De tu hoja, figura 9.25d. La mancuerna del GIF no indica qué carga usar: confirmá la variante con tu profesional.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}]}, {"id": "hf-optional", "code": "+", "name": "Curl · opcional", "optional": true, "alternative": true, "freeLog": true, "exercises": [{"id": "hf-curl", "name": "Curl liviano · opcional", "muscle": "Bíceps", "cue": "Palma hacia arriba, doblá el codo y bajá despacio. Solo si tolerás la carga; omitilo si estás en una fase irritable o el hombro empeora. El tamaño de la mancuerna del GIF no es una indicación de peso.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}]}]});
+    programs.push({"id": "shoulder-focus", "short": "Hombro · sesión", "symbol": "H", "days": [{"id": "hf-main", "code": "H", "name": "Hombro · base", "freeLog": true, "exercises": [{"id": "hf-row", "name": "Remo suave con banda", "muscle": "Hombros", "tracking": "reps", "loadLabel": "Banda", "cue": "Usá la pauta de tu profesional; frená con dolor punzante y ajustá si mañana estás peor. Fijá la banda delante tuyo. Tirás llevando los codos cerca del cuerpo y volvés despacio, sin encoger los hombros.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}, {"id": "hf-iso", "name": "Empuje hacia fuera · sin mover el brazo", "muscle": "Hombros", "tracking": "reps", "loadLabel": "Pared", "cue": "De costado a la pared, codo doblado y pegado al cuerpo. Apoyá el dorso de la mano sobre una toalla y presioná suavemente hacia la pared sin mover el brazo. El GIF casi no se mueve: eso es el isométrico. Registrá contracciones, no segundos.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}, {"id": "hf-scapula", "name": "Extensión boca abajo · control escapular", "muscle": "Hombros", "tracking": "reps", "loadLabel": "Acordada", "cue": "Boca abajo con apoyo estable, llevá el brazo hacia atrás junto al cuerpo y volvé con control. De tu hoja, figura 9.25d. La mancuerna del GIF no indica qué carga usar: confirmá la variante con tu profesional.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}]}, {"id": "hf-optional", "code": "+", "name": "Curl · opcional", "optional": true, "alternative": true, "freeLog": true, "exercises": [{"id": "hf-curl", "name": "Curl liviano · opcional", "muscle": "Bíceps", "cue": "Palma hacia arriba, doblá el codo y bajá despacio. Solo si tolerás la carga; omitilo si estás en una fase irritable o el hombro empeora. El tamaño de la mancuerna del GIF no es una indicación de peso.", "sets": 1, "reps": "—", "rest": 0, "freeLog": true}]}]});
 
     // Optional repertoire: choose variants with Hacer ahora; excluded from the A/B rotation.
     const chestExtraExercises = [
@@ -2523,7 +2522,6 @@
     function renderNavigation() {
       const programMarkup = programs.map(programButton).join("");
       const dayMarkup = activeProgram().days.map(dayButton).join("");
-      document.querySelector("[data-open-shoulder]").setAttribute("aria-pressed", String(state.programId === "shoulder-focus"));
       $("#desktop-programs").innerHTML = programMarkup;
       $("#sheet-programs").innerHTML = programMarkup;
       $("#desktop-days").innerHTML = dayMarkup;
@@ -2722,8 +2720,6 @@
       $("#exercise-list").innerHTML = filtered.length
         ? filtered.map((exercise) => exerciseCard(day, exercise, day.exercises.indexOf(exercise))).join("")
         : `<div class="empty-state"><strong>No hay ejercicios con este filtro.</strong>Elige otro grupo muscular para volver a la sesión.</div>`;
-      document.querySelector('#focus-session-note')?.remove();
-      if(day.freeLog) $("#exercise-list").insertAdjacentHTML('beforebegin', `<div id="focus-session-note" class="focus-session-note"><p>Usá la pauta acordada con tu profesional. Las filas son para registrar, no una dosis. Frená si hay dolor punzante; ajustá si mañana estás peor.</p><div><button class="rest-button" data-day="hf-main">Sesión principal</button> <button class="rest-button" data-day="hf-optional">Curl opcional</button> <a href="https://msk-bexley.nhs.uk/conditions/shoulder-pain/biceps-tendinopathy" target="_blank" rel="noopener noreferrer">Fuente clínica ↗</a></div></div>`);
       renderShoulderReferences();
       $$(".exercise-demo").forEach(loadExerciseDemo);
       configureNumericTriggers();
@@ -3649,7 +3645,6 @@
         $("[data-hero-toggle]")?.focus({ preventScroll: true });
         return;
       }
-      if(event.target.closest('[data-open-shoulder]')) { switchProgram('shoulder-focus'); switchDay('hf-main'); return; }
       const addSet = event.target.closest('[data-add-free-set]');
       if(addSet){const e=activeDay().exercises.find(e=>e.id===addSet.dataset.addFreeSet);if(e?.freeLog&&e.sets<20){e.sets++;state.freeSetCounts={...(isRecord(state.freeSetCounts)?state.freeSetCounts:{}),[e.id]:e.sets};persist();renderHero();renderExercises();}return;}
       const programButton = event.target.closest("[data-program]");

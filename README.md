@@ -83,3 +83,6 @@ La navegación principal incluye **Entrenar** y **Guía hombro**. `guide.html` p
 
 ## Corrección: Hombro como entrenamiento integrado
 **Entrenar hombro** abre ahora el programa `shoulder-focus` desde el inicio, en la misma interfaz de series/GIFs/consola. Acceso directo: `index.html?program=shoulder-focus`; el antiguo `guide.html` redirige ahí. Tres ejercicios principales; curl en sesión opcional aparte. Las filas iniciales son espacios de registro, no una dosis: no se proponen reps, cargas ni descanso automático. Se pueden añadir filas con **Añadir serie al registro**; `freeSetCounts` conserva su número y las entradas siguen usando IDs independientes, sin alterar rutinas anteriores. Se registran contracciones (no segundos) para el isométrico. Su GIF se cambió por una vista lateral/frontal clara, con explicación visible de presión sin movimiento. Las recomendaciones clínicas permanecen generales y no sustituyen la pauta del profesional.
+
+### Acceso simplificado
+Se retiraron la barra añadida **Gym / Entrenar hombro** y el bloque de navegación de la sesión. La rutina se abre con el selector ya existente: tocar el nombre de la sesión arriba → **Hombro · sesión** → **Hombro · base**. **Curl · opcional** aparece como día opcional en ese mismo selector. No se eliminaron programas ni registros. Los enlaces anteriores siguen redirigiendo para no romperlos.
