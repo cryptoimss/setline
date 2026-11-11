@@ -1060,7 +1060,8 @@
 
     .console-work-head { min-width: 0; display: flex; align-items: center; gap: 8px; grid-column: 1 / -1; }
     .console-work-head .console-heading { flex: 1; }
-    .console-return { flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 12px; background: var(--surface-soft); color: var(--muted); font-size: 24px; }
+    .console-return { flex: 0 0 auto; min-width: 64px; height: 44px; padding: 0 10px; border: 0; border-radius: 12px; background: var(--surface-soft); color: var(--text); font-size: 12px; font-weight: 850; }
+    .console-hint.console-edit-rest { color: var(--mint); }
     .stepper.is-selected-field, .set-input.is-console-source { box-shadow: inset 0 0 0 2px var(--mint); }
 
     .console-heading {
@@ -1693,8 +1694,9 @@
                 <button class="console-heading" type="button" data-scroll-next>
                   <span class="console-title"><strong id="console-name"></strong><span class="console-set" id="console-set"></span></span>
                   <span class="console-hint" id="console-hint"></span>
+                  <span class="console-hint console-edit-rest" id="console-edit-rest" hidden></span>
                 </button>
-                <button class="console-return" id="console-return" type="button" aria-label="Volver a la serie actual o al descanso" hidden>×</button>
+                <button class="console-return" id="console-return" type="button" aria-label="Cerrar editor sin completar la serie" hidden>Cerrar</button>
               </div>
               <div class="stepper stepper-weight" id="console-weight-stepper">
                 <button class="stepper-button" type="button" data-stepper="weight" data-direction="-1" aria-label="Bajar peso">−</button>
@@ -2969,7 +2971,7 @@
       const field = input.dataset.consoleField || (input.matches("[data-weight]") ? "weight" : "reps");
       // The existing console owns both numbers for the exact row that was touched.
       // Selecting a row must not change the workout order or stop a running rest.
-      const target = fromConsole ? consoleTarget : { programId: state.programId, dayId: day.id, exerciseId: exercise.id, index };
+      const target = { programId: state.programId, dayId: day.id, exerciseId: exercise.id, index };
       dismissSetEditor();
       consoleTarget = target;
       updateConsole();
@@ -3103,6 +3105,19 @@
         $("#console-complete-stats").textContent = sessionStats(day);
       }
       setDockMode(timerRunning || timerRemaining > 0 ? "rest" : next ? "work" : "done");
+      updateEditingRest();
+    }
+
+    function updateEditingRest() {
+      const hasRest = timerRunning || timerRemaining > 0;
+      const finished = $("#timer-dock").classList.contains("is-finished");
+      const showRest = Boolean(consoleTarget) && (hasRest || finished);
+      $("#console-hint").hidden = showRest;
+      const status = $("#console-edit-rest");
+      status.hidden = !showRest;
+      if (showRest) status.textContent = hasRest
+        ? `${timerRunning ? "Descanso" : "Descanso en pausa"} · ${$("#timer-time").textContent}`
+        : "Descanso terminado";
     }
 
     function setCollapseToggle(card, collapsed) {
@@ -3456,6 +3471,7 @@
       document.title = timerRunning ? `${$("#timer-time").textContent} · Setline` : "Setline — Rutinas de hipertrofia";
       $("#console-undo").hidden = !lastDoneSet;
       setDockMode(timerRunning || timerRemaining > 0 ? "rest" : findNextSet(activeDay()) ? "work" : "done");
+      updateEditingRest();
       saveTimer();
     }
 

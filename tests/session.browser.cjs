@@ -997,6 +997,55 @@ scenario('Mobile bar: touching a row uses the existing kg/reps controls without 
   assert.deepEqual(await page.evaluate(()=>window.numericFocus),[]);
 });
 
+scenario('Mobile bar: closing the editor never completes a pending row or starts a rest', async page => {
+  for (const [source,key] of [
+    ['[data-exercise-card="s1-incline"] [data-set-row="2"] [data-reps]','solo:s-1:s1-incline:2'],
+    ['#console-reps','solo:s-1:s1-incline:0']
+  ]) {
+    await press(page,source);
+    assert.equal(await page.locator('#console-return').isVisible(),true);
+    assert.equal(await page.locator('#console-return').textContent(),'Cerrar');
+    await stepUp(page,'reps');
+    const adjusted=await entry(page,key);
+    await press(page,'#console-return');
+    assert.equal(await page.locator('#console-return').isVisible(),false);
+    assert.equal(await doneCount(page),0);
+    assert.equal(Boolean((await entry(page,key)).completed),false);
+    assert.deepEqual(await entry(page,key),adjusted,'closing preserves the adjustment');
+    assert.equal(await page.evaluate(key=>localStorage.getItem(key),timerKey),null);
+    assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+  }
+});
+
+scenario('Mobile bar: rest stays visible while editing and Cerrar restores its controls', async (page,context,shots) => {
+  await press(page,'#console-done');
+  const deadline=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).deadline,timerKey);
+  const source=page.locator('[data-exercise-card="s1-incline"] [data-set-row="1"] [data-reps]');
+  await source.tap();
+  const status=page.locator('#console-edit-rest');
+  assert.equal(await status.isVisible(),true);
+  assert.match(await status.textContent(),/^Descanso · \d{2}:\d{2}$/);
+  const initial=await status.textContent();
+  await page.waitForFunction(text=>document.querySelector('#console-edit-rest').textContent!==text,initial);
+  await shots('editing-with-visible-rest-and-close');
+  await stepUp(page,'reps');
+  await press(page,'#console-return');
+  assert.equal(await mode(page),'rest');
+  assert.equal(await page.locator('#timer-time').isVisible(),true);
+  assert.equal(await page.locator('#timer-skip').isVisible(),true);
+  assert.equal(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).deadline,timerKey),deadline);
+  assert.equal(await doneCount(page),1);
+  assert.equal(Boolean((await entry(page,'solo:s-1:s1-incline:1')).completed),false);
+  await press(page,'#timer-toggle');
+  const paused=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),timerKey);
+  await source.tap();
+  assert.match(await status.textContent(),/^Descanso en pausa · \d{2}:\d{2}$/);
+  await page.keyboard.press('Escape');
+  assert.equal(await mode(page),'rest');
+  assert.deepEqual(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),timerKey),paused);
+  assert.equal(await doneCount(page),1);
+});
+
 scenario('Mobile bar: corrections preserve completed sets and a running rest', async page => {
   await press(page,'#console-done');
   const deadline=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).deadline,timerKey);
@@ -1028,6 +1077,7 @@ scenario('Mobile bar: a rest ending cannot replace the selected row mid-correcti
   assert.equal(await mode(page),'rest');
   await page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-reps]').tap();
   await page.waitForFunction(()=>document.querySelector('#timer-dock').classList.contains('is-finished'));
+  assert.equal(await page.locator('#console-edit-rest').textContent(),'Descanso terminado');
   assert.equal(await mode(page),'work');
   assert.match(await page.locator('#console-set').textContent(),/Serie 1\/3/);
   await press(page,'[data-stepper="reps"][data-direction="1"]',900);
