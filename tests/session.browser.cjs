@@ -308,11 +308,10 @@ scenario('Ticking a row with no known reps never opens an editor; explicit editi
   assert.equal(await reps.evaluate(input => input === document.activeElement), false);
   assert.equal(await page.locator('#timer-dock').isVisible(), true);
   await reps.tap();
-  assert.equal(await page.locator('#numeric-editor').isVisible(), true);
-  assert.equal(await page.locator('#numeric-value').evaluate(input => input.readOnly), true);
-  await press(page, '#numeric-type');
-  await page.locator('#numeric-value').fill('9');
-  await press(page, '#numeric-save');
+  assert.equal(await page.locator('dialog[open]').count(), 0);
+  assert.match(await page.locator('#console-set').textContent(), /Serie 1\/3/);
+  for (let i = 0; i < 3; i++) await stepUp(page, 'reps');
+  await press(page, '#console-done');
   assert.equal(await page.locator('#timer-dock').isVisible(), true);
   const saved = await state(page);
   assert.equal(saved.entries['solo:s-1:s1-incline:0'].reps, '9');
@@ -326,14 +325,11 @@ scenario('Ticking a row with no known reps never opens an editor; explicit editi
   assert.equal(await page.locator('[data-exercise-card="ph-pushup"] [data-reps]').evaluate(input => input === document.activeElement), false);
 });
 
-scenario('Typing in the console keeps it visible and stays in sync with the row', async page => {
+scenario('Desktop typing in the console keeps it visible and stays in sync with the row', async page => {
   const input = page.locator('#console-reps');
   await input.tap();
-  assert.equal(await page.locator('#numeric-editor').isVisible(), true);
-  await press(page, '#numeric-type');
-  await page.locator('#numeric-value').fill('');
+  await input.fill('');
   await page.keyboard.type('12');
-  await press(page, '#numeric-save');
   assert.equal(await page.locator('[data-exercise-card="s1-incline"] [data-reps]').first().inputValue(), '12');
   assert.equal(await input.inputValue(), '12');
   await input.fill('');
@@ -346,14 +342,14 @@ scenario('Typing in the console keeps it visible and stays in sync with the row'
   assert.equal(saved.weight, '17,5');
   assert.equal(saved.reps, '6');
   assert.match(await page.locator('[data-exercise-card="s1-incline"] [data-volume-value]').textContent(), /^105 kg·rep/);
-});
+}, {...desktop, hasTouch:true});
 
 scenario('Session sheet: full names, program keeps it open, day closes it, Escape and backdrop close', async page => {
   await page.locator('#session-switch').tap();
   const sheet = page.locator('#session-sheet');
   assert.equal(await sheet.isVisible(), true);
   assert.equal(await page.locator('#session-sheet-title').evaluate(title => title === document.activeElement), true, 'no focus ring on a button for touch users');
-  assert.equal(await page.locator('#sheet-programs [data-program]').count(), 5);
+  assert.equal(await page.locator('#sheet-programs [data-program]').count(), 6);
   assert.match(await sheet.textContent(), /Referencias de hombro/);
   assert.equal(await sheet.locator('a[href="./catalog.html"]').count(), 1);
   await press(page, '#sheet-programs [data-program="calisthenics"]');
@@ -387,6 +383,8 @@ scenario('The install offer only appears when asked for', async page => {
   await page.locator('#session-switch').tap();
   await press(page, '#sheet-install');
   await page.locator('#pwa-banner.is-visible').waitFor({timeout:3000});
+  // Measure the settled position, after the banner's entrance transition.
+  await page.waitForFunction(() => getComputedStyle(document.querySelector('#pwa-banner')).opacity === '1');
   const banner = await page.locator('#pwa-banner').boundingBox();
   const dock = await page.locator('#timer-dock').boundingBox();
   assert.ok(banner.y + banner.height <= dock.y, 'banner sits above the console');
@@ -970,81 +968,149 @@ scenario('Mobile completion: rows and console dismiss an existing editor without
   assert.equal((await entry(page,'solo:s-1:s1-incline:0')).completed,false);
 });
 
-scenario('Mobile editor: touching a row or console value opens steppers, never the native keyboard', async (page, context, shots) => {
+scenario('Mobile bar: touching a row uses the existing kg/reps controls without a modal or native keyboard', async (page, context, shots) => {
   await page.evaluate(() => {
     window.numericFocus=[];
-    document.addEventListener('focusin',event=>{if(event.target.matches('input'))window.numericFocus.push({id:event.target.id,readOnly:event.target.readOnly,mode:event.target.inputMode});});
+    document.addEventListener('focusin',event=>{if(event.target.matches('input'))window.numericFocus.push(event.target.id);});
   });
   const row=page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-weight]');
   await row.tap();
-  assert.equal(await page.locator('#numeric-editor').isVisible(),true);
-  assert.equal(await page.locator('#numeric-value').inputValue(),'18');
-  assert.equal(await page.locator('#numeric-value').evaluate(input=>input.readOnly && input.inputMode==='none'),true);
+  assert.equal(await page.locator('dialog[open]').count(),0);
+  assert.equal(await mode(page),'work');
+  assert.equal(await page.locator('#console-weight').inputValue(),'18');
   assert.deepEqual(await page.evaluate(()=>window.numericFocus),[]);
-  assert.equal(await page.locator('#numeric-less').evaluate(button=>button===document.activeElement),true);
-  await shots('mobile-native-free-editor');
-  await press(page,'#numeric-more');
-  assert.equal(await page.locator('#numeric-value').inputValue(),'20');
-  assert.equal((await entry(page,'solo:s-1:s1-incline:0')).weight,'18','draft does not change a set');
-  await press(page,'#numeric-save');
+  assert.equal(await page.locator('[data-stepper="weight"][data-direction="-1"]').evaluate(button=>button===document.activeElement),true);
+  await shots('mobile-existing-bar');
+  await stepUp(page,'weight');
   assert.equal((await entry(page,'solo:s-1:s1-incline:0')).weight,'20');
-  assert.equal(await page.locator('#numeric-editor').isVisible(),false);
-  assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+  assert.equal(await row.inputValue(),'20');
   await page.locator('#console-reps').tap();
-  assert.equal(await page.locator('#numeric-value').inputValue(),'6');
-  await press(page,'#numeric-more');
-  await press(page,'#numeric-save');
+  await stepUp(page,'reps');
   assert.equal(await page.locator('#console-reps').inputValue(),'7');
-  assert.equal(await doneCount(page),0,'editing alone does not complete a set');
+  assert.equal(await doneCount(page),0,'adjusting does not complete a set');
+  // The rest of the workout remains interactive while the bar is selected.
+  await page.locator('[data-exercise-card="s1-fly"] .exercise-head').tap();
+  assert.equal(await page.locator('[data-exercise-card="s1-fly"]').evaluate(card=>card.classList.contains('is-collapsed')),false);
   await press(page,'#console-done');
-  assert.equal(await page.locator('#numeric-editor').isVisible(),false);
-  assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+  assert.equal((await entry(page,'solo:s-1:s1-incline:0')).reps,'7');
+  assert.equal(await mode(page),'rest');
+  assert.deepEqual(await page.evaluate(()=>window.numericFocus),[]);
 });
 
-scenario('Mobile editor: keyboard requires Escribir, cancel discards and finished-set corrections preserve progress', async page => {
+scenario('Mobile bar: corrections preserve completed sets and a running rest', async page => {
   await press(page,'#console-done');
-  const first=page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-reps]');
-  await first.tap();
-  await press(page,'#numeric-more');
-  await page.keyboard.press('Escape');
-  assert.equal((await entry(page,'solo:s-1:s1-incline:0')).reps,'6');
-  await first.tap();
-  await press(page,'#numeric-type');
-  assert.equal(await page.locator('#numeric-value').evaluate(input=>!input.readOnly && input.inputMode==='numeric' && input===document.activeElement),true);
-  await page.locator('#numeric-value').fill('9');
-  await page.keyboard.press('Enter');
-  await page.locator('#numeric-editor').waitFor({state:'hidden'});
+  const deadline=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).deadline,timerKey);
+  await page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-reps]').tap();
+  assert.equal(await mode(page),'work');
+  assert.equal(await page.locator('#console-done span').textContent(),'Listo');
+  for (let i=0;i<3;i++) await stepUp(page,'reps');
+  await press(page,'#console-done');
   const saved=await entry(page,'solo:s-1:s1-incline:0');
   assert.equal(saved.reps,'9');
   assert.equal(saved.completed,true);
   assert.equal((await state(page)).setLog['solo:s-1:s1-incline:0'][0].reps,'9');
   assert.equal(await doneCount(page),1);
+  assert.equal(await mode(page),'rest');
+  assert.equal(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).deadline,timerKey),deadline);
+  await press(page,'#timer-skip');
   assert.match(await page.locator('#console-set').textContent(),/Serie 2\/3/);
   assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
 });
 
-scenario('Mobile editor: fits small phones, clears a value and exposes a keyboard-operable dialog', async (page,context,shots) => {
-  for(const width of [320,430]) {
-    await page.setViewportSize({width,height:844});
-    await page.locator('#console-weight').tap();
-    const dialog=page.locator('#numeric-editor');
-    const box=await dialog.boundingBox();
+scenario('Mobile bar: a rest ending cannot replace the selected row mid-correction', async page => {
+  await press(page,'#console-done');
+  await page.evaluate(key => {
+    const timer=JSON.parse(localStorage.getItem(key));
+    timer.deadline=Date.now()+4000;
+    localStorage.setItem(key,JSON.stringify(timer));
+  },timerKey);
+  await page.reload({waitUntil:'domcontentloaded'});
+  assert.equal(await mode(page),'rest');
+  await page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-reps]').tap();
+  await page.waitForFunction(()=>document.querySelector('#timer-dock').classList.contains('is-finished'));
+  assert.equal(await mode(page),'work');
+  assert.match(await page.locator('#console-set').textContent(),/Serie 1\/3/);
+  await press(page,'[data-stepper="reps"][data-direction="1"]',900);
+  assert.equal((await entry(page,'solo:s-1:s1-incline:0')).reps,'7');
+  await press(page,'#console-done');
+  assert.equal(await mode(page),'work');
+  assert.match(await page.locator('#console-set').textContent(),/Serie 2\/3/);
+  assert.equal(await doneCount(page),1);
+});
+
+scenario('Mobile bar: any row can be selected, switched, or completed without changing another set', async page => {
+  await page.locator('[data-exercise-card="s1-incline"] [data-set-row="2"] [data-reps]').tap();
+  assert.match(await page.locator('#console-set').textContent(),/Serie 3\/3/);
+  await stepUp(page,'reps');
+  assert.equal((await entry(page,'solo:s-1:s1-incline:2')).reps,'7');
+  assert.equal((await entry(page,'solo:s-1:s1-incline:0')).reps,'');
+  await page.locator('[data-exercise-card="s1-fly"] .exercise-head').tap();
+  await page.locator('[data-exercise-card="s1-fly"] [data-set-row="1"] [data-reps]').tap();
+  assert.equal(await page.locator('#console-name').textContent(),'Apertura en polea');
+  assert.match(await page.locator('#console-set').textContent(),/Serie 2\/2/);
+  await stepUp(page,'reps');
+  await press(page,'#console-done');
+  assert.equal((await entry(page,'solo:s-1:s1-fly:1')).completed,true);
+  assert.equal((await entry(page,'solo:s-1:s1-fly:1')).reps,'11');
+  assert.equal(Boolean((await entry(page,'solo:s-1:s1-fly:0')).completed),false);
+  assert.equal(await doneCount(page),1);
+});
+
+scenario('Mobile bar: remains compact and keyboard-operable across phone and tablet sizes', async (page,context,shots) => {
+  for(const [width,height] of [[320,568],[430,844],[768,1024],[844,390]]) {
+    await page.setViewportSize({width,height});
+    const source=page.locator('[data-exercise-card="s1-incline"] [data-set-row="0"] [data-weight]');
+    await source.tap();
+    const dock=page.locator('#timer-dock');
+    const box=await dock.boundingBox();
     assert.ok(box.x>=0 && box.x+box.width<=width);
-    assert.equal(await dialog.evaluate(element=>element.scrollWidth<=element.clientWidth),true);
-    for(const selector of ['#numeric-less','#numeric-more','#numeric-type','#numeric-clear','#numeric-save']) {
+    assert.ok(box.y>=0 && box.y+box.height<=height && box.height<=180,JSON.stringify(box));
+    assert.equal(await dock.evaluate(element=>element.scrollWidth<=element.clientWidth),true);
+    for(const selector of ['[data-stepper="weight"][data-direction="-1"]','[data-stepper="reps"][data-direction="1"]','#console-return','#console-done']) {
       const target=await page.locator(selector).boundingBox();
       assert.ok(target.width>=44 && target.height>=44,`${selector}: ${JSON.stringify(target)}`);
     }
-    await shots(`mobile-editor-${width}`);
-    await press(page,'#numeric-clear');
-    await press(page,'#numeric-save');
-    assert.equal((await entry(page,'solo:s-1:s1-incline:0')).weight,'');
-    await page.locator('#console-weight').focus();
-    await page.keyboard.press('Enter');
-    assert.equal(await dialog.isVisible(),true);
+    await shots(`mobile-bar-${width}`);
     await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#console-return').isVisible(),false);
+    await source.focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await page.locator('#console-return').isVisible(),true);
     assert.equal(await page.evaluate(()=>document.activeElement.matches('input')),false);
+    await press(page,'#console-return');
   }
+});
+
+scenario('Mobile bar: free shoulder rows use the same controls without inventing reps or a rest', async page => {
+  await page.locator('#session-switch').tap();
+  await press(page,'#sheet-programs [data-program="shoulder-focus"]');
+  await press(page,'#sheet-days [data-day="hf-main"]');
+  await page.locator('[data-add-free-set="hf-row"]').tap();
+  await page.locator('[data-exercise-card="hf-row"] [data-set-row="1"] [data-reps]').tap();
+  assert.equal(await page.locator('dialog[open]').count(),0);
+  assert.equal(await page.locator('#console-weight-stepper').isVisible(),false);
+  assert.equal(await page.locator('#console-reps').inputValue(),'');
+  assert.match(await page.locator('#console-set').textContent(),/Serie 2\/2/);
+  await stepUp(page,'reps');
+  await press(page,'#console-done');
+  assert.equal((await entry(page,'shoulder-focus:hf-main:hf-row:1')).reps,'1');
+  assert.equal((await entry(page,'shoulder-focus:hf-main:hf-row:1')).completed,true);
+  assert.equal(Boolean((await entry(page,'shoulder-focus:hf-main:hf-row:0'))?.completed),false);
+  assert.equal(await mode(page),'work');
+  assert.equal(await page.evaluate(key=>localStorage.getItem(key),timerKey),null);
+});
+
+scenario('Mobile bar: selection clears on session changes and returns to the right series', async page => {
+  await page.locator('[data-exercise-card="s1-incline"] [data-set-row="2"] [data-reps]').tap();
+  await stepUp(page,'reps');
+  await press(page,'#console-return');
+  assert.match(await page.locator('#console-set').textContent(),/Serie 1\/3/);
+  await page.locator('[data-exercise-card="s1-incline"] [data-set-row="2"] [data-reps]').tap();
+  await page.locator('#session-switch').tap();
+  await press(page,'#sheet-days [data-day="s-2"]');
+  assert.equal(await page.locator('#console-return').isVisible(),false);
+  assert.equal(await page.locator('#console-name').textContent(),'Dominada asistida/lastrada o jalón');
+  assert.equal((await entry(page,'solo:s-1:s1-incline:2')).reps,'7');
 });
 
 scenario('Mobile exercise choice: narrow and wide phones keep actions reachable and inputs editable', async (page, context, shots) => {

@@ -1048,15 +1048,20 @@
     }
 
     .timer-dock[data-mode="rest"] { border-color: transparent; background: #edf0e9; color: #11181a; }
-    .timer-dock.is-running { background: var(--mint); }
+    .timer-dock[data-mode="rest"].is-running { background: var(--mint); }
     .timer-dock[data-mode="done"] { border-color: rgba(142, 215, 202, .45); background: #13201f; }
-    .timer-dock.is-finished { border-color: transparent; background: var(--accent); color: #1a0c09; }
+    .timer-dock.is-finished:not(.is-editing) { border-color: transparent; background: var(--accent); color: #1a0c09; }
 
     .console-panel { display: none; gap: 8px; }
 
     .timer-dock[data-mode="work"] .console-work,
     .timer-dock[data-mode="rest"] .console-rest,
     .timer-dock[data-mode="done"] .console-complete { display: grid; }
+
+    .console-work-head { min-width: 0; display: flex; align-items: center; gap: 8px; grid-column: 1 / -1; }
+    .console-work-head .console-heading { flex: 1; }
+    .console-return { flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 12px; background: var(--surface-soft); color: var(--muted); font-size: 24px; }
+    .stepper.is-selected-field, .set-input.is-console-source { box-shadow: inset 0 0 0 2px var(--mint); }
 
     .console-heading {
       min-width: 0;
@@ -1115,8 +1120,8 @@
       }
     }
 
-    .timer-dock.is-finished .console-set,
-    .timer-dock.is-finished .console-hint { color: inherit; }
+    .timer-dock.is-finished:not(.is-editing) .console-set,
+    .timer-dock.is-finished:not(.is-editing) .console-hint { color: inherit; }
 
     .stepper {
       min-width: 0;
@@ -1180,16 +1185,10 @@
       text-transform: uppercase;
     }
 
-    .numeric-editor-context { margin: 8px 0 16px; color: var(--muted); }
-    .numeric-editor-stepper { height: 72px; grid-template-columns: 64px minmax(0, 1fr) 64px; }
-    .numeric-editor-value { width: 100%; min-width: 0; border: 0; background: transparent; color: var(--text); font: inherit; font-size: 28px; font-weight: 850; text-align: center; }
-    .numeric-editor-options { display: flex; gap: 8px; margin-top: 12px; }
-    .numeric-editor-options button { flex: 1; min-height: 44px; }
-
-    .timer-dock.is-finished .stepper { background: rgba(26, 12, 9, .14); }
-    .timer-dock.is-finished .stepper-unit { color: inherit; }
-    .timer-dock.is-finished .stepper-button:hover,
-    .timer-dock.is-finished .stepper-button:active { background: rgba(26, 12, 9, .14); }
+    .timer-dock.is-finished:not(.is-editing) .stepper { background: rgba(26, 12, 9, .14); }
+    .timer-dock.is-finished:not(.is-editing) .stepper-unit { color: inherit; }
+    .timer-dock.is-finished:not(.is-editing) .stepper-button:hover,
+    .timer-dock.is-finished:not(.is-editing) .stepper-button:active { background: rgba(26, 12, 9, .14); }
 
     .console-done {
       min-height: 56px;
@@ -1210,7 +1209,7 @@
     .console-done svg { width: 22px; height: 22px; flex: 0 0 auto; }
     .console-done:hover { filter: brightness(1.06); }
     .console-done:active { transform: scale(.96); }
-    .timer-dock.is-finished .console-done { background: #1a0c09; color: var(--accent); }
+    .timer-dock.is-finished:not(.is-editing) .console-done { background: #1a0c09; color: var(--accent); }
 
     .console-rest-top {
       min-width: 0;
@@ -1578,7 +1577,7 @@
       .mobile-topbar { position: relative; }
       .timer-dock { max-width: none; }
       .console-work { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) 62px; align-items: center; }
-      .console-heading { grid-column: auto; }
+      .console-work-head { grid-column: auto; }
       .timer-dock.is-reps-only .stepper-reps { grid-column: 2 / 4; }
     }
 
@@ -1690,10 +1689,13 @@
         <aside class="summary-column">
           <section class="timer-dock" id="timer-dock" data-mode="work" aria-label="Serie actual y descanso">
             <div class="console-panel console-work">
-              <button class="console-heading" type="button" data-scroll-next>
-                <span class="console-title"><strong id="console-name"></strong><span class="console-set" id="console-set"></span></span>
-                <span class="console-hint" id="console-hint"></span>
-              </button>
+              <div class="console-work-head">
+                <button class="console-heading" type="button" data-scroll-next>
+                  <span class="console-title"><strong id="console-name"></strong><span class="console-set" id="console-set"></span></span>
+                  <span class="console-hint" id="console-hint"></span>
+                </button>
+                <button class="console-return" id="console-return" type="button" aria-label="Volver a la serie actual o al descanso" hidden>×</button>
+              </div>
               <div class="stepper stepper-weight" id="console-weight-stepper">
                 <button class="stepper-button" type="button" data-stepper="weight" data-direction="-1" aria-label="Bajar peso">−</button>
                 <label class="stepper-field"><input class="stepper-input" id="console-weight" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="—" aria-label="Peso de la serie actual en kilogramos" data-console-field="weight"><span class="stepper-unit" aria-hidden="true">kg</span></label>
@@ -1766,25 +1768,6 @@
     </div>
     <img id="gif-viewer-image" alt="">
     <p class="gif-viewer-error" id="gif-viewer-error" role="status" hidden>No se pudo cargar el GIF. Cierra y vuelve a intentarlo cuando tengas conexión.</p>
-  </dialog>
-  <dialog class="sheet" id="numeric-editor" aria-labelledby="numeric-editor-title" aria-describedby="numeric-editor-context">
-    <form method="dialog" class="sheet-body">
-      <h2 id="numeric-editor-title">Editar repeticiones</h2>
-      <p class="numeric-editor-context" id="numeric-editor-context"></p>
-      <div class="stepper numeric-editor-stepper">
-        <button class="stepper-button" id="numeric-less" type="button" aria-label="Disminuir valor" autofocus>−</button>
-        <input class="numeric-editor-value" id="numeric-value" type="text" inputmode="none" readonly autocomplete="off" enterkeyhint="done" aria-label="Valor">
-        <button class="stepper-button" id="numeric-more" type="button" aria-label="Aumentar valor">+</button>
-      </div>
-      <div class="numeric-editor-options">
-        <button class="quiet-button" id="numeric-type" type="button">Escribir con teclado</button>
-        <button class="quiet-button" id="numeric-clear" type="button">Vaciar</button>
-      </div>
-      <div class="sheet-actions">
-        <button class="sheet-cancel" type="submit" value="cancel">Cancelar</button>
-        <button class="sheet-confirm" id="numeric-save" type="submit" value="save">Guardar</button>
-      </div>
-    </form>
   </dialog>
   <dialog class="sheet" id="confirm-sheet" aria-labelledby="sheet-title">
     <form method="dialog" class="sheet-body">
@@ -2260,6 +2243,7 @@
     let sessionResetPending = false;
     let lastTimerSnapshot = null;
     let lastDoneSet = null;
+    let consoleTarget = null;
     const tapGuardsUntil = { console: 0, dialog: 0 };
     let renderedOn = dateKey();
     let wakeLock = null;
@@ -2714,6 +2698,7 @@
     }
 
     function renderExercises() {
+      dismissSetEditor();
       const day = activeDay();
       ensurePresetWeights(day);
       const filtered = day.exercises.filter(exercise => state.filter === "Todos" || exercise.muscle === state.filter);
@@ -2951,105 +2936,95 @@
     }
 
     function dismissSetEditor() {
+      consoleTarget = null;
+      $$(".is-console-source, .is-selected-field").forEach(element => element.classList.remove("is-console-source", "is-selected-field"));
       const editor = document.activeElement;
       if (editor?.matches("[data-reps], [data-weight], [data-console-field], [data-reference]")) editor.blur();
     }
 
-    let numericTarget = null;
+    function currentConsoleSet(day = activeDay()) {
+      if (consoleTarget?.programId === state.programId && consoleTarget.dayId === day.id) {
+        const exercise = day.exercises.find(item => item.id === consoleTarget.exerciseId);
+        if (exercise && consoleTarget.index >= 0 && consoleTarget.index < exercise.sets) return { exercise, index: consoleTarget.index };
+      }
+      consoleTarget = null;
+      return findNextSet(day);
+    }
 
-    function openNumericEditor(input) {
-      const day = activeDay();
-      const next = input.matches("[data-console-field]") ? findNextSet(day) : null;
-      const exercise = next?.exercise || day.exercises.find(item => item.id === input.dataset.exercise);
-      const index = next?.index ?? Number(input.dataset.set);
-      if (!exercise || !Number.isInteger(index)) return;
+    function returnToCurrentSet() {
       dismissSetEditor();
+      updateConsole();
+      const mode = $("#timer-dock").dataset.mode;
+      $(mode === "rest" ? "#timer-skip" : mode === "done" ? "#console-reset" : "#console-done").focus({ preventScroll: true });
+      guardTaps(350, "console");
+    }
+
+    function selectConsoleSet(input) {
+      const day = activeDay();
+      const fromConsole = input.matches("[data-console-field]");
+      const selected = fromConsole ? currentConsoleSet(day) : null;
+      const exercise = selected?.exercise || day.exercises.find(item => item.id === input.dataset.exercise);
+      const index = selected?.index ?? Number(input.dataset.set);
+      if (!exercise || !Number.isInteger(index)) return;
       const field = input.dataset.consoleField || (input.matches("[data-weight]") ? "weight" : "reps");
-      numericTarget = { programId: state.programId, dayId: day.id, exerciseId: exercise.id, index, field,
-        restore: input.closest(".exercise-card")?.querySelector("[data-collapse-toggle]") || $(`[data-stepper="${field}"][data-direction="1"]`) };
-      $("#numeric-editor-title").textContent = field === "weight" ? "Editar peso · kg" : "Editar repeticiones";
-      $("#numeric-editor-context").textContent = `${exercise.name} · serie ${index + 1}/${exercise.sets}`;
-      const value = $("#numeric-value");
-      value.value = input.value;
-      value.readOnly = true;
-      value.inputMode = "none";
-      value.setAttribute("aria-label", field === "weight" ? "Peso en kilogramos" : "Repeticiones");
-      $("#numeric-type").hidden = false;
-      $("#numeric-editor").returnValue = "cancel";
-      guardTaps(350, "dialog");
-      $("#numeric-editor").showModal();
+      // The existing console owns both numbers for the exact row that was touched.
+      // Selecting a row must not change the workout order or stop a running rest.
+      const target = fromConsole ? consoleTarget : { programId: state.programId, dayId: day.id, exerciseId: exercise.id, index };
+      dismissSetEditor();
+      consoleTarget = target;
+      updateConsole();
+      const source = $(`[data-exercise-card="${exercise.id}"] [data-set-row="${index}"] [data-${field}]`);
+      source?.classList.add("is-console-source");
+      $(`#console-${field}-stepper`).classList.add("is-selected-field");
+      $(`[data-stepper="${field}"][data-direction="-1"]`).focus({ preventScroll: true });
+      guardTaps(350, "console");
+      announce(`${exercise.name}, serie ${index + 1} de ${exercise.sets}. Ajustar ${field === "weight" ? "peso" : "repeticiones"} en la barra inferior.`);
     }
 
-    function stepNumericEditor(direction) {
-      const input = $("#numeric-value");
-      const current = safeNumber(input.value);
-      input.value = displayDecimal(numericTarget.field === "weight" ? stepWeight(current, direction) : Math.max(0, current + direction));
-    }
-
-    function interceptNumericEditor(event) {
+    function interceptConsoleSelection(event) {
       if (!window.matchMedia("(max-width: 880px)").matches) return;
       const input = event.target.closest?.("[data-reps], [data-weight], [data-console-field]");
-      if (!input || $("#numeric-editor").open) return;
-      if (input.closest("#timer-dock") && performance.now() < tapGuardsUntil.console) return;
+      if (!input) return;
       event.preventDefault();
       event.stopPropagation();
-      openNumericEditor(input);
+      if (input.closest("#timer-dock") && performance.now() < tapGuardsUntil.console) return;
+      selectConsoleSet(input);
     }
 
     function configureNumericTriggers() {
       const mobile = window.matchMedia("(max-width: 880px)").matches;
+      if (!mobile && consoleTarget) returnToCurrentSet();
       $$("[data-reps], [data-weight], [data-console-field]").forEach(input => {
         input.inputMode = mobile ? "none" : input.matches("[data-reps], [data-console-field='reps']") ? "numeric" : "decimal";
-        if (mobile) input.setAttribute("aria-haspopup", "dialog");
-        else input.removeAttribute("aria-haspopup");
+        if (mobile) input.setAttribute("aria-controls", "timer-dock");
+        else input.removeAttribute("aria-controls");
       });
     }
 
-    // Cancel the native focus action before a touch can summon the OS keyboard.
-    document.addEventListener("pointerdown", interceptNumericEditor, true);
-    document.addEventListener("click", interceptNumericEditor, true);
+    // Cancel native focus before a touch can summon the OS keyboard.
+    document.addEventListener("pointerdown", interceptConsoleSelection, true);
+    document.addEventListener("click", interceptConsoleSelection, true);
     document.addEventListener("keydown", event => {
-      if (event.key === "Enter" && event.target === $("#numeric-value")) {
+      if (event.key === "Escape" && consoleTarget && !$("dialog[open]")) {
         event.preventDefault();
-        $("#numeric-editor").close("save");
-      } else if (event.key === "Enter") interceptNumericEditor(event);
+        returnToCurrentSet();
+      } else if (event.key === "Enter") interceptConsoleSelection(event);
     }, true);
     window.addEventListener("resize", configureNumericTriggers);
-    $("#numeric-less").addEventListener("click", () => stepNumericEditor(-1));
-    $("#numeric-more").addEventListener("click", () => stepNumericEditor(1));
-    $("#numeric-clear").addEventListener("click", () => { $("#numeric-value").value = ""; });
-    $("#numeric-type").addEventListener("click", () => {
-      const input = $("#numeric-value");
-      input.readOnly = false;
-      input.inputMode = numericTarget.field === "weight" ? "decimal" : "numeric";
-      input.focus();
-      input.select();
-      $("#numeric-type").hidden = true;
-    });
-    $("#numeric-editor").addEventListener("close", () => {
-      const target = numericTarget;
-      numericTarget = null;
-      $("#numeric-value").blur();
-      if (!target) return;
-      const day = activeDay();
-      if ($("#numeric-editor").returnValue === "save" && state.programId === target.programId && day.id === target.dayId) {
-        const exercise = day.exercises.find(item => item.id === target.exerciseId);
-        if (exercise) applySetValue(day, exercise, target.index, target.field, $("#numeric-value").value.trim());
-      }
-      target.restore?.focus({ preventScroll: true });
-    });
+    $("#console-return").addEventListener("click", returnToCurrentSet);
 
     function completeFromConsole() {
       const day = activeDay();
-      const next = findNextSet(day);
+      const next = currentConsoleSet(day);
       if (!next) return;
+      if (getEntry(day.id, next.exercise.id, next.index).completed) return returnToCurrentSet();
       setEntry(day.id, next.exercise.id, next.index, { reps: $("#console-reps").value.trim() || defaultReps(day, next.exercise, next.index) });
       setSetDone(day, next.exercise, next.index, true);
     }
 
     function stepConsole(field, direction) {
       const day = activeDay();
-      const next = findNextSet(day);
+      const next = currentConsoleSet(day);
       if (!next) return;
       const current = safeNumber($(field === "weight" ? "#console-weight" : "#console-reps").value);
       const value = field === "weight" ? stepWeight(current, direction) : Math.max(1, current + direction);
@@ -3072,6 +3047,7 @@
     }
 
     function setDockMode(mode) {
+      if (consoleTarget) mode = "work";
       const dock = $("#timer-dock");
       if (dock.dataset.mode === mode) return;
       const hadFocus = dock.contains(document.activeElement);
@@ -3096,8 +3072,10 @@
 
     function updateConsole() {
       const day = activeDay();
-      const next = findNextSet(day);
+      const next = currentConsoleSet(day);
       const dock = $("#timer-dock");
+      dock.classList.toggle("is-editing", Boolean(consoleTarget));
+      $("#console-return").hidden = !consoleTarget;
       if (next) {
         const { exercise, index } = next;
         const bodyweight = exercise.tracking === "reps";
@@ -3105,13 +3083,15 @@
         const hint = [exercise.freeLog ? "Registrá lo realizado · sin objetivo fijado" : `Objetivo ${exercise.reps}`, ...(exercise.rir ? [`RIR ${exercise.rir}`] : [])];
         if (previous && (safeNumber(previous.reps) || !bodyweight)) hint.push(`última ${formatLoggedSet(previous, bodyweight)}`);
         $("#console-name").textContent = exercise.name;
-        $("#console-set").textContent = `${dock.classList.contains("is-finished") ? "¡Listo! · " : ""}Serie ${index + 1}/${exercise.sets}`;
+        $("#console-set").textContent = `${dock.classList.contains("is-finished") && !consoleTarget ? "¡Listo! · " : ""}Serie ${index + 1}/${exercise.sets}`;
         $("#console-hint").textContent = hint.join(" · ");
         $("#console-weight-stepper").hidden = bodyweight;
         dock.classList.toggle("is-reps-only", bodyweight);
         setConsoleValue("#console-weight", displayDecimal(defaultWeight(day, exercise, index)));
         setConsoleValue("#console-reps", defaultReps(day, exercise, index));
-        $("#console-done").setAttribute("aria-label", `Marcar serie ${index + 1} de ${exercise.name} como hecha`);
+        const completed = Boolean(getEntry(day.id, exercise.id, index).completed);
+        $("#console-done span").textContent = completed ? "Listo" : "Hecha";
+        $("#console-done").setAttribute("aria-label", completed ? "Terminar de corregir la serie" : `Marcar serie ${index + 1} de ${exercise.name} como hecha`);
       } else {
         const nextDay = nextDayInRotation();
         const button = $("#console-next-day");
@@ -3671,7 +3651,7 @@
       }
       const nextButton = event.target.closest("[data-scroll-next]");
       if (nextButton) {
-        const next = findNextSet(activeDay());
+        const next = currentConsoleSet();
         if (next && !$(`[data-exercise-card="${next.exercise.id}"]`)) {
           state.filter = "Todos";
           persist();
@@ -3682,7 +3662,11 @@
           toggledCards.delete(next.exercise.id);
           syncCardStates();
         }
-        revealCurrentSet("center");
+        if (next) {
+          const card = $(`[data-exercise-card="${next.exercise.id}"]`);
+          if (card?.classList.contains("is-collapsed")) toggleCard(card);
+          $(`[data-set-row="${next.index}"]`, card)?.scrollIntoView({ block: "center" });
+        }
         return;
       }
       const stepperButton = event.target.closest("[data-stepper]");
@@ -3775,7 +3759,7 @@
       }
       if (event.target.matches("[data-console-field]")) {
         const day = activeDay();
-        const next = findNextSet(day);
+        const next = currentConsoleSet(day);
         if (next) applySetValue(day, next.exercise, next.index, event.target.dataset.consoleField, event.target.value);
       }
       if (event.target.matches("[data-reference]")) {
