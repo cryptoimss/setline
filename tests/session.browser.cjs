@@ -412,6 +412,53 @@ scenario('Shoulder plan: reps only, no kg or volume, no preset panel', async pag
   assert.equal(await page.locator('#console-reset').isVisible(), true);
 });
 
+scenario('Chest shoulder alternative: retired volley, loaded sets, demos and saved history', async (page, context, shots) => {
+  const legacyKey='volley:v-b:vb-chest:0';
+  const legacyEntry={weight:'35',reps:'10',completed:true};
+  await seed(page,{schemaVersion:3,programId:'volley',dayByProgram:{volley:'v-b'},filter:'Bíceps',focusExerciseId:'vb-chest',entries:{[legacyKey]:legacyEntry}});
+  assert.equal(await page.locator('#switch-title').textContent(),'Torso A');
+  assert.equal((await state(page)).programId,'solo');
+  assert.deepEqual(await entry(page,legacyKey),legacyEntry);
+  assert.equal(await page.locator('[data-program="volley"]').count(),0);
+  await page.locator('#session-switch').tap();
+  await press(page,'#sheet-programs [data-program="chest"]');
+  await press(page,'#sheet-days [data-day="p-shoulder"]');
+  assert.equal(await page.locator('#switch-title').textContent(),'Pecho + hombro · fuerza');
+  assert.equal(await page.locator('[data-exercise-card]').count(),5);
+  assert.equal(await page.locator('[data-set-row]').count(),13);
+  assert.match(await page.locator('.hero-meta').textContent(),/37–42 min/);
+  await page.locator('[data-hero-toggle]').tap();
+  assert.equal(await page.locator('#load-preset-panel').isVisible(),false);
+  await page.locator('[data-hero-toggle]').tap();
+  for(const id of ['ps-machine','ps-neutral','ps-row','ps-external','ps-curl']){
+    const card=page.locator(`[data-exercise-card="${id}"]`);
+    if(await card.locator('[data-focus-exercise]').isVisible()) await card.locator('[data-focus-exercise]').tap();
+    await card.scrollIntoViewIfNeeded();
+    await page.waitForFunction(id=>{const image=document.querySelector(`[data-exercise-card="${id}"] img`);return image?.complete&&image.naturalWidth>0;},id,{timeout:15000});
+    assert.equal(await card.locator('[data-weight]').count(),id==='ps-external'||id==='ps-curl'?2:3);
+  }
+  assert.equal(await page.locator('#console-weight').inputValue(),'');
+  await stepUp(page,'weight');
+  await press(page,'#console-done');
+  const key='chest:p-shoulder:ps-curl:0';
+  assert.equal((await entry(page,key)).weight,'1');
+  assert.equal((await entry(page,key)).reps,'10');
+  assert.equal((await entry(page,key)).completed,true);
+  await page.reload();
+  assert.equal(await page.locator('#switch-title').textContent(),'Pecho + hombro · fuerza');
+  assert.equal((await entry(page,key)).weight,'1');
+  assert.deepEqual(await entry(page,legacyKey),legacyEntry);
+  await press(page,'#timer-skip');
+  for(const width of [320,768,1024,1440]){
+    await page.setViewportSize({width,height:900});
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`width ${width}`);
+  }
+  await page.setViewportSize({width:390,height:844});
+  await shots('chest-shoulder-mobile');
+  await page.setViewportSize({width:1440,height:900});
+  await shots('chest-shoulder-desktop');
+});
+
 scenario('The interface states data and does not explain itself, on any program or in any state', async page => {
   const explanations = /Volumen semanal|Cómo progresar|Cómo usar esta pauta|Pauta de hombro|Regla de esfuerzo|Control y recuperación|Demostraciones servidas|se conserva|Sesión en curso|Tiempo estimado|Variante mostrada|Extracto del video|Fuente:|Sin dolor|Registra repeticiones|Ajusta la variante|Carga manual|Se vaciarán|fisioterapeuta|174 cm/i;
   const clean = async label => {
@@ -419,7 +466,7 @@ scenario('The interface states data and does not explain itself, on any program 
     const match = text.match(explanations);
     assert.equal(match && match[0], null, label);
   };
-  for (const program of ['solo', 'volley', 'chest', 'calisthenics', 'shoulder']) {
+  for (const program of ['solo', 'chest', 'calisthenics', 'shoulder']) {
     await page.locator('#session-switch').tap();
     await press(page, `#sheet-programs [data-program="${program}"]`);
     await clean(`${program}: session sheet`);
@@ -489,7 +536,7 @@ scenario('GIFs stay visible through a whole session and on every program and ses
   await finishSession(page);
   await page.waitForTimeout(1000);
   assert.equal(await page.locator('[data-exercise-card] .demo-frame:visible').count(), 6, 'finished cards keep theirs');
-  for (const program of ['volley', 'solo', 'chest', 'calisthenics', 'shoulder']) {
+  for (const program of ['solo', 'chest', 'calisthenics', 'shoulder']) {
     await page.locator('#session-switch').tap();
     await press(page, `#sheet-programs [data-program="${program}"]`);
     const days = await page.locator('#sheet-days [data-day]').evaluateAll(items => items.map(item => item.dataset.day));

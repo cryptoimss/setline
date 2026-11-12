@@ -82,16 +82,16 @@ test('A stale confirmation cannot reset a different program or day',async()=>{
 test('A rest started before any set can also be reset without a destructive confirmation',async()=>{
  const h=harness({...fixture(),entries:{}});await h.reset(); assert.equal(h.confirmations(),0); assert.equal(h.timer(),0);
 });
-test('Strength routines retain 30–45 minute estimates and chest volume stays at seven direct sets',()=>{
+test('Strength routines retain 30–45 minute estimates and their intended chest volume',()=>{
  const h=harness(fixture()); const programs=JSON.parse(vm.runInContext('JSON.stringify(programs)',h.context));
  const ids=new Set();
  for(const p of programs.filter(p=>!['shoulder','shoulder-focus'].includes(p.id)))for(const d of p.days.filter(d=>d.id!=='p-extra')){
   assert.ok(d.timing.min>=30 && d.timing.max<=45,`${p.id}/${d.id}: ${d.duration}`);
   assert.ok(d.timing.min<d.timing.max);assert.equal(d.duration,`${d.timing.min}–${d.timing.max} min`);
   for(const e of d.exercises){assert.ok(e.sets>=1 && e.rest>=60);assert.ok(!ids.has(e.id));ids.add(e.id);}
-  if(p.id==='chest')assert.equal(d.exercises.filter(e=>e.muscle==='Pecho').reduce((sum,e)=>sum+e.sets,0),7);
+  if(p.id==='chest')assert.equal(d.exercises.filter(e=>e.muscle==='Pecho').reduce((sum,e)=>sum+e.sets,0),d.id==='p-shoulder'?6:7);
  }
- assert.equal(programs.filter(p=>!['shoulder','shoulder-focus'].includes(p.id)).flatMap(p=>p.days.filter(d=>d.id!=='p-extra')).length,12);
+ assert.equal(programs.filter(p=>!['shoulder','shoulder-focus'].includes(p.id)).flatMap(p=>p.days.filter(d=>d.id!=='p-extra')).length,10);
  const home=programs.find(p=>p.id==='chest').days.find(d=>d.id==='p-home');
  assert.ok(!home.exercises.some(e=>/máquina|polea|banco/i.test(e.name)));
 });
@@ -102,6 +102,41 @@ test('Increasing sets or rest changes the estimate; no fixed 45-minute label or 
   const after=estimateSessionTiming(changed);return {min:after.min-before.min,max:after.max-before.max};
  })()`,h.context);
  assert.ok(delta.min>=4 && delta.max>=4);
+});
+
+test('Retiring volley repairs selection without dropping or reusing any previous training records',()=>{
+ const saved={...fixture(),programId:'volley',dayByProgram:{volley:'v-b',solo:'s-2',chest:'p-b'},focusExerciseId:'vb-chest',
+  entries:{...fixture().entries,'volley:v-b:vb-chest:0':{weight:'35',reps:'10',completed:true}},
+  references:{'volley:vb-chest':'350'},setLog:{'volley:v-b:vb-chest:0':[{weight:'35',reps:'10',date:'2026-11-01'}]}};
+ const h=harness(saved), migrated=h.state();
+ assert.equal(vm.runInContext('programs.some(p=>p.id==="volley")',h.context),false);
+ assert.equal(migrated.programId,'solo');assert.equal(migrated.dayByProgram.solo,'s-2');
+ assert.equal(migrated.filter,'Todos');assert.equal(migrated.focusExerciseId,null);
+ for(const field of ['entries','references','lastVolumes','setLog'])assert.deepEqual(migrated[field],saved[field],field);
+ vm.runInContext('persist()',h.context);assert.deepEqual(h.reload(),migrated);
+ assert.equal(harness(fixture()).state().programId,'chest');
+});
+
+test('Chest and shoulder alternative records real loads independently without presetting rehabilitation weights',()=>{
+ const key='chest:p-shoulder:ps-external:0';
+ const saved={...fixture(),dayByProgram:{chest:'p-shoulder'},loadPreset:'heavy',setLog:{[key]:[{weight:'1.5',reps:'14',date:'2026-11-01'}]}};
+ const h=logHarness(saved), day=h.run('activeDay()');
+ assert.ok(day.alternative);assert.equal(day.exercises.reduce((s,e)=>s+e.sets,0),13);
+ assert.equal(day.exercises.filter(e=>e.muscle==='Bíceps').length,1);
+ assert.equal(day.exercises.filter(e=>e.muscle==='Hombros').length,1);
+ for(const e of day.exercises){
+  assert.notEqual(e.tracking,'reps');assert.equal(e.manualLoad,true);
+  assert.equal(h.run(`suggestedLoad(${JSON.stringify(e.id)})`),null);
+  assert.ok(h.run(`exerciseGifs[${JSON.stringify(e.id)}]`)?.[0],e.id);
+ }
+ h.run('(ensurePresetWeights(activeDay()),null)');
+ assert.equal(h.state().entries[key].weight,'1.5');
+ assert.equal(h.run('defaultWeight(activeDay(),activeDay().exercises[0],0)'),'');
+ h.run('(setEntry("p-shoulder","ps-external",0,{weight:"2",weightSource:"manual"}),state.loadPreset="light",ensurePresetWeights(activeDay()),null)');
+ assert.equal(h.reload().entries[key].weight,'2');
+ assert.equal(h.state().entries['chest:p-a:pa-incline:0'].weight,'18');
+ vm.runInContext(functionSource('nextDayInRotation'),h.context);
+ assert.equal(h.run('nextDayInRotation().id'),'p-a');
 });
 
 test('Shoulder plan follows the five video chapters and spoken starting dose without preset loads',()=>{
@@ -287,12 +322,12 @@ test('Chest extra contains thirty distinct variants with demos and stays outside
  assert.equal(vm.runInContext('nextDayInRotation().id',h.context),'p-a');
 });
 
-test('Every unambiguous loaded movement has a starting load; bodyweight and rehabilitation stay reps-only',()=>{
+test('Starting loads distinguish preset movements from individually calibrated loads and reps-only work',()=>{
  const h=logHarness({...fixture(),entries:{}});
  const plans=h.run('programs');
  for(const p of plans)for(const day of p.days)for(const e of day.exercises){
   const load=h.run(`NORMAL_LOADS[${JSON.stringify(e.id)}] ?? null`);
-  if(e.tracking==='reps'||e.freeLog) { assert.equal(load,null,e.id); continue; }
+  if(e.tracking==='reps'||e.freeLog||e.manualLoad) { assert.equal(load,null,e.id); continue; }
   // This existing slot mixes assistance, added load and a pulldown: no shared kg meaning.
   if(e.id==='s2-pullup') { assert.equal(load,null); continue; }
   assert.ok(load>0,e.id);

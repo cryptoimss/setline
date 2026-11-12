@@ -1794,47 +1794,6 @@
 
     const programs = [
       {
-        id: "volley",
-        short: "Vóley + gym",
-        symbol: "V+",
-        days: [
-          {
-            id: "v-a", code: "A", name: "Base de torso",
-            exercises: [
-              { id: "va-press", name: "Press inclinado en máquina o mancuernas", muscle: "Pecho", sets: 3, reps: "6–10", rest: 120, rir: "2", cue: "Escápulas firmes; evita rebotar en la parte baja. Si no hay inclinado, usa el press de pecho disponible; conserva series, reps, descanso y RIR, y calibra la carga de esa máquina." },
-              { id: "va-row-db", name: "Remo a una mano con mancuerna", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", unilateral: true, cue: "Apoya la mano libre en el banco; lleva el codo hacia la cadera sin girar el torso. Reps por lado; kg de una mancuerna." },
-              { id: "va-pulldown-chinup", name: "Dominadas supinas", muscle: "Espalda", sets: 2, reps: "6–10", rest: 120, rir: "1–2", tracking: "reps", cue: "Palmas hacia ti, agarre al ancho de hombros y subida sin balanceo. Usa una banda de asistencia si la necesitas para mantener el RIR." },
-              { id: "va-lateral", name: "Elevación lateral en polea", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "1–2", unilateral: true, cue: "Sube con el codo y controla la vuelta." },
-              { id: "va-curl", name: "Curl de bíceps en polea", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "Brazos quietos; extensión completa sin perder tensión." },
-              { id: "va-pushdown", name: "Extensión de tríceps con cuerda", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "Separa la cuerda al final sin mover los codos." }
-            ]
-          },
-          {
-            id: "v-b", code: "B", name: "Hombros y brazos",
-            exercises: [
-              { id: "vb-chest", name: "Press de pecho convergente", muscle: "Pecho", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Agarre cómodo y recorrido sin despegar los hombros." },
-              { id: "vb-highrow-db", name: "Remo inclinado con mancuernas", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Inclina el torso desde la cadera, mantén la espalda estable y lleva los codos atrás, algo separados. Kg por mancuerna." },
-              { id: "vb-shoulder-db", name: "Press de hombro con mancuernas", muscle: "Hombros", sets: 2, reps: "8–12", rest: 120, rir: "2–3", cue: "Mantén el RIR por el trabajo de vóley. Sentado, abdomen firme y antebrazos verticales; sube sin arquear la espalda. Kg por mancuerna." },
-              { id: "vb-reverse-db", name: "Pájaros con mancuernas", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "1–2", cue: "Inclina el torso y abre los brazos con los codos ligeramente flexionados, sin impulso. Kg por mancuerna." },
-              { id: "vb-inclinecurl", name: "Curl inclinado con mancuernas", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "Mantén el hombro atrás y evita impulso." },
-              { id: "vb-overheadtri", name: "Extensión de tríceps sobre la cabeza", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "Busca estiramiento largo y codos apuntando al frente." }
-            ]
-          },
-          {
-            id: "v-c", code: "C", name: "Densidad de torso", optional: true,
-            exercises: [
-              { id: "vc-pulldown", name: "Jalón unilateral en polea", muscle: "Espalda", sets: 2, reps: "10–14", rest: 120, rir: "2", unilateral: true, cue: "Inicia bajando la escápula; no tires con el torso." },
-              { id: "vc-incline", name: "Press inclinado en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Misma trayectoria en todas las repeticiones. Si no hay inclinado, usa el press horizontal disponible con la misma pauta y RIR. Calibra su carga desde liviano." },
-              { id: "vc-seatedrow", name: "Remo sentado en polea", muscle: "Espalda", sets: 2, reps: "10–14", rest: 120, rir: "1–2", cue: "Mantén el pecho alto y no colapses al estirar." },
-              { id: "vc-lateral-db", name: "Elevación lateral con mancuernas", muscle: "Hombros", sets: 2, reps: "15–20", rest: 75, rir: "2", cue: "Eleva los brazos hasta la altura de los hombros, sin encogerlos ni balancearte. Kg por mancuerna." },
-              { id: "vc-fly", name: "Apertura en polea o peck deck", muscle: "Pecho", sets: 2, reps: "12–18", rest: 75, rir: "1–2", cue: "Acerca los bíceps sin perder el arco natural del hombro." },
-              { id: "vc-curl", name: "Curl predicador", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", cue: "No hiperextiendas el codo al final." },
-              { id: "vc-tri", name: "Extensión cruzada de tríceps en polea", muscle: "Tríceps", sets: 2, reps: "10–15", rest: 75, rir: "1–2", unilateral: true, cue: "Bloquea el brazo y termina cada repetición." }
-            ]
-          }
-        ]
-      },
-      {
         id: "solo",
         short: "Hipertrofia 3–4 días",
         symbol: "H4",
@@ -1910,6 +1869,16 @@
               { id: "pb-fly", name: "Apertura en peck deck", muscle: "Pecho", sets: 2, reps: "12–18", rest: 90, rir: "1–2", cue: "Apoya la espalda y acerca los brazos sin encoger los hombros. Controla la vuelta, sin forzar el estiramiento. Sin peck deck, usa apertura en polea con la misma pauta; sin ambas, flexiones escaladas al mismo rango y RIR. Reemplaza, no añade." },
               { id: "pb-row", name: "Remo sentado en polea", muscle: "Espalda", sets: 3, reps: "8–12", rest: 120, rir: "2", cue: "Torso estable y agarre cómodo. Si falta esta estación, usa remo inclinado con mancuernas, con las mismas series, reps y descanso; registra kg por mancuerna." },
               { id: "pb-reverse", name: "Pájaros con mancuernas", muscle: "Hombros", sets: 2, reps: "12–20", rest: 75, rir: "2", cue: "Inclina el torso desde la cadera y abre sin impulso. Kg por mancuerna; usa un recorrido cómodo." }
+            ]
+          },
+          {
+            id: "p-shoulder", code: "H", name: "Pecho + hombro · fuerza", alternative: true,
+            exercises: [
+              { id: "ps-machine", name: "Press de pecho en máquina", muscle: "Pecho", sets: 3, reps: "8–12", rest: 150, rir: "3", manualLoad: true, cue: "Esta sesión sustituye A o B; deja 48–72 h entre sesiones de torso y cuenta el trabajo de otras rutinas de hombro. Propuesta general: confirma la selección con tu fisioterapeuta según tu tendinopatía del bíceps proximal. Calienta 6–8 min y prueba el press con poca carga. Ajusta asiento y agarre; mantén la espalda apoyada y usa un recorrido sin dolor. Elige y registra los kg que permitan terminar con unas 3 reps en reserva, sin llegar al fallo. Si duele, detén el ejercicio. Sube primero reps; aumenta el menor salto de peso solo tras dos sesiones en el máximo, con técnica estable y sin empeorar esa noche ni al día siguiente. Si empeora, reduce carga, recorrido o series en la próxima sesión; si persiste, consulta." },
+              { id: "ps-neutral", name: "Press con mancuernas en agarre neutro", muscle: "Pecho", sets: 3, reps: "10–12", rest: 120, rir: "3", manualLoad: true, cue: "En banco plano, palmas enfrentadas y codos en diagonal al torso. Baja con control solo hasta un recorrido sin dolor; el agarre neutro no garantiza que sea tolerable para tu hombro. Registra kg por mancuerna y conserva 3 reps en reserva. Si duele, detén el ejercicio. Sube reps antes que kilos y no progreses si esa noche o al día siguiente estás peor." },
+              { id: "ps-row", name: "Remo sentado en polea", muscle: "Espalda", sets: 3, reps: "10–15", rest: 120, rir: "3", manualLoad: true, cue: "Agarre cómodo, torso estable y codos cerca del cuerpo; tira hacia las costillas sin encoger los hombros ni forzar su recorrido hacia atrás. Vuelve con control. Calibra los kg de esta polea dejando 3 reps en reserva; detén el ejercicio si duele. Aumenta reps antes que carga y solo si el hombro no empeora al día siguiente." },
+              { id: "ps-external", name: "Rotación externa de lado con mancuerna", muscle: "Hombros", sets: 2, reps: "12–15/lado", rest: 75, rir: "3–4", unilateral: true, manualLoad: true, cue: "Trabajo complementario del hombro. Acostado de lado, trabaja con el brazo de arriba: codo a 90° pegado al torso, con una toalla pequeña entre ambos si ayuda. Gira el antebrazo hacia arriba sin despegar el codo ni girar el cuerpo; baja lento. Empieza con una mancuerna liviana y registra sus kg; no uses la carga del press ni de las elevaciones como referencia. Reps por lado, ambos lados antes del descanso. Deja 3–4 reps en reserva. Si duele, detén el ejercicio; si al día siguiente estás peor, reduce la carga o las series. Sube el menor incremento disponible solo tras dos sesiones de 15 reps controladas sin empeorar los síntomas." },
+              { id: "ps-curl", name: "Curl de bíceps con mancuernas", muscle: "Bíceps", sets: 2, reps: "10–15", rest: 75, rir: "3–4", manualLoad: true, cue: "De pie, brazos al costado y codos quietos; no lleves el brazo detrás del torso. Palmas hacia delante, sube sin balancearte y baja lento, en unos 3 segundos. Empieza con carga liviana que toleres y registra kg por mancuerna, dejando 3–4 reps en reserva. Para el bíceps proximal, ajusta esta carga directa con tu fisioterapeuta según tu tolerancia. Si duele delante del hombro, detén el ejercicio; no fuerces repeticiones ni compenses con más series. Aumenta primero reps y luego el menor salto de peso, solo tras dos sesiones en el máximo sin empeorar esa noche ni al día siguiente." }
             ]
           },
           {
@@ -2045,9 +2014,6 @@
       "px-cable-press": 10, "px-db-fly": 6, "px-db-fly-incline": 6, "px-db-fly-decline": 6,
       "px-cable-fly": 10, "px-cable-low": 7.5, "px-cable-high": 10, "px-pec-deck": 25, "px-floor": 14,
       "pa-incline": 18, "pa-flat": 45, "pa-fly": 10, "pb-flat": 40, "pb-incline": 14, "pb-fly": 25,
-      "va-press": 18, "va-row-db": 15, "va-pulldown-chinup": null, "va-lateral": 5, "va-curl": 15, "va-pushdown": 25,
-      "vb-chest": 45, "vb-highrow-db": 12.5, "vb-shoulder-db": 10, "vb-reverse-db": 4, "vb-inclinecurl": 10, "vb-overheadtri": 20,
-      "vc-pulldown": 17.5, "vc-incline": 40, "vc-seatedrow": 40, "vc-lateral-db": 5, "vc-fly": 30, "vc-curl": 20, "vc-tri": 12.5,
       "s1-incline": 18, "s1-row-db": 15, "s1-fly": 10, "s1-pulldown-chinup": null, "s1-lateral": 5, "s1-tri": 25,
       "s2-pullup": null, "s2-highrow-db": 12.5, "s2-cablerow": 40, "s2-reverse-db": 4, "s2-preacher": 20, "s2-hammer": 15,
       "s3-flat": 50, "s3-incline": 40, "s3-shoulder-db": 10, "s3-lateral-db": 5, "s3-fly-db": 6, "s3-overhead": 20, "s3-pushdown": 12.5,
@@ -2077,25 +2043,6 @@
       "pb-flat": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
       "pb-incline": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
       "pb-fly": ["pectorals/lever-seated-fly.gif", "Apertura sentada en máquina"],
-      "va-press": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
-      "va-row-db": ["upper-back/dumbbell-one-arm-bent-over-row.gif", "Remo a una mano con mancuerna"],
-      "va-pulldown-chinup": ["lats/chin-up.gif", "Dominadas supinas"],
-      "va-lateral": ["delts/cable-one-arm-lateral-raise.gif", "Elevación lateral unilateral en polea"],
-      "va-curl": ["biceps/cable-curl.gif", "Curl de bíceps en polea"],
-      "va-pushdown": ["triceps/cable-pushdown-with-rope-attachment.gif", "Extensión de tríceps con cuerda"],
-      "vb-chest": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
-      "vb-highrow-db": ["upper-back/dumbbell-bent-over-row.gif", "Remo inclinado con mancuernas"],
-      "vb-shoulder-db": ["delts/dumbbell-seated-shoulder-press.gif", "Press de hombro con mancuernas"],
-      "vb-reverse-db": ["delts/dumbbell-reverse-fly.gif", "Pájaros con mancuernas"],
-      "vb-inclinecurl": ["biceps/dumbbell-incline-biceps-curl.gif", "Curl inclinado con mancuernas"],
-      "vb-overheadtri": ["triceps/cable-overhead-triceps-extension-rope-attachment.gif", "Extensión de tríceps sobre la cabeza con cuerda"],
-      "vc-pulldown": ["lats/cable-one-arm-pulldown.gif", "Jalón unilateral en polea"],
-      "vc-incline": ["pectorals/lever-incline-chest-press.gif", "Press inclinado en máquina"],
-      "vc-seatedrow": ["upper-back/cable-seated-row.gif", "Remo sentado en polea"],
-      "vc-lateral-db": ["delts/dumbbell-lateral-raise.gif", "Elevación lateral con mancuernas"],
-      "vc-fly": ["pectorals/lever-seated-fly.gif", "Apertura sentada en máquina"],
-      "vc-curl": ["biceps/barbell-preacher-curl.gif", "Curl predicador con barra"],
-      "vc-tri": ["triceps/cable-standing-one-arm-triceps-extension.gif", "Extensión unilateral de tríceps en polea"],
       "s1-incline": ["pectorals/dumbbell-incline-bench-press.gif", "Press inclinado con mancuernas"],
       "s1-row-db": ["upper-back/dumbbell-one-arm-bent-over-row.gif", "Remo a una mano con mancuerna"],
       "s1-fly": ["pectorals/cable-standing-fly.gif", "Apertura de pie en polea"],
@@ -2135,6 +2082,11 @@
     };
 
     Object.assign(exerciseGifs, {
+      "ps-machine": ["pectorals/lever-chest-press.gif", "Press de pecho en máquina"],
+      "ps-neutral": ["pectorals/dumbbell-lying-hammer-press.gif", "Press con mancuernas en agarre neutro"],
+      "ps-row": ["upper-back/cable-seated-row.gif", "Remo sentado en polea"],
+      "ps-external": ["./assets/shoulder/doctor/ref-side-er.gif", "Rotación externa de lado con mancuerna", "https://www.csp.org.uk/conditions/shoulder-pain/video-exercises-shoulder-pain", "ExerciseGymGifsDB / JahelCuadrado", "./assets/shoulder/doctor/ref-side-er.jpg"],
+      "ps-curl": ["./assets/shoulder/guide/curl.gif", "Curl de bíceps con mancuernas", "https://github.com/JahelCuadrado/ExerciseGymGifsDB", "ExerciseGymGifsDB / JahelCuadrado", "./assets/shoulder/guide/curl.jpg"],
       "px-bar-flat": ["pectorals/barbell-bench-press.gif", "Press plano con barra"],
       "px-bar-incline": ["pectorals/barbell-incline-bench-press.gif", "Press inclinado con barra"],
       "px-bar-decline": ["pectorals/barbell-decline-bench-press.gif", "Press declinado con barra"],
@@ -2174,7 +2126,7 @@
     const defaultState = {
       schemaVersion: 3,
       programId: "solo",
-      dayByProgram: { volley: "v-a", solo: "s-1", chest: "p-a", calisthenics: "c-a", shoulder: "h-a" },
+      dayByProgram: { solo: "s-1", chest: "p-a", calisthenics: "c-a", shoulder: "h-a" },
       filter: "Todos",
       loadPreset: "normal",
       entries: {},
@@ -2213,6 +2165,12 @@
         } : JSON.parse(JSON.stringify(defaultState));
         if (saved && Number(saved.schemaVersion || 1) < 2) {
           merged.programId = "solo";
+        }
+        // Retired programs must not keep writing new sets under their old namespace.
+        if (!programs.some(program => program.id === merged.programId)) {
+          merged.programId = defaultState.programId;
+          merged.filter = "Todos";
+          merged.focusExerciseId = null;
         }
         merged.schemaVersion = 3;
         if (!LOAD_PRESETS[merged.loadPreset]) merged.loadPreset = "normal";
@@ -2537,7 +2495,7 @@
 
     function renderLoadPresets() {
       const panel = $("#load-preset-panel");
-      panel.hidden = ["calisthenics", "shoulder", "shoulder-focus"].includes(activeProgram().id);
+      panel.hidden = ["calisthenics", "shoulder", "shoulder-focus"].includes(activeProgram().id) || activeDay().exercises.every(exercise => exercise.manualLoad);
       if (panel.hidden) return;
       $("#load-presets").innerHTML = Object.entries(LOAD_PRESETS).map(([id, item]) => `<button class="load-preset-button" type="button" aria-pressed="${state.loadPreset === id}" data-load-preset="${id}">${item.label}</button>`).join("");
     }
